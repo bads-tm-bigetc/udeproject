@@ -1,3 +1,6 @@
+2003-05-04  Christian Ruppert <arc@users.sf.net>
+	* added po/Makevars
+
 2003-04-17  Christian Ruppert <arc@users.sf.net>
 	* uwm/handlers.c (HandleButtonPress): replaced XQueryPointer by
 	  coordinate calculation from event structure.
