@@ -1,3 +1,18 @@
+ude-0.2.9b:
+
+* fixed the following bugs:
+  - OpenOffice1.1 resizing now works properly.
+  - a small bug in the new window focus method was fixed.
+  - some minor updates in urdb.
+  - missing shapes extension is now properly handled (i.e. uwm pops out
+    with an error)
+  - uwm now properly handles missing c preprocessor, backported from the
+    0.3 branch.
+
+ude-0.2.9a:
+
+* fixed an issue with building rpm packages.
+
 ude-0.2.9:
 
 * contains improved window focus strategy from 0.3 branch

@@ -304,7 +304,10 @@ int CheckCPP()
 
     execl("/bin/sh", "/bin/sh", "-c", temp, NULL);
     fprintf(TheScreen.errout,"UWM: couldn't start application: /bin/sh\n");
-    while(getc(STDIN_FILENO) != EOF) ;
+    {
+      char buf[16];
+      while(read(STDIN_FILENO, buf, 16)) ;
+    }
     exit(-1);
   }
 

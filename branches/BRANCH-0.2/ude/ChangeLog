@@ -1,3 +1,12 @@
+2004-01-14  Christian Ruppert <arc@users.sf.net>
+	* uwm/special.c (CheckCPP): fixed a bug in the backported cpp check.
+
+2004-12-05  Christian Ruppert <arc@users.sf.net>
+	* RELEASE: ude-0.2.9b
+	* configure.in: changed version to 0.2.9b
+	* doc/Makefile.am: changed .gif to .png
+	* NEWS: updated to reflect changes since 0.2.9a
+
 2004-11-24  Christian Ruppert <arc@users.sf.net>
 	* uwm/windows.c(MoveResizeWindow): fixed bug that windows with static
 	  gravity aren't properly moved/resized.

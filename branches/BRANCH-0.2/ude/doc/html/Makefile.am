@@ -3,7 +3,7 @@ TEXSOURCES= \
 	./manual.tex 
 HTMLOUTPUT= \
 	*.html \
-	*.gif \
+	*.png \
 	manual.css
 
 DIR_CONTENTS= ${HTMLOUTPUT}
@@ -20,7 +20,7 @@ manual.css: ${TEXSOURCES}
 	latex2html -no_subdir -init_file ../l2h.conf manual.tex
 
 clean:
-	rm -rf *.html *.gif *.pl *.css
+	rm -rf *.html *.png *.pl *.css
 
 *.html: manual.css
-*.gif: manual.css
+*.png: manual.css
