@@ -50,7 +50,7 @@ void ApplicationMenu(int x,int y)
 {
   MenuItem *item;
   lastsel=NULL;
-  item=StartMenu(TheScreen.AppsMenu,x,y,True,True,OtherSelect);
+  item=StartMenu(TheScreen.AppsMenu,x,y,True,OtherSelect);
   if(item && (item!=lastsel)) if((item->type==I_SELECT)&&(item->data))
     MySystem(((AppStruct *)item->data)->command);
 }

@@ -138,6 +138,12 @@ typedef struct
 #define StampTime(TIME) (TheScreen.now = ((TheScreen.now < TIME) || (TheScreen.now > (TIME + (1<<(sizeof(TheScreen.now)*8-1))))) ? TIME : TheScreen.now)
 #define TimeStamp TheScreen.now
 
+#define ButtonCount(CNT) ((((CNT) & Button1Mask) ? 1 : 0) \
+                          + (((CNT) & Button2Mask) ? 1 : 0) \
+                          + (((CNT) & Button3Mask) ? 1 : 0) \
+                          + (((CNT) & Button4Mask) ? 1 : 0) \
+                          + (((CNT) & Button5Mask) ? 1 : 0))
+
 /*** Window-Context structure ***/
 typedef struct _WinGroup *WinGroupPtr;
 

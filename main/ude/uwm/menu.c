@@ -54,8 +54,10 @@ extern InitStruct InitS;
 
 Menu *activemen=NULL;
 MenuItem *selectedMenuItem;
-extern short Buttoncount;
-Bool quittable,keepIt;
+short keepIt;
+#define KeepNonTransMenu   (1<<0)
+#define KeepMenuActive     (1<<1)
+Bool quittable;
 void (*SpecialProc)(XEvent *event,MenuItem *selectedMenuItem);
 
 void Menu2ws(Menu *menu,short ws)
@@ -372,13 +374,13 @@ void DeleteSubMenus(Menu *menu)
   }
 }
 
-MenuItem *StartMenu(Menu *menu, int x, int y, Bool q, Bool mousestarted,
+MenuItem *StartMenu(Menu *menu, int x, int y, Bool q,
                     void (*prc)(XEvent *event, MenuItem *selectedMenuItem))
 {
   selectedMenuItem=NULL;
-  Buttoncount=mousestarted ? 1 : 0;
   quittable = q;
-  keepIt = (!TheScreen.desktop.flags & UDETransientMenus) || (!mousestarted);
+  keepIt = ((TheScreen.desktop.flags & UDETransientMenus) 
+            ? 0 : KeepNonTransMenu) | KeepMenuActive;
   SpecialProc = prc;
 
   if(x>(TheScreen.width-menu->width))
@@ -396,7 +398,7 @@ MenuItem *StartMenu(Menu *menu, int x, int y, Bool q, Bool mousestarted,
 
   MapMenu(menu, x, y);
 
-  while(Buttoncount || keepIt){
+  while(keepIt){
     XEvent event;
     XNextEvent(disp,&event);
     if(Handle[event.type]) (*Handle[event.type])(&event);
@@ -411,7 +413,7 @@ MenuItem *StartMenu(Menu *menu, int x, int y, Bool q, Bool mousestarted,
   return(selectedMenuItem);
 }
 
-void SelectItem(MenuItem *item)
+void SelectItem(MenuItem *item, unsigned int state)
 {
   if(selectedMenuItem){
     DrawItem(selectedMenuItem, 1);
@@ -435,7 +437,7 @@ void SelectItem(MenuItem *item)
       XMoveWindow(disp, selectedMenuItem->menu->win, selectedMenuItem->menu->x,
 		  selectedMenuItem->menu->y);
     }
-    if(Buttoncount) keepIt=False;
+    if(ButtonCount(state)>0) MenuDontKeepItAnymore();
     DrawBevel(item->win,0,0,item->menu->width-2*MENUBORDERW-1,\
                          item->menu->ItemHeight-1,MENUBORDERW,\
                      item->menu->ShadowGC,item->menu->LightGC);
@@ -481,11 +483,11 @@ void MenuEnterNotify(XEvent *event)
           EnterWindowMask|LeaveWindowMask,TheScreen.Mice[C_WINDOW],TimeStamp);
   if(!XFindContext(disp,event->xcrossing.window,TheScreen.MenuContext,\
                                                      (XPointer *)&mc)){
-    SelectItem(mc);
+    SelectItem(mc, event->xcrossing.state);
     XChangeActivePointerGrab(disp,ButtonPressMask|ButtonReleaseMask|\
           EnterWindowMask|LeaveWindowMask,TheScreen.Mice[C_WINDOW],TimeStamp);
   }
-  else if(quittable) SelectItem(NULL);
+  else if(quittable) SelectItem(NULL, event->xcrossing.state);
 }
 
 void MenuLeaveNotify(XEvent *event)
@@ -494,7 +496,7 @@ void MenuLeaveNotify(XEvent *event)
   if(VisibleMenuWin(event->xcrossing.window)) {
     XChangeActivePointerGrab(disp,ButtonPressMask|ButtonReleaseMask|\
          EnterWindowMask|LeaveWindowMask,TheScreen.Mice[C_DEFAULT],TimeStamp);
-    if(quittable) SelectItem(NULL);
+    if(quittable) SelectItem(NULL, event->xcrossing.state);
   }
 }
 
@@ -537,22 +539,19 @@ void MenuVisibility(XEvent *event)
 
 void MenuDontKeepItAnymore()
 {
-  keepIt=False;
-  Buttoncount=1;
+  keepIt &= ~KeepNonTransMenu;
 }
 
 void MenuButtonPress(XEvent *event)
 {
   StampTime(event->xbutton.time);
-  keepIt=False;
-  Buttoncount++;
+  MenuDontKeepItAnymore();
 }
 
 void MenuButtonRelease(XEvent *event)
 {
   StampTime(event->xbutton.time);
-  Buttoncount--;
-  if( Buttoncount && (SpecialProc!=NULL)) {
-    SpecialProc(event,selectedMenuItem);
-  }
+  if(ButtonCount(event->xbutton.state)>1) {
+    if(SpecialProc != NULL) SpecialProc(event, selectedMenuItem);
+  } else if(!(keepIt & KeepNonTransMenu)) keepIt &= ~KeepMenuActive;
 }

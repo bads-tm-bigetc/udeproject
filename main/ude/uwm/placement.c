@@ -61,7 +61,6 @@ extern Display *disp;
 extern UDEScreen TheScreen;
 extern InitStruct InitS;
 extern UltimateContext *ActiveWin;
-extern short Buttoncount;
 
 NodeList* ScanScreen(Window win)
 {
@@ -324,7 +323,6 @@ void ManualPlace(NodeList *wins,int w,int h,int *x,int *y)
   StartRubber(*x,*y,w,h,TheScreen.BorderWidth1);
   placing=-1;
   while(placing){
-    unsigned int state;
     int i;
     XEvent event;
     KeySym keysym;
@@ -356,16 +354,6 @@ void ManualPlace(NodeList *wins,int w,int h,int *x,int *y)
                               break;
       case ButtonRelease:     placing=0;
                               StampTime(event.xbutton.time);
-                              state = event.xbutton.state & ( Button1Mask
-                                      | Button2Mask | Button3Mask | Button4Mask
-                                      | Button5Mask);
-                              i = -1;
-                              while(state) {
-                                if(state & 1) i++;
-                                state = state >> 1;
-                              }
-                              if(Buttoncount) Buttoncount = i;
-
                               break;
       default:                break;
     }

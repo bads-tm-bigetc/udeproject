@@ -47,7 +47,7 @@ extern Display *disp;
 extern const int iconpostab[ICONWINS][2];
 extern InitStruct InitS;
 
-short Buttoncount,selectedHex;
+short selectedHex;
 int x1,y1,move_back;
 UltimateContext *TheWin;
 
@@ -55,7 +55,6 @@ void StartWinMenu(UltimateContext *uc,int x,int y)
 {
   TheWin=uc;
   selectedHex=ICONWINS;
-  Buttoncount=1;
 
   x1=x;y1=y;
   if(x<40) x=40;
@@ -180,7 +179,6 @@ void WinMenuEnterNotify(XEvent *event)
 void WinMenuButtonPress(XEvent *event)
 {
   StampTime(event->xbutton.time);
-  Buttoncount++;
 }
 
 void WinMenuVisibility(XEvent *event)
@@ -213,8 +211,7 @@ void ButtonAction(int a)
 void WinMenuButtonRelease(XEvent *event)
 {
   StampTime(event->xbutton.time);
-  Buttoncount--;
-  if(Buttoncount) {
+  if(ButtonCount(event->xbutton.state)>1) {
     switch(event->xbutton.button){
       case Button1: ButtonAction(0); break;
       case Button2: ButtonAction(1); break;

@@ -1,3 +1,19 @@
+2001-05-26  Christian Ruppert <arc@gmx.li>
+
+	* uwm/menu.c: changed SelectItem syntax (added state argument)
+
+2001-05-25  Christian Ruppert <arc@gmx.li>
+
+	* uwm/uwm.h: added ButtonCount
+	* uwm/winmenu.c: removed Buttoncount variable and replaced it by
+	  ButtonCount macro
+	* uwm/resize.c: replaced Buttoncount variable by ButtonCount macro
+	* uwm/menu.c: replaced Buttoncount variable by ButtonCount macro
+	* uwm/menu.h: changed prototypes
+	* uwm/placement.c: removed Buttoncount variable handling
+	* uwm/applications.c, uwm/menu.c, umw/uwmmenu.c, uwm/windows.c,
+	  wum/winmenumenu.c: changed StartMenu syntax (removed mousestarted)
+
 2001-05-09  Christian Ruppert <arc@gmx.li>
 
 	* uwm/windows.c: a small bugfix that unmaps border wins of shaped

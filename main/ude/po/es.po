@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-12-08 20:13-0700\n"
+"POT-Creation-Date: 2001-05-26 14:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,11 +14,11 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: ENCODING\n"
 
-#: uwm/windows.c:570
+#: uwm/windows.c:559
 msgid "Windows Menu"
 msgstr "Menu de ventanas"
 
-#: uwm/windows.c:581 uwm/windows.c:582
+#: uwm/windows.c:570 uwm/windows.c:571
 msgid "Sticky Windows"
 msgstr "Ventanas pegajosas"
 
@@ -30,14 +30,14 @@ msgstr "Ventana pegajosa"
 msgid "Move to WorkSpace"
 msgstr "Mover al espacio de trabajo"
 
-#: uwm/init.c:438
+#: uwm/init.c:441
 msgid "Application Menu"
 msgstr "Menu de aplicaciones"
 
-#: uwm/init.c:791 uwm/init.c:818 uwm/init.c:838 uwm/init.c:869 uwm/init.c:889
-#: uwm/init.c:915 uwm/init.c:955 uwm/init.c:969 uwm/init.c:977 uwm/init.c:990
-#: uwm/init.c:998 uwm/init.c:1071 uwm/init.c:1082 uwm/init.c:1136
-#: uwm/init.c:1147 uwm/init.c:1158 uwm/init.c:1169 uwm/init.c:1180
+#: uwm/init.c:792 uwm/init.c:819 uwm/init.c:839 uwm/init.c:870 uwm/init.c:890
+#: uwm/init.c:916 uwm/init.c:956 uwm/init.c:970 uwm/init.c:978 uwm/init.c:991
+#: uwm/init.c:999 uwm/init.c:1072 uwm/init.c:1083 uwm/init.c:1137
+#: uwm/init.c:1148 uwm/init.c:1159 uwm/init.c:1170 uwm/init.c:1181
 msgid "UWM: error in config-file. Ignored.\n"
 msgstr "UWM: error en el archivo de configuracion. Ignorado.\n"
 

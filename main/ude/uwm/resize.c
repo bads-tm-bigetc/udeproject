@@ -49,7 +49,6 @@ extern InitStruct InitS;
 
 int ox1,ox2,oy1,oy2,x1,x2,y1,y2,minw,maxw,minh,maxh,wi,hi;
 int bw,bh;
-extern short Buttoncount;
 
 short risen;  /*  0: normal resize; 1: fullscreen; 2:old size */
 short risenstart; /* started in risen mode? */
@@ -209,7 +208,6 @@ void UnriseIt(int x,int y)
 
 void StartResizing(UltimateContext *uc,int x,int y)
 {
-  Buttoncount=1;
   risen=0;
 
   minh=uc->ra.minh;    /*** lazy dayze ***/
@@ -258,7 +256,6 @@ void ResizeButtonPress(XEvent *event)
 {
   DBG(fprintf(TheScreen.errout,"ResizeButtonPress\n");)
   StampTime(event->xbutton.time);
-  Buttoncount++;
   switch(event->xbutton.button){
     case Button1: ResizeButtons(0,event);break;
     case Button2: ResizeButtons(1,event);break;
@@ -279,8 +276,7 @@ void ResizeButtonRelease(XEvent *event)
   int x,y,width,height;
   DBG(fprintf(TheScreen.errout,"ResizeButtonRelease\n");)
   StampTime(event->xbutton.time);
-  Buttoncount--;
-  if(Buttoncount) return;
+  if(ButtonCount(event->xbutton.state)>1) return;
   if(risen==1) ActiveWin->flags |= RISEN;
   else ActiveWin->flags &=~ RISEN;
   StopRubber(&x,&y,&width,&height);

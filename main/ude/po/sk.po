@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-11-24 13:33-0700\n"
+"POT-Creation-Date: 2001-05-26 14:58+0200\n"
 "PO-Revision-Date: 2001-01-26 11:090100\n"
 "Last-Translator: Zdenko Podoný <zdpo@mailbox.sk>\n"
 "Language-Team: slovak <sk-i18n@rak.isternet.sk>\n"
@@ -14,11 +14,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.6\n"
 
-#: uwm/windows.c:563
+#: uwm/windows.c:559
 msgid "Windows Menu"
 msgstr "Pracovné plochy"
 
-#: uwm/windows.c:574 uwm/windows.c:575
+#: uwm/windows.c:570 uwm/windows.c:571
 msgid "Sticky Windows"
 msgstr "Prilepené okná"
 
@@ -30,14 +30,14 @@ msgstr "Prilepené okno"
 msgid "Move to WorkSpace"
 msgstr "Presuò na pracovnú plochu"
 
-#: uwm/init.c:438
+#: uwm/init.c:441
 msgid "Application Menu"
 msgstr "Aplikaèné menu"
 
-#: uwm/init.c:791 uwm/init.c:818 uwm/init.c:838 uwm/init.c:869 uwm/init.c:889
-#: uwm/init.c:915 uwm/init.c:955 uwm/init.c:969 uwm/init.c:977 uwm/init.c:990
-#: uwm/init.c:998 uwm/init.c:1071 uwm/init.c:1082 uwm/init.c:1136
-#: uwm/init.c:1147 uwm/init.c:1158 uwm/init.c:1169 uwm/init.c:1180
+#: uwm/init.c:792 uwm/init.c:819 uwm/init.c:839 uwm/init.c:870 uwm/init.c:890
+#: uwm/init.c:916 uwm/init.c:956 uwm/init.c:970 uwm/init.c:978 uwm/init.c:991
+#: uwm/init.c:999 uwm/init.c:1072 uwm/init.c:1083 uwm/init.c:1137
+#: uwm/init.c:1148 uwm/init.c:1159 uwm/init.c:1170 uwm/init.c:1181
 msgid "UWM: error in config-file. Ignored.\n"
 msgstr "UWM: chyba v konfiguraènom súbore. Ignorované.\n"
 
@@ -78,4 +78,3 @@ msgstr "Nespusti StartScript"
 #: uwm/uwmmenu.c:156 uwm/uwmmenu.c:163
 msgid "Launch another WM"
 msgstr "Spusti iný WM"
-

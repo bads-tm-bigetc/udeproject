@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ude 0.2.6-beta\n"
-"POT-Creation-Date: 2000-12-08 20:13-0700\n"
+"POT-Creation-Date: 2001-05-26 14:58+0200\n"
 "PO-Revision-Date: 1999-11-23 18:03+0200\n"
 "Last-Translator: Fatih Demir <kabalak@gmx.net>\n"
 "Language-Team: Fatih Demir <kabalak@gmx.net>\n"
@@ -14,11 +14,11 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-9\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: uwm/windows.c:570
+#: uwm/windows.c:559
 msgid "Windows Menu"
 msgstr "Pencereler"
 
-#: uwm/windows.c:581 uwm/windows.c:582
+#: uwm/windows.c:570 uwm/windows.c:571
 msgid "Sticky Windows"
 msgstr ""
 
@@ -30,14 +30,14 @@ msgstr ""
 msgid "Move to WorkSpace"
 msgstr "Masaüstüne taþý"
 
-#: uwm/init.c:438
+#: uwm/init.c:441
 msgid "Application Menu"
 msgstr "Uygulamalar"
 
-#: uwm/init.c:791 uwm/init.c:818 uwm/init.c:838 uwm/init.c:869 uwm/init.c:889
-#: uwm/init.c:915 uwm/init.c:955 uwm/init.c:969 uwm/init.c:977 uwm/init.c:990
-#: uwm/init.c:998 uwm/init.c:1071 uwm/init.c:1082 uwm/init.c:1136
-#: uwm/init.c:1147 uwm/init.c:1158 uwm/init.c:1169 uwm/init.c:1180
+#: uwm/init.c:792 uwm/init.c:819 uwm/init.c:839 uwm/init.c:870 uwm/init.c:890
+#: uwm/init.c:916 uwm/init.c:956 uwm/init.c:970 uwm/init.c:978 uwm/init.c:991
+#: uwm/init.c:999 uwm/init.c:1072 uwm/init.c:1083 uwm/init.c:1137
+#: uwm/init.c:1148 uwm/init.c:1159 uwm/init.c:1170 uwm/init.c:1181
 msgid "UWM: error in config-file. Ignored.\n"
 msgstr "UWM : Ayar dosyasýnda hata var -- atlatýlýyor .\n"
 

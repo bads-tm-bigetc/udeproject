@@ -590,7 +590,7 @@ void DeiconifyMenu(int x, int y)
     }
   }
 
-  if(item = StartMenu(men, x, y, True, True, NULL)){
+  if(item = StartMenu(men, x, y, True, NULL)){
     if(SWITCHTYPE(item->type)){
       UltimateContext *uc;
       uc=item->data;

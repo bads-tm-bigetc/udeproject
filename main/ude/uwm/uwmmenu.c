@@ -168,7 +168,7 @@ void WMMenu(int x,int y)
 {
   HandlerTable DoIt;
   MenuItem *item;
-  item=StartMenu(TheScreen.UWMMenu,x,y,True,True,ZapWS);
+  item=StartMenu(TheScreen.UWMMenu,x,y,True,ZapWS);
   if(item) {
     if((item->type==I_SELECT)&&(item->data)) {
       DoIt=item->data;

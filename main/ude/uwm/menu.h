@@ -37,7 +37,7 @@ typedef struct _Menu{
 Menu *MenuCreate(char *name);
 void AppendMenuItem(Menu *menu,char *name,void *data,short type);
 void RemoveMenuBottomLines(Menu *men);
-MenuItem *StartMenu(Menu *menu,int x,int y,Bool q,Bool mousestarted,void (*prc)(XEvent *event, MenuItem *selected));
+MenuItem *StartMenu(Menu *menu,int x,int y,Bool q,void (*prc)(XEvent *event, MenuItem *selected));
 void DestroyMenu(Menu *menu);
 
 void MenuEnterNotify(XEvent *event);
