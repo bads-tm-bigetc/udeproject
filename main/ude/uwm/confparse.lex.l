@@ -29,6 +29,7 @@
 %{
 #include <string.h>
 #include <stdlib.h>
+#include <fcntl.h>
 
 #include "special.h"
 #include "confparse.h"
@@ -182,18 +183,42 @@ void uwm_yydrop(unsigned int n)
   yytext[yyleng] = '\0'; 
 }
 
-void uwm_yypush_LineStack(char *file)
+void uwm_yypush_LineStack(char *file, int ispipe)
 {
   struct uwm_yyParseLineStackStruct *s;
 
   s = MyCalloc(1, sizeof(struct uwm_yyParseLineStackStruct));
 
   if(file) {
-    s->file = MyOpen(file, "");
-    if(! s->file) {
-      fprintf(TheScreen.errout, "UWM: file not found - %s - ignoring\n", file);
-      free(s);
-      return;
+    if(ispipe) {
+      int pid;
+      int files[2];
+      if(pipe(files)) {
+        free(s);
+        return;
+      }
+      if(!(pid = fork())) {
+	close(files[0]);
+	fclose(stdout);
+	if(STDOUT_FILENO != fcntl(files[1], F_DUPFD, STDOUT_FILENO)) exit(-1);
+	close(files[1]);
+	if(-1 == fcntl(STDOUT_FILENO, F_SETFD, 0)) exit(-1);
+	execl("/bin/sh", "/bin/sh", "-c" , file, NULL);
+	fprintf(TheScreen.errout, "UWM: couldn't start /bin/sh\n");
+	exit(-1);
+      }
+      close(files[1]);
+      if(!(s->file = fdopen(files[0], "r")) || (pid < 0)) {
+	close(files[0]);
+	free(s);
+	return;
+      }
+    } else {
+      s->file = MyOpen(file, "");
+      if(! s->file) {
+        free(s);
+        return;
+      }
     }
     s->filename = s->topfilename = file;
   } else {

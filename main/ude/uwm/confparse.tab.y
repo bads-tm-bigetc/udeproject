@@ -227,8 +227,7 @@ Menu : { uwm_yy_PushContext(UWM_YY_MENU_CONTEXT, NULL); }
        Menu_ { uwm_yy_PopContext(); } ;
 
 Menu_ : '{' MenuLines '}'
-      | WinmenuAtom ';'
-      | FileLine ;
+      | WinmenuAtom ';' ;
 
 MenuLines : MenuLine
           | MenuLines MenuLine
@@ -244,8 +243,8 @@ DrawLine : LineAtom ';' { printf("line\n"); } ;
 
 MenuItem : ItemAtom String ':' FunctionBlock ;
 
-FileLine : FileAtom String ';'
-         | PipeAtom String ';' { printf("FileAction: %s\n", $2); } ;
+FileLine : FileAtom String ';' { uwm_yypush_LineStack($2, 0); }
+         | PipeAtom String ';' { uwm_yypush_LineStack($2, 1); } ;
 
 /*** more or less standard yacc stuff for arithmetics ***/
 
@@ -386,7 +385,7 @@ struct uwm_yy_ContextStackStruct *uwm_yy_PeekContext()
 int uwm_yyparse_wrapper(char *initialfilename)
 {
   uwm_yyinitscanner();
-  uwm_yypush_LineStack(initialfilename);
+  uwm_yypush_LineStack(initialfilename, 0);
   uwm_yy_PushContext(UWM_YY_GLOBAL_CONTEXT, NULL);
   return yyparse();
 }
