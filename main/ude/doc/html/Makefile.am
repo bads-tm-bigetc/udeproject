@@ -1,6 +1,6 @@
 TEXSOURCES= \
 	../l2h.conf \
-	../manual.tex 
+	./manual.tex 
 HTMLOUTPUT= \
 	*.html \
 	*.gif \
@@ -11,11 +11,14 @@ udehtmldocdir= ${prefix}/doc/${PACKAGE}-${VERSION}/html
 udehtmldoc_DATA= ${DIR_CONTENTS}
 EXTRA_DIST= ${DIR_CONTENTS}
 
-manual.css: ${TEXSOURCES}
+manual.tex: ../manual.tex
+	rm -f ./manual.tex
 	ln -s ../manual.tex .
+
+manual.css: ${TEXSOURCES}
 	rm -f manual.css
 	latex2html -no_subdir -init_file ../l2h.conf manual.tex
-	rm manual.tex
+	rm ./manual.tex
 
 clean:
 	rm -rf *.html *.gif *.pl *.css

@@ -1,3 +1,6 @@
+2002-11-24  Christian Ruppert <arc@gmx.li>
+	* doc/html/Makefile.am: added rule to create link manual.tex
+
 2002-11-10  Christian Ruppert <arc@gmx.li>
 	* uwm/handlers.c: now DeUltimizing windows that are reparented by
 	  cliets since we usually don't need to further care about them.
