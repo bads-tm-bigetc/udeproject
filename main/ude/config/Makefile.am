@@ -21,6 +21,9 @@ udeconfig_DATA= \
 	uwmrc-ws.hook \
 	ude_config_consts.h
 
+dist-hook:
+	ln -s ../uwm/ude_config_consts.h $(distdir)
+
 udeconfig_SCRIPTS= \
 	StartScript \
 	StopScript
