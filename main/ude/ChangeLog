@@ -1,4 +1,10 @@
 2002-11-24  Christian Ruppert <arc@gmx.li>
+	* configure.in: added language swedish (sv)
+	* po/sv.po: added file sent in from David Weinehall <tao@kernel.org>,
+	  thanks, David!
+	* po/de.po, po/es.po: fixed german and spanish charset settings.
+
+2002-11-24  Christian Ruppert <arc@gmx.li>
 	* doc/html/Makefile.am: added rule to create link manual.tex
 
 2002-11-10  Christian Ruppert <arc@gmx.li>
