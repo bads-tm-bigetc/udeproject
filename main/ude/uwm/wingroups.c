@@ -113,7 +113,9 @@ void DeleteWinGroup(WinGroup *group)
 
 void UpdateWinGroup(UltimateContext *uc)
 {
-  if(uc->WMHints && (uc->WMHints->flags & WindowGroupHint)) {
+  if(uc->WMHints && (uc->WMHints->flags & WindowGroupHint)
+     && (uc->WMHints->window_group != None)
+     && (uc->WMHints->window_group != TheScreen.root)) {
     if(uc->group && (uc->group->leader == uc->WMHints->window_group))
       return;
     RemoveWinFromGroup(uc);
