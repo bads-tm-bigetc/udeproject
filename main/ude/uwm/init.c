@@ -1540,10 +1540,6 @@ UWM ");
 
   CheckCPP();  /* check for the c preprocessor */
 
-  /* ugly thing, but can't really use sigaction due to differences between *
-   * sigaction structure on posix-std.-signal systems and bsd-like ones... */
-  signal(SIGCHLD,ShellQuit); /* kick out zombies */
-
           /*** from now on MyOpen can be called */
 
   UWMContext = XUniqueContext();   /* Create Context to store UWM-data */

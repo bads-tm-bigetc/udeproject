@@ -303,6 +303,10 @@ int main(int argc,char **argv)
 
   printf("\nAttempting to start UWM - the Ultimate Window Manager...\n");
 
+  /* ugly thing, but can't really use sigaction due to differences between *
+   * sigaction structure on posix-std.-signal systems and bsd-like ones... */
+  signal(SIGCHLD,ShellQuit); /* kick out zombies */
+
   signal(SIGTERM,TermSig);
 
   InitUWM();

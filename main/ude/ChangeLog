@@ -1,4 +1,8 @@
 2002-04-21  Christian Ruppert <arc@gmx.li>
+	* uwm/uwm.c, uwm/init.c: moved sigchld installation from init.c to
+	  uwm.c where it belongs and works properly.
+
+2002-04-21  Christian Ruppert <arc@gmx.li>
 	* config/urdb, config/uwmrc*: applied Stephan Helma's (Debian) patches.
 
 2002-03-05  Christian Ruppert <arc@gmx.li>
