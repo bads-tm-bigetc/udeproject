@@ -39,6 +39,7 @@
 #include "special.h"
 #include "placement.h"
 #include "nodes.h"
+#include "settings.h"
 
 extern UDEScreen TheScreen;
 extern Display *disp;
@@ -48,7 +49,7 @@ extern InitStruct InitS;
 void HandleUnmapNotify(XEvent *event);
 
 unsigned int xofs,yofs,xstart,ystart;
-Bool Risen,Rise,Riseit,RubberMove;
+Bool Risen, Rise, Riseit, RubberMove;
 NodeList *movewins;
 
 /* StartDragging installs handlers to be used during the dragging procedure *
@@ -64,16 +65,18 @@ void StartDragging(UltimateContext *uc,unsigned int x,unsigned int y)
   GrabPointer(uc->frame, PointerMotionMask | PointerMotionHintMask
               | ButtonPressMask | ButtonReleaseMask, TheScreen.Mice[C_DRAG]);
   InstallMoveHandle();
-  if(InitS.SnapDistance) movewins = ScanScreen(uc->frame);
+  if(settings.global_settings->SnapDistance) movewins = ScanScreen(uc->frame);
     
-  RubberMove=InitS.RubberMove;
-  if(((uc->Attr.width*uc->Attr.height)>InitS.OpaqueMoveSize)&&\
-                         InitS.OpaqueMoveSize) RubberMove=True;
-  Risen=False;
-  Rise=False;
+  RubberMove = (settings.global_settings->BehaviourFlags & RubberMove)
+	       ? True : False;
+  if(settings.global_settings->OpaqueMoveSize
+     && ((uc->Attr.width * uc->Attr.height)
+	 > settings.global_settings->OpaqueMoveSize)) RubberMove = True;
+  Risen = False;
+  Rise = False;
   if(RubberMove) {
-    StartRubber(uc->Attr.x,uc->Attr.y,uc->Attr.width,uc->Attr.height,\
-                                                     uc->BorderWidth);
+    StartRubber(uc->Attr.x, uc->Attr.y, uc->Attr.width, uc->Attr.height,
+                uc->BorderWidth);
   }
 }
 
@@ -92,7 +95,7 @@ void MoveMotion(XEvent *event)
   x = event->xmotion.x_root - xofs;
   y = event->xmotion.y_root - yofs;
 
-  if(InitS.SnapDistance)
+  if(settings.global_settings->SnapDistance)
     SnapWin(movewins, &x, &y, ActiveWin->Attr.width, ActiveWin->Attr.height);
   
   if(RubberMove){
@@ -142,7 +145,7 @@ void MoveButtons(int a,XEvent *event)
       if((abs(ActiveWin->Attr.x-xstart)<3)&&(abs(ActiveWin->Attr.y-ystart)<3)\
                                                                    &&(!Risen))
         LowerWin(ActiveWin);
-      if(InitS.SnapDistance) FreeScanned(movewins);
+      if(settings.global_settings->SnapDistance) FreeScanned(movewins);
       ReinstallDefaultHandle();
       UngrabPointer();
       break;

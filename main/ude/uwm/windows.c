@@ -90,8 +90,8 @@ void DrawWinBorder(UltimateContext *uc)
   XClearWindow(disp, uc->border);
   if(uc->title.win != None) {
     XSetWindowBackground(disp, uc->title.win, winbg);
-    if(uc->title.name && (InitS.BorderTitleFlags
-       & (active ? BT_ACTIVE_TITLE : BT_INACTIVE_TITLE))){
+    if(uc->title.name && (settings.global_settings->FrameFlags
+       & (active ? ACTIVE_TITLE : INACTIVE_TITLE))){
       XRaiseWindow(disp,uc->title.win);
       DrawTitle(uc);
     } else {
@@ -166,7 +166,7 @@ void MoveResizeWin(UltimateContext *uc,int x,int y,int width,int height)
                   - settings.global_settings->TitleHeight);
     if((uc->title.win != None ) 
        && ((uc->flags & SHAPED)
-           || (InitS.BorderTitleFlags & BT_CENTER_TITLE))) {
+           || (settings.global_settings->FrameFlags & CENTER_TITLE))) {
       XMoveWindow(disp, uc->title.win,
                   uc->title.x = ((width - uc->title.width)/2), uc->title.y);
     }
@@ -243,8 +243,9 @@ void EnborderWin(UltimateContext *uc)
     }
   }
 
-  if((InitS.PlacementStrategy & 1) && ((uc->Attributes.x!=0) ||\
-                 (uc->Attributes.y!=0))) uc->flags &= ~PLACEIT;
+  if((settings.global_settings->PlacementStrategy & 1)
+     && ((uc->Attributes.x!=0)
+     || (uc->Attributes.y!=0))) uc->flags &= ~PLACEIT;
 
   if(((uc->Attributes.x + uc->Attributes.width) > TheScreen.width)
      || ((uc->Attributes.y + uc->Attributes.height) > TheScreen.height)
@@ -293,7 +294,8 @@ DBG(fprintf(TheScreen.errout,"reparenting: %d\n",uc->win);)
   XMapWindow(disp,uc->border);
 
   /*** create title-window if needed ***/
-  if((InitS.BorderTitleFlags & (BT_INACTIVE_TITLE|BT_ACTIVE_TITLE)) && HasTitle)
+  if((settings.global_settings->FrameFlags & (INACTIVE_TITLE | ACTIVE_TITLE))
+     && HasTitle)
   {
     SAttr.override_redirect=True;
     SAttr.background_pixel = ActiveWSSettings->InactiveColor->pixel;
@@ -364,16 +366,18 @@ void MapWin(UltimateContext *uc,Bool NoPlacement){
       XMapRaised(disp, uc->frame);
       DrawWinBorder(uc);
     }
-    if(!((InitS.WarpPointerToNewWinH == -1) ||
-	 (InitS.WarpPointerToNewWinV == -1))
+    if(!((settings.global_settings->WarpPointerToNewWinH == -1) ||
+	 (settings.global_settings->WarpPointerToNewWinV == -1))
        && (!NoPlacement)) {
-      if((InitS.WarpPointerToNewWinH == -2) ||
-	 (InitS.WarpPointerToNewWinV == -2))
+      if((settings.global_settings->WarpPointerToNewWinH == -2) ||
+	 (settings.global_settings->WarpPointerToNewWinV == -2))
 	XWarpPointer(disp, None, uc->frame, 0, 0, 0, 0, 0, 0);
       else
 	XWarpPointer(disp, None, uc->win, 0, 0, 0, 0,
-		     uc->Attributes.width*InitS.WarpPointerToNewWinH/100,
-		     uc->Attributes.height*InitS.WarpPointerToNewWinV/100);
+		     uc->Attributes.width
+		     * settings.global_settings->WarpPointerToNewWinH / 100,
+		     uc->Attributes.height
+		     * settings.global_settings->WarpPointerToNewWinV / 100);
     }
   } else {
     SetSeemsMapState(uc, IconicState);

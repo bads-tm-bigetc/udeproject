@@ -37,7 +37,7 @@ typedef struct _uwm_global_settings {
   char *HexPath;
 
 /*** behaviour */
-  int PlacementStratety;
+  int PlacementStrategy;
   int PlacementThreshold;
   int OpaqueMoveSize;
 

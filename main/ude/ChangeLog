@@ -1,3 +1,25 @@
+2004-02-07  Christian Ruppert <arc@users.sf.net>
+	* uwm/workspaces.c(SetWSBackground), uwm/uwm.h: replaced
+	  TheScreen.BackCommand by settings.WorkspaceSettings[]->ScreenCommand.
+	* uwm/workspaces.c(SetWSBackground), uwm/uwm.h: removed
+	  TheScreen.SetBackground.
+	* uwm/init.h, uwm/menu.c: removed MenuBorderWidth, MenuXOffset and
+	  MenuYOffset from InitStruct
+	* uwm/init.h, uwm/move.c: removed RubberMove and OpaqueMoveSize from
+	  InitStruct
+	* uwm/ude_config_consts.h: added RUBBER_MOVE to BehaviourFlags
+	* uwm/init.h, uwm/placement.c: removed PlacementStrategy and
+	  PlacementThreshold from InitStruct
+	* uwm/init.h, uwm/handlers.c: removed BehaviourFlags from InitStruct
+	* uwm/settings.h, confparse.tab.y: corrected a typo in
+	  global_settings.PlacementStrategy
+	* uwm/init.h, uwm/widgets.c, uwm/windows.c, uwm/handlers.c,
+	  uwm/properties.c: removed InitStruct.BorderTitleFlags.
+	* uwm/init.h, uwm/move.c, uwm/placement.c: removed
+	  InitStruct.SnapDistance
+	* uwm/init.h, uwm/windows.c: removed InitStruct.WarpPointerToNewWin[HV]
+	* uwm/init.c: changed trial exit to do XSync first.
+
 2003-12-30  Christian Ruppert <arc@users.sf.net>
 	* autogen.sh: added creation of symlink from config/ude_config_consts.h
 	  to uwm/ude_config_consts.h

@@ -12,6 +12,7 @@
 /*** BehaviourFlags ***/
 #define TRANSIENT_MENUS	 (1)
 #define ALL_CLICKS	 (2)
+#define RUBBER_MOVE	 (4)
 
 /*** LayoutFlags ***/
 #define SUBMENU_TITLES	 (1)

@@ -354,7 +354,6 @@ void InitUWM()
   /*** read configuration files ***/
 
   ReadConfigFile();
-  exit(0);
 
   PrepareIcons();
 
@@ -430,6 +429,10 @@ void InitUWM()
 
   BroadcastWorkSpacesInfo();
   UpdateDesktop();
+
+/***/XSync(disp,False);
+/***/sleep(1);
+/***/exit(0);
 
   /* Set the background for the current desktop. */
   SetWSBackground();

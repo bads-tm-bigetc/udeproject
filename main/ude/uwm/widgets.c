@@ -102,9 +102,9 @@ void DrawFrameBevel(UltimateContext *uc)
 
     if(((i = (uc->BorderWidth
               - settings.global_settings->FrameBevelWidth - 1)) > 3) &&
-       (InitS.BorderTitleFlags & BT_GROOVE)){
+       (settings.global_settings->FrameFlags & GROOVE)){
       i = i / 2 + settings.global_settings->FrameBevelWidth;
-      if(InitS.BorderTitleFlags & BT_CENTER_TITLE) {
+      if(settings.global_settings->FrameFlags & CENTER_TITLE) {
         DrawBevel(uc->border,i-1,2*uc->BorderWidth,i,uc->Attr.height-\
                                 2*uc->BorderWidth,1,ShadowGC,LightGC);
         DrawBevel(uc->border,2*uc->BorderWidth,i-1,uc->Attr.width-\
@@ -122,7 +122,7 @@ void DrawFrameBevel(UltimateContext *uc)
                                                          LightGC,ShadowGC);
       }
     }
-    if(InitS.BorderTitleFlags&BT_LINE)
+    if(settings.global_settings->FrameFlags & BLACK_LINE)
       DrawBevel(uc->border, uc->BorderWidth-1,
                 uc->BorderWidth + settings.global_settings->TitleHeight - 1,
                 uc->Attr.width - uc->BorderWidth,
@@ -179,14 +179,15 @@ void DrawTitle(UltimateContext *uc)
     if((i = (uc->BorderWidth
              - settings.global_settings->FrameBevelWidth - 1)) <= 3) i=2;
     i = i / 2 + settings.global_settings->FrameBevelWidth;
-    if(InitS.BorderTitleFlags & BT_GROOVE){
+    if(settings.global_settings->FrameFlags & GROOVE){
       XDrawLine(disp, uc->title.win, LightGC,
-                (InitS.BorderTitleFlags & BT_CENTER_TITLE) ? 2 : 0,
+                (settings.global_settings->FrameFlags & CENTER_TITLE)
+		? 2 : 0,
 	        uc->title.height-2, uc->title.width-2, uc->title.height-2);
       XDrawLine(disp, uc->title.win, LightGC, uc->title.width-2, 0,
                 uc->title.width-2, uc->title.height-2);
       XDrawPoint(disp, uc->title.win, LightGC, uc->title.width-1, 0);
-      if(InitS.BorderTitleFlags &  BT_CENTER_TITLE) {
+      if(settings.global_settings->FrameFlags &  CENTER_TITLE) {
         XDrawLine(disp, uc->title.win, ShadowGC,1,0,1, uc->title.height-2);
         XDrawPoint(disp, uc->title.win, LightGC, 0, 0);
       } else {
@@ -195,9 +196,9 @@ void DrawTitle(UltimateContext *uc)
     }
     if(((settings.global_settings->TitleHeight
          + uc->BorderWidth - i) <= uc->title.height) &&
-       (InitS.BorderTitleFlags & BT_LINE)) {
+       (settings.global_settings->FrameFlags & BLACK_LINE)) {
       XDrawLine(disp, uc->title.win, TheScreen.blackcontext,
-                (InitS.BorderTitleFlags & BT_CENTER_TITLE) 
+                (settings.global_settings->FrameFlags & CENTER_TITLE) 
 	        ? 0 : (uc->BorderWidth - i - 1),
                 uc->title.height - 1, uc->title.width - 1,
 		uc->title.height - 1);
@@ -205,7 +206,7 @@ void DrawTitle(UltimateContext *uc)
                 uc->title.width - 1,
                 uc->BorderWidth - i - 1 + settings.global_settings->TitleHeight,
                 uc->title.width - 1, uc->title.height-1);
-      if(InitS.BorderTitleFlags &  BT_CENTER_TITLE)
+      if(settings.global_settings->FrameFlags &  CENTER_TITLE)
         XDrawLine(disp,uc->title.win, TheScreen.blackcontext, 0,
                   uc->BorderWidth - i - 1 
                   + settings.global_settings->TitleHeight, 0,
@@ -214,7 +215,8 @@ void DrawTitle(UltimateContext *uc)
   }
   if(uc->title.name) XDrawString(disp, uc->title.win, TextGC,
 		           ((uc->flags & SHAPED)
-			    || (InitS.BorderTitleFlags & BT_CENTER_TITLE))
+			    || (settings.global_settings->FrameFlags
+				& CENTER_TITLE))
 			   ? 5 : 2,
 			   ((uc->flags & SHAPED) ? 3 : 0)
 			   + settings.global_settings->TitleFont.xfs->ascent,

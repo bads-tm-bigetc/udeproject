@@ -107,7 +107,6 @@ typedef struct {
   unsigned int ActiveWorkspace;
 
   FILE *errout;
-/*******************************************************************/
 
   struct {
     Window IconWins[ICONWINS];
@@ -119,8 +118,6 @@ typedef struct {
 
   Menu *AppsMenu;
   Menu *UWMMenu;
-  unsigned char *SetBackground;
-  char **BackCommand;
 } UDEScreen;
 
 extern UDEScreen TheScreen;

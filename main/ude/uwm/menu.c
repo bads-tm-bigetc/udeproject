@@ -43,9 +43,9 @@
 #include "settings.h"
 #include "workspaces.h"
 
-#define MENUBORDERW InitS.MenuBorderWidth
-#define MENUXOFS InitS.MenuXOffset
-#define MENUYOFS InitS.MenuYOffset
+#define MENUBORDERW settings.global_settings->BevelWidth
+#define MENUXOFS settings.global_settings->MenuXOffset
+#define MENUYOFS settings.global_settings->MenuYOffset
 #define MENUSCROLLHEIGHT 5
 
 extern UDEScreen TheScreen;

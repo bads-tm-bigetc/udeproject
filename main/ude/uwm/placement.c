@@ -43,8 +43,6 @@
 #include "special.h"
 #include "settings.h"
 
-#define FIRSTINC InitS.PlacementStrategy
-
 #ifndef MIN
 #define MIN(A,B) ((A)<(B)? (A):(B))
 #endif
@@ -260,43 +258,47 @@ void SnapWin(NodeList *wins, int *x, int *y, int width, int height)
   origx = *x;
   origy = *y;
 
-  if(BETWEEN(-((int)InitS.SnapDistance), origx,
-             InitS.SnapDistance))
+  if(BETWEEN(-((int)settings.global_settings->SnapDistance), origx,
+             settings.global_settings->SnapDistance))
     *x = 0;
-  if(BETWEEN(-((int)InitS.SnapDistance), ((int)TheScreen.width) - origx - width,
-             InitS.SnapDistance))
+  if(BETWEEN(-((int)settings.global_settings->SnapDistance),
+	     ((int)TheScreen.width) - origx - width,
+             settings.global_settings->SnapDistance))
     *x = TheScreen.width - width;
 
-  if(BETWEEN(-((int)InitS.SnapDistance), origy,
-             InitS.SnapDistance))
+  if(BETWEEN(-((int)settings.global_settings->SnapDistance), origy,
+             settings.global_settings->SnapDistance))
     *y = 0;
-  if(BETWEEN(-((int)InitS.SnapDistance), ((int)TheScreen.height)-origy - height,
-             InitS.SnapDistance))
+  if(BETWEEN(-((int)settings.global_settings->SnapDistance),
+	     ((int)TheScreen.height)-origy - height,
+             settings.global_settings->SnapDistance))
     *y = TheScreen.height - height;
 
   while(n=NodeNext(wins,n)){
     test = n->data;
-    if(((test->y1 - InitS.SnapDistance) < (*y + height)) 
-       && ((test->y2 + InitS.SnapDistance) > *y)){
-      if(BETWEEN(-((int)InitS.SnapDistance), test->x2 - origx,
-                 InitS.SnapDistance)
+    if(((test->y1 - settings.global_settings->SnapDistance) < (*y + height)) 
+       && ((test->y2 + settings.global_settings->SnapDistance) > *y)){
+      if(BETWEEN(-((int)settings.global_settings->SnapDistance),
+	         test->x2 - origx, settings.global_settings->SnapDistance)
          && ((abs(test->x2 - origx) <= abs(*x - origx)) || (*x == origx)))
         *x = test->x2;
-      if(BETWEEN(-((int)InitS.SnapDistance), test->x1 - origx - width,
-                 InitS.SnapDistance)
+      if(BETWEEN(-((int)settings.global_settings->SnapDistance),
+                 test->x1 - origx - width,
+                 settings.global_settings->SnapDistance)
          && ((abs(test->x1 - width - origx) <= abs(*x - origx))
              || (*x == origx)))
         *x = test->x1 - width;
     }
 
-    if((((test->x1) - InitS.SnapDistance) < (*x + width))
-       && ((test->x2 + InitS.SnapDistance) > *x)){
-      if(BETWEEN(-((int)InitS.SnapDistance), test->y2 - origy,
-                 InitS.SnapDistance)
+    if((((test->x1) - settings.global_settings->SnapDistance) < (*x + width))
+       && ((test->x2 + settings.global_settings->SnapDistance) > *x)){
+      if(BETWEEN(-((int)settings.global_settings->SnapDistance),
+                 test->y2 - origy, settings.global_settings->SnapDistance)
          && ((abs(test->y2 - origy) <= abs(*y - origy)) || (*y == origy)))
         *y = test->y2;
-      if(BETWEEN(-((int)InitS.SnapDistance), test->y1 - origy - height,
-                 InitS.SnapDistance)
+      if(BETWEEN(-((int)settings.global_settings->SnapDistance),
+                 test->y1 - origy - height,
+                 settings.global_settings->SnapDistance)
          && ((abs(test->y1 - height - origy) <= abs(*y - origy))
              || (*y == origy)))
         *y = test->y1 - height;
@@ -333,7 +335,8 @@ void ManualPlace(NodeList *wins,int w,int h,int *x,int *y)
     switch(event.type){
       case MotionNotify:      *x=event.xmotion.x_root;
                               *y=event.xmotion.y_root;
-			      if(InitS.SnapDistance) SnapWin(wins,x,y,w,h);
+			      if(settings.global_settings->SnapDistance)
+				SnapWin(wins,x,y,w,h);
                               SqueezeRubber(*x,*y,w,h);
                               break;
       case KeyPress:          keysym=XKeycodeToKeysym(disp, event.xkey.keycode,
@@ -397,31 +400,32 @@ void PlaceWin(UltimateContext *uc)
   int x,y,width,height;
 
 
-  if(InitS.PlacementStrategy && (uc->flags & PLACEIT)) {
-    if(uc->frame!=None) {
-      win=uc->frame;
-      width=uc->Attr.width;
-      height=uc->Attr.height;
+  if(settings.global_settings->PlacementStrategy && (uc->flags & PLACEIT)) {
+    if(uc->frame != None) {
+      win = uc->frame;
+      width = uc->Attr.width;
+      height = uc->Attr.height;
     } else {
-      win=uc->win;
-      width=uc->Attributes.width;
-      height=uc->Attributes.height;
+      win = uc->win;
+      width = uc->Attributes.width;
+      height = uc->Attributes.height;
     }
 
     wins=ScanScreen(win);
 
-    switch(InitS.PlacementStrategy>>1){
-      case 2:if(InitS.PlacementThreshold<GradientPlace(wins,width,height,&x,&y))
-                ManualPlace(wins,width,height,&x,&y);
+    switch(settings.global_settings->PlacementStrategy >> 1){
+      case 2: if(settings.global_settings->PlacementThreshold
+		 < GradientPlace(wins, width, height, &x, &y))
+                ManualPlace(wins, width, height, &x, &y);
               break;
-      case 3: ManualPlace(wins,width,height,&x,&y);
+      case 3: ManualPlace(wins, width, height, &x, &y);
               break;
-      default: GradientPlace(wins,width,height,&x,&y);
+      default: GradientPlace(wins, width, height, &x, &y);
     }
 
     FreeScanned(wins);
 
-    MoveResizeWin(uc,x,y,0,0);
+    MoveResizeWin(uc, x, y, 0, 0);
   }
   uc->flags &= ~PLACEIT;
 }

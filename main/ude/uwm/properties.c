@@ -140,14 +140,15 @@ void UpdateName(UltimateContext *uc)
 		    uc->title.width = (XTextWidth(settings.global_settings
 							  ->TitleFont.xfs,
                     uc->title.name, strlen(uc->title.name))
-		    + (((InitS.BorderTitleFlags & BT_CENTER_TITLE) 
+		    + (((settings.global_settings->FrameFlags & CENTER_TITLE)
 		        || (uc->flags & SHAPED)) ? 9 : 6)),
                     uc->title.height = (settings.global_settings->TitleFont.xfs
 								->ascent
 					+ settings.global_settings->TitleFont
 								  .xfs->descent
 					+ ((uc->flags & SHAPED) ? 6 : 3)));
-      if((InitS.BorderTitleFlags & BT_CENTER_TITLE) || (uc->flags & SHAPED))
+      if((settings.global_settings->FrameFlags & CENTER_TITLE)
+	 || (uc->flags & SHAPED))
         XMoveWindow(disp, uc->title.win,
 	            uc->title.x = ((uc->Attr.width - uc->title.width) / 2),
                     uc->title.y = ((uc->flags & SHAPED) ? 0

@@ -112,7 +112,7 @@ void SetWSBackground()
       UngrabServer (disp);
       XFlush (disp);
     }
-  else if (TheScreen.SetBackground[ActiveWS])
+  else
     {
       XSetWindowBackground(disp, TheScreen.root,
                            ActiveWSSettings->Wallpaper.image);
@@ -125,8 +125,8 @@ void SetWSBackground()
     kill(ScreenCommandPID,SIGTERM);
     ScreenCommandPID=0;
   }
-  if(TheScreen.BackCommand[ActiveWS])
-    ScreenCommandPID = MySystem(TheScreen.BackCommand[ActiveWS]);
+  if(ActiveWSSettings->ScreenCommand)
+    ScreenCommandPID = MySystem(ActiveWSSettings->ScreenCommand);
   else ScreenCommandPID=0;
 }
 

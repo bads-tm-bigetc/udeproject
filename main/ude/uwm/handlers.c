@@ -154,7 +154,7 @@ void HandleEnterNotify(XEvent *event)
     if(event->xcrossing.window == uc->frame)
       ActivateWin(uc);
     else if((event->xcrossing.window == uc->title.win)
-            && (InitS.BorderTitleFlags & BT_DODGY_TITLE))
+            && (settings.global_settings->FrameFlags & DODGY_TITLE))
       XLowerWindow(disp,uc->title.win);
   }
 }
@@ -228,8 +228,8 @@ void HandleMapNotify(XEvent *event)
 
   if(!XFindContext(disp, event->xmap.window, UWMContext, (XPointer *)&uc)) {
     if(uc->title.win != None) {
-      if(InitS.BorderTitleFlags 
-         & ((uc == ActiveWin) ? BT_ACTIVE_TITLE : BT_INACTIVE_TITLE)) {
+      if(settings.global_settings->FrameFlags
+         & ((uc == ActiveWin) ? ACTIVE_TITLE : INACTIVE_TITLE)) {
         XRaiseWindow(disp, uc->title.win);
       } else {
         XLowerWindow(disp, uc->title.win);
@@ -311,7 +311,7 @@ void HandleButtonPress(XEvent *event)
       case Button4: break;
       case Button5: break;
     }
-  } else if((InitS.BehaviourFlags & BF_IN_WIN_CTRL)
+  } else if((settings.global_settings->BehaviourFlags & ALL_CLICKS)
             || (event->xbutton.window != TheScreen.root)
             || (event->xbutton.state == UWM_MODIFIERS)) {
     Window win;
@@ -395,7 +395,7 @@ void HandleConfigureRequest(XEvent *event)
 		            | CWWidth | CWHeight), &xwc);
         if((event->xconfigurerequest.value_mask & CWWidth)
            && (uc->title.win != None)
-	   && ((InitS.BorderTitleFlags & BT_CENTER_TITLE) 
+	   && ((settings.global_settings->FrameFlags & CENTER_TITLE) 
 	       || (uc->flags & SHAPED))) {
           XMoveWindow(disp, uc->title.win,
 	              uc->title.x = (xwc.width - uc->title.width) / 2,
