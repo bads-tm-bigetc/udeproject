@@ -1,0 +1,46 @@
+Hello, everyone!                                            SNAPSHOT JUN 26 2000
+
+This is uwm, the ultimate window manager, which will be one day part of ude, the
+unix desktop environment.
+
+********************************************************************************
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ATTENTION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+This is just a development snapshot. it should *theoretically* be running stable
+but it's not completely tested.
+
+This snapshot was released since a major bug was discovered (nothing to worry
+about yet if you don't change workspaces really fast (about 10 times a second
+on a modern machine with several apps running)) but it could become a problem
+in future versions and it needs to be fixed. Unluckily fixing the bug
+requires rewriting parts of the main wm and handler functions. I'll use this
+opportunity to also finish icccm2.0 compliance and clean up the code a little
+bit. So the next version will probably be 0.3.0, release date unknown (don't
+expext it too soon, i'll probably release some more snapshots as soon as the
+wm-functions work again so that the new routines can be tested).
+
+thanx to shawn for reporting the bug.
+
+********************************************************************************
+
+For info on how to compile uwm, please check out the INSTALL and INSTALL.UDE
+files.
+For questions on how to use and configure uwm, please check out the file
+manual.dvi in the docs directory. If you have further questions also check the
+old manual uwm_manual.dvi in the same directory.
+
+Please also note that our url at ude.org is currently not available due
+to DNS problems. The web page can be reached at
+
+http://udeproject.sourceforge.net
+
+meanwhile. Mirror pages also might be down or outaged due to this problem.
+
+For bug reports, suggestions etc. please write to Christian Ruppert <arc@gmx.li>
+
+Have fun with this snapshot.
+
+oh, and don't forget: we're still looking for developers, designers etc. 
+contact us if you're interested.
+
+ude - get used to it.
