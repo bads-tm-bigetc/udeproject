@@ -1,3 +1,8 @@
+2003-02-09  Christian Ruppert <arc@users.sf.net>
+	* uwm/workspaces.c: changed order of UpdateDesktop and SetWSBackground
+	  calls in ChangeWS to prevent race condition problem in urdb2gtkd
+	  --dump.
+
 2003-01-09  Christian Ruppert <arc@gmx.li>
 	* config/urdb: added font resources to set gvim's fixed font correctly.
 

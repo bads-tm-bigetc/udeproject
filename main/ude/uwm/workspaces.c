@@ -171,8 +171,8 @@ void ChangeWS(short WS)
   oldws=TheScreen.desktop.ActiveWorkSpace;
   TheScreen.desktop.ActiveWorkSpace=WS;
 
-  SetWSBackground();
   UpdateDesktop();
+  SetWSBackground();
 
   n=NULL;
   while((n= NodeNext(TheScreen.UltimateList, n))) {
