@@ -1,3 +1,27 @@
+2001-02-24  Christian Ruppert <arc@gmx.li>
+
+	* uwm/menu.c(DrawMenu): split into MapMenu and DrawMenuFrame
+	* uwm/handlers.c(InitHandlers): added init for MenuExpose event handler.
+	* uwm/menu.c(MenuExpose): added event handler
+	* uwm/menu.c(MenuCreate): menu window flags are now set depending on
+	  x-servers capability to do saveunder
+	* uwm/menu.c(MenuCreate): menu window flags are now set depending on
+	  x-servers capability to do backingstore
+	* uwm/menu.c(AppendMenuItem): item window flags are now set depending on
+	  x-servers capability to do backingstore
+	* uwm/menu.c(MenuCreate): added ExposureMask to menu event mask
+	* uwm/menu.c(MenuCreate): added pointer to menu structure as
+	  MenuFrameContext to menu frame windows.
+	* uwm/menu.c(DestroyMenu): added MenuFrameContext deletion.
+	* uwm/init.c(PrepareIcons): hex window flags are now set depending on
+	  x-servers capability to do saveunder
+	* uwm/init.c: added initialisation for TheScreen.DoesSaveUnders
+	* uwm/init.c: added initialisation for TheScreen.DoesBackingStore
+	* uwm/init.c: added initialisation for TheScreen.MenuFrameContext
+	* uwm.h: added TheScreen.MenuFrameContext
+	* uwm.h: added TheScreen.DoesSaveUnders
+	* uwm.h: added TheScreen.DoesBackingStore
+
 2001-02-23  Christian Ruppert <arc@gmx.li>
 
 	* uwm/winmenu.c: added handler WinMenuUnmapNotify.

@@ -1,3 +1,6 @@
+* support for xservers not supporting saveunder and backingstore (xf4.0)
+* further icccm-code
+
 SNAPSHOT JUN 26 2000:
 
 * support for .jpg background pictures implemented (requires libjpeg)
