@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ude 0.2.8-final\n"
-"POT-Creation-Date: 2002-12-09 22:00+0100\n"
+"POT-Creation-Date: 2002-12-09 22:12+0100\n"
 "PO-Revision-Date: 2002-11-26 23:16+0100\n"
 "Last-Translator: David Weinehall <tao@kernel.org>\n"
 "Language-Team: Swedish <sv@li.org>\n"
