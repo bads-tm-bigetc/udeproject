@@ -199,8 +199,12 @@ void UpdateMotifHints(UltimateContext *uc)
                                  (unsigned char **)&uc->MotifWMHints))
     uc->MotifWMHints=NULL;
   if(uc->frame) {
+    char visible;
+
+    visible = WinVisible(uc);
     DisenborderWin(uc,True);
     EnborderWin(uc);
+    if(visible) MapWin(uc, True);
   }
 }
 
