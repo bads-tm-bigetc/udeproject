@@ -1,3 +1,7 @@
+2004-02-05  Christian Ruppert <arc@users.sf.net>
+	* po/it.po, configure.in: added italian language support. Many thanks
+	  to Diego Bertone.
+
 2004-01-14  Christian Ruppert <arc@users.sf.net>
 	* uwm/special.c (CheckCPP): fixed a bug in the backported cpp check.
 
