@@ -101,10 +101,11 @@ const uwm_init_index uwm_global_index[UWM_GLOBAL_OPTION_NR] = {
 };
 #undef GLOBAL_OPTION_STRUCT_LINE \
 
+char uwm_default_ws_name[UWM_DEFAULT_NAME_LENGTH];
 #define WORKSPACE_OPTION_STRUCT_LINE(NAME, TYPE, DEFAULT) \
         {#NAME,    OFFSET_OF(_uwm_workspace_settings, NAME),    TYPE,   DEFAULT}
-const uwm_init_index uwm_workspace_index[UWM_WORKSPACE_OPTION_NR] = {
-  WORKSPACE_OPTION_STRUCT_LINE(Name, UWM_S_STRING, NULL),
+uwm_init_index uwm_workspace_index[UWM_WORKSPACE_OPTION_NR] = {
+  WORKSPACE_OPTION_STRUCT_LINE(Name, UWM_S_STRING, uwm_default_ws_name),
   WORKSPACE_OPTION_STRUCT_LINE(ScreenColor, UWM_S_COLOR, "grey30"),
   WORKSPACE_OPTION_STRUCT_LINE(InactiveColor, UWM_S_COLOR, "grey30"),
   WORKSPACE_OPTION_STRUCT_LINE(InactiveShadow, UWM_S_COLOR, "grey10"),
@@ -128,8 +129,6 @@ const uwm_init_index uwm_workspace_index[UWM_WORKSPACE_OPTION_NR] = {
 
 struct uwm_yy_ContextStackStruct *uwm_yy_ContextStack = NULL;
 
-typedef char*(*ConverterFunction)(YYSTYPE *in, const uwm_init_index *out,
-				  void *base);
 /* conversion table to convert parser datatypes to uwm datatypes
    must be updated when either parser or uwm datatypes are changed */
 const ConverterFunction uwm_yy_to_setting_table[UWM_S_TYPENO][UWM_YY_TYPENO] = {

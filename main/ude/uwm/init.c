@@ -1754,58 +1754,57 @@ uwm_settings settings = {
 int ReadConfigFile()
 {
   int a;
-  uwm_workspace_settings *default_workspace_settings = NULL;
 
   uwm_yyparse_wrapper("uwmrc.new");
 
+  /* initialize gettext defaults */
+  strncpy(uwm_default_ws_name, _("Default Workspace"),
+          UWM_DEFAULT_NAME_LENGTH);
+  uwm_default_ws_name[UWM_DEFAULT_NAME_LENGTH - 1] = '\0';
+
   /* complete global options with defaults */
   for(a = 0; a < UWM_GLOBAL_OPTION_NR; a ++) {
-    YYSTYPE d;
-    switch(uwm_global_index[a].type) {
-      case UWM_S_FONT: {
-	   FontStruct *fs;
-	   fs = (FontStruct *)(((void *)settings.global_settings)
-		 + uwm_global_index[a].offset);
-	   if(!fs->xfs) {
-	     char *errmsg;
-	     d.string = MyStrdup(uwm_global_index[a].default_val_string);
-	     if(errmsg = uopt_str_fnt(&d, &(uwm_global_index[a]),
-				      settings.global_settings)) {
-	       SeeYa(1, errmsg);
-	     }
-	   }
-	   break; }
+    if(uwm_global_index[a].default_val_string
+       && (!(*(((void **)settings.global_settings)
+               + uwm_global_index[a].offset)))
+       && (uwm_yy_to_setting_table[uwm_global_index[a].type][UWM_YY_STRING])) {
+      YYSTYPE d;
+      char *errmsg;
+      d.string = MyStrdup(uwm_global_index[a].default_val_string);
+      if(errmsg = uwm_yy_to_setting_table
+                        [uwm_global_index[a].type][UWM_YY_STRING]
+                        (&d, &(uwm_global_index[a]),
+			 settings.global_settings)) {
+        SeeYa(1, errmsg);
+      }
     }
   }
-
   /* complete workspace options with defaults */
   for(a = 0; a < settings.workspace_settings_count; a++) {
     int b;
     if(!settings.workspace_settings[a]) {
-      if(!default_workspace_settings) {
-	default_workspace_settings = MyCalloc(1,
-					      sizeof(uwm_workspace_settings));
-	memset(default_workspace_settings, 0, sizeof(uwm_workspace_settings));
-	for(b = 0; b < UWM_WORKSPACE_OPTION_NR; b ++) {
-	  YYSTYPE d;
-	  switch(uwm_workspace_index[b].type) {
-	    case UWM_S_COLOR:
-		 if(!(*((XColor**)((void *)default_workspace_settings
-				   + uwm_workspace_index[b].offset)))) {
-		   char *errmsg;
-		   d.string = MyStrdup(uwm_workspace_index[b].default_val_string);
-		   if(errmsg = uopt_str_col(&d, &(uwm_workspace_index[a]),
-					    default_workspace_settings)) {
-		     SeeYa(1, errmsg);
-		   }
-		 }
-		 break;
-	  }
-	}
-	default_workspace_settings->Name = _("Default Workspace");
-      }
-      settings.workspace_settings[a] = default_workspace_settings;
+      settings.workspace_settings[a] = MyCalloc(1,
+						sizeof(uwm_workspace_settings));
+      memset(settings.workspace_settings[a], 0, sizeof(uwm_workspace_settings));
     }
+    for(b = 0; b < UWM_WORKSPACE_OPTION_NR; b ++) {
+      if(uwm_workspace_index[b].default_val_string
+         && (!(*(((void **)settings.workspace_settings[a])
+                 + uwm_workspace_index[b].offset)))
+         && (uwm_yy_to_setting_table[uwm_workspace_index[b].type]
+	                            [UWM_YY_STRING])) {
+        YYSTYPE d;
+        char *errmsg;
+        d.string = MyStrdup(uwm_workspace_index[b].default_val_string);
+        if(errmsg = uwm_yy_to_setting_table
+                          [uwm_workspace_index[b].type][UWM_YY_STRING]
+                          (&d, &(uwm_workspace_index[b]),
+			   settings.workspace_settings[a])) {
+          SeeYa(1, errmsg);
+        }
+      }
+    }
+/***/fprintf(TheScreen.errout, "%s\n", settings.workspace_settings[a]->Name);
   }
 }
 

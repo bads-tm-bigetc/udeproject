@@ -1,3 +1,11 @@
+2003-08-29  Christian Ruppert <arc@users.sf.net>
+        * uwm/init.c(ReadConfigFile): corrected default configuration setting.
+	* uwm/confparse.y, uwm/confparse.h: moved definition of
+	  ConverterFunction prototype to header, added external converter table
+	  definition to header.
+	* uwm/confparse.y, uwm/confparse.h: added writable buffer to change
+	  workspace name (libintl). default name set in init.c (ReadConfigFile).
+
 2003-07     Christian Ruppert <arc@users.sf.net>
 	* uwm/configconvertors.c: changed derefptr define to be safer (using
 	  void* typecast for pointer arithmetic)

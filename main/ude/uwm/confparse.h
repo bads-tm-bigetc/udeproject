@@ -25,10 +25,18 @@ typedef struct _uwm_init_index {
   char *default_val_string;
 } uwm_init_index;
 
+#define UWM_DEFAULT_NAME_LENGTH 100
+extern char uwm_default_ws_name[UWM_DEFAULT_NAME_LENGTH];
 #define UWM_GLOBAL_OPTION_NR 26
 extern const uwm_init_index uwm_global_index[UWM_GLOBAL_OPTION_NR];
 #define UWM_WORKSPACE_OPTION_NR 20
-extern const uwm_init_index uwm_workspace_index[UWM_WORKSPACE_OPTION_NR];
+extern uwm_init_index uwm_workspace_index[UWM_WORKSPACE_OPTION_NR];
+
+/* convertors */
+typedef char*(*ConverterFunction)(YYSTYPE *in, const uwm_init_index *out,
+				  void *base);
+extern const ConverterFunction
+             uwm_yy_to_setting_table[UWM_S_TYPENO][UWM_YY_TYPENO];
 
 /* prototypes for configconvertors.c */
 char *uopt_int_int(YYSTYPE *in, const uwm_init_index *out, void *base);
