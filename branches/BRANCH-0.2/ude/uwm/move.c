@@ -85,15 +85,12 @@ void MoveButtonPress(XEvent *event)
 
 void MoveMotion(XEvent *event)
 {
-  Window w;
-  int x,y,dummy;
+  int x, y, dummy;
 
   StampTime(event->xmotion.time);
   
-  XQueryPointer(disp, TheScreen.root, &w, &w, &x, &y, &dummy,
-                &dummy, &dummy);
-  x -= xofs;
-  y -= yofs;
+  x = event->xmotion.x_root - xofs;
+  y = event->xmotion.y_root - yofs;
 
   if(InitS.SnapDistance)
     SnapWin(movewins, &x, &y, ActiveWin->Attr.width, ActiveWin->Attr.height);
@@ -103,6 +100,11 @@ void MoveMotion(XEvent *event)
   } else {
     MoveResizeWin(ActiveWin, x, y, 0, 0);
   }
+  XGetMotionEvents(disp, TheScreen.root, 2, 1, &dummy);
+  /* the start / stop times don't make sense here. this is because we just
+     want to trigger the next motion event and these times are an efficient
+     way to suppress any results we don't want */
+    
 }
 
 void MoveUnmap(XEvent *event) /* in case a win is unmapped during MoveProcess */
