@@ -80,7 +80,7 @@ void StartDragging(UltimateContext *uc,unsigned int x,unsigned int y)
 void MoveButtonPress(XEvent *event)
 {
   DBG(fprintf(TheScreen.errout,"move button press\n");)
-  TheScreen.now = event->xbutton.time;
+  StampTime(event->xbutton.time);
 }
 
 void MoveMotion(XEvent *event)
@@ -88,7 +88,7 @@ void MoveMotion(XEvent *event)
   Window w;
   int x,y,dummy;
 
-  TheScreen.now = event->xmotion.time;
+  StampTime(event->xmotion.time);
   
   XQueryPointer(disp, TheScreen.root, &w, &w, &x, &y, &dummy,
                 &dummy, &dummy);
@@ -156,7 +156,7 @@ void MoveButtonRelease(XEvent *event)
 {
   DBG(fprintf(TheScreen.errout,"move button release\n");)
 
-  TheScreen.now = event->xbutton.time;
+  StampTime(event->xbutton.time);
 
   switch(event->xbutton.button) {
     case Button1: MoveButtons(0,event);break;

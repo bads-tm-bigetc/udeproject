@@ -167,7 +167,7 @@ void UpdateWMHints(UltimateContext *uc)
   if((uc == ActiveWin) && ((!uc->WMHints)
      ||(uc->WMHints && (uc->WMHints->flags & InputHint) && uc->WMHints->input)))
   {
-    XSetInputFocus(disp, ActiveWin->win, RevertToPointerRoot, TheScreen.now);
+    XSetInputFocus(disp, ActiveWin->win, RevertToPointerRoot, TimeStamp);
   }
 }
 
@@ -204,7 +204,7 @@ void UpdateWMProtocols(UltimateContext *uc)
     for(a=0;a<count;a++){
       if(prots[a]==WM_TAKE_FOCUS) {
         uc->ProtocolFlags|=TAKE_FOCUS;
-        if(uc == ActiveWin) SendWMProtocols(uc, WM_TAKE_FOCUS, TheScreen.now);
+        if(uc == ActiveWin) SendWMProtocols(uc, WM_TAKE_FOCUS, TimeStamp);
       }
       if(prots[a]==WM_DELETE_WINDOW) uc->ProtocolFlags|=DELETE_WINDOW;
     }

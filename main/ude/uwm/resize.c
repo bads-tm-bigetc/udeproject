@@ -138,39 +138,39 @@ void SqueezeIt(int mousex,int mousey)
     switch(borderstat&(RACTIVE|LACTIVE|TACTIVE|BACTIVE)){
       case RACTIVE: 
         XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_O],TheScreen.now);
+          ButtonReleaseMask,TheScreen.Mice[C_O],TimeStamp);
         break;
       case RACTIVE|TACTIVE:
         XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_NO],TheScreen.now);
+          ButtonReleaseMask,TheScreen.Mice[C_NO],TimeStamp);
         break;
       case TACTIVE:
         XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_N],TheScreen.now);
+          ButtonReleaseMask,TheScreen.Mice[C_N],TimeStamp);
         break;
       case TACTIVE|LACTIVE:
         XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_NW],TheScreen.now);
+          ButtonReleaseMask,TheScreen.Mice[C_NW],TimeStamp);
         break;
       case LACTIVE:
         XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_W],TheScreen.now);
+          ButtonReleaseMask,TheScreen.Mice[C_W],TimeStamp);
         break;
       case LACTIVE|BACTIVE:
         XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_SW],TheScreen.now);
+          ButtonReleaseMask,TheScreen.Mice[C_SW],TimeStamp);
         break;
       case BACTIVE:
         XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_S],TheScreen.now);
+          ButtonReleaseMask,TheScreen.Mice[C_S],TimeStamp);
         break;
       case BACTIVE|RACTIVE:
         XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_SO],TheScreen.now);
+          ButtonReleaseMask,TheScreen.Mice[C_SO],TimeStamp);
         break;
       default:
         XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_DEFAULT],TheScreen.now);
+          ButtonReleaseMask,TheScreen.Mice[C_DEFAULT],TimeStamp);
         break;
     }
   }
@@ -193,7 +193,7 @@ void RiseIt()
     risenstart=False;
   }
     XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-            ButtonReleaseMask,TheScreen.Mice[C_DEFAULT],TheScreen.now);
+            ButtonReleaseMask,TheScreen.Mice[C_DEFAULT],TimeStamp);
 }
 
 void UnriseIt(int x,int y)
@@ -257,7 +257,7 @@ void ResizeButtons(int a,XEvent *event)
 void ResizeButtonPress(XEvent *event)
 {
   DBG(fprintf(TheScreen.errout,"ResizeButtonPress\n");)
-  TheScreen.now = event->xbutton.time;
+  StampTime(event->xbutton.time);
   Buttoncount++;
   switch(event->xbutton.button){
     case Button1: ResizeButtons(0,event);break;
@@ -270,7 +270,7 @@ void ResizeButtonPress(XEvent *event)
 
 void ResizeMotion(XEvent *event)
 {
-  TheScreen.now = event->xmotion.time;
+  StampTime(event->xmotion.time);
   if(!risen) SqueezeIt(event->xmotion.x_root,event->xmotion.y_root);
 }
 
@@ -278,7 +278,7 @@ void ResizeButtonRelease(XEvent *event)
 {
   int x,y,width,height;
   DBG(fprintf(TheScreen.errout,"ResizeButtonRelease\n");)
-  TheScreen.now = event->xbutton.time;
+  StampTime(event->xbutton.time);
   Buttoncount--;
   if(Buttoncount) return;
   if(risen==1) ActiveWin->flags |= RISEN;

@@ -90,7 +90,7 @@ void WinMenuEnterNotify(XEvent *event)
 {
   int a;
 
-  TheScreen.now = event->xcrossing.time;
+  StampTime(event->xcrossing.time);
   if(selectedHex<ICONWINS){
     XSetWindowBackgroundPixmap(disp,TheScreen.icons.IconWins[selectedHex],\
                                     TheScreen.icons.IconPixs[selectedHex]);
@@ -123,7 +123,7 @@ void WinMenuEnterNotify(XEvent *event)
 
 void WinMenuButtonPress(XEvent *event)
 {
-  TheScreen.now = event->xbutton.time;
+  StampTime(event->xbutton.time);
   Buttoncount++;
 }
 
@@ -157,7 +157,7 @@ void ButtonAction(int a)
 
 void WinMenuButtonRelease(XEvent *event)
 {
-  TheScreen.now = event->xbutton.time;
+  StampTime(event->xbutton.time);
   Buttoncount--;
   if(Buttoncount) {
     switch(event->xbutton.button){

@@ -131,6 +131,8 @@ typedef struct
   FILE *errout;
 } UDEScreen;
 
+#define StampTime(TIME) (TheScreen.now = ((TheScreen.now < TIME) || (TheScreen.now > (TIME + (1<<(sizeof(TheScreen.now)*8-1))))) ? TIME : TheScreen.now)
+#define TimeStamp TheScreen.now
 
 /*** Window-Context structure ***/
 

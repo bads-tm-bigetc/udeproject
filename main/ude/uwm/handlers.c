@@ -147,7 +147,7 @@ void HandleEnterNotify(XEvent *event)
   
   DBG(fprintf(TheScreen.errout,"HandleEnterNotify\n"));
 
-  TheScreen.now = event->xcrossing.time;
+  StampTime(event->xcrossing.time);
 
   if(!XFindContext(disp, event->xcrossing.window, UWMContext, (XPointer *)&uc))
     if(event->xcrossing.window == uc->frame)
@@ -159,7 +159,7 @@ void HandleEnterNotify(XEvent *event)
 
 void HandleLeaveNotify(XEvent *event)
 { 
-  TheScreen.now = event->xcrossing.time;
+  StampTime(event->xcrossing.time);
 }
 
 void HandleExpose(XEvent *event)
@@ -278,7 +278,7 @@ void HandleButtonPress(XEvent *event)
 
   DBG(fprintf(TheScreen.errout,"HandleButtonPress\n");)
 
-  TheScreen.now = event->xbutton.time;
+  StampTime(event->xbutton.time);
 
   XQueryPointer(disp,TheScreen.root,&rootret,&childret,&dummy,&dummy,\
                                                 &dummy,&dummy,&dummy);
@@ -319,12 +319,12 @@ void HandleButtonPress(XEvent *event)
 
 void HandleButtonRelease(XEvent *event)
 {
-  TheScreen.now = event->xbutton.time;
+  StampTime(event->xbutton.time);
 }
 
 void HandleMotionNotify(XEvent *event)
 {
-  TheScreen.now = event->xmotion.time;
+  StampTime(event->xmotion.time);
 }
 
 void HandleConfigureRequest(XEvent *event)
@@ -403,14 +403,14 @@ void HandleClientMsg(XEvent *event)
 
 void HandleKeyPress(XEvent *event)
 {
-  TheScreen.now = event->xkey.time;
+  StampTime(event->xkey.time);
 }
 
 void HandleKeyRelease(XEvent *event)
 {
   DBG(fprintf(TheScreen.errout,"HandleKeyRelease\n");)
   
-  TheScreen.now = event->xkey.time;
+  StampTime(event->xkey.time);
 
   if(event->xkey.state==(ControlMask|Mod1Mask)){
     Node *n,*n2;
@@ -456,7 +456,7 @@ void HandlePropertyNotify(XEvent *event)
   
   DBG(fprintf(TheScreen.errout,"HandlePropertyNotify\n");)
 
-  TheScreen.now = event->xproperty.time;
+  StampTime(event->xproperty.time);
 
   GrabServer();
   if(!XFindContext(disp,event->xproperty.window,UWMContext,(XPointer *)&uc)){
@@ -491,7 +491,7 @@ void HandleSelectionClear(XEvent *event)
 {
   DBG(fprintf(TheScreen.errout,"HandleSelectionClear\n");)
 
-  TheScreen.now = event->xselectionclear.time;
+  StampTime(event->xselectionclear.time);
 
   if((event->xselectionclear.selection == TheScreen.WM_Sx)
      && (TheScreen.inputwin != XGetSelectionOwner(disp, TheScreen.WM_Sx))){
@@ -508,7 +508,7 @@ void HandleSelectionRequest(XEvent *event)
 
   DBG(fprintf(TheScreen.errout,"HandleSelectionRequest\n");)
 
-  TheScreen.now = event->xselectionrequest.time;
+  StampTime(event->xselectionrequest.time);
 
   if(event->xselectionrequest.selection == TheScreen.WM_Sx) {
     if((event->xselectionrequest.time >= TheScreen.start_tstamp)

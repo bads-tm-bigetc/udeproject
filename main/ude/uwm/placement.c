@@ -319,7 +319,7 @@ void ManualPlace(NodeList *wins,int w,int h,int *x,int *y)
   RealActive = ActiveWin;
   ActivateWin(NULL);
   XSetInputFocus(disp, TheScreen.inputwin, RevertToPointerRoot,
-                 TheScreen.now);
+                 TimeStamp);
   XSync(disp,False);
   StartRubber(*x,*y,w,h,TheScreen.BorderWidth1);
   placing=-1;
@@ -351,11 +351,11 @@ void ManualPlace(NodeList *wins,int w,int h,int *x,int *y)
 #endif
                                  0) {
 			        placing=0;
-			        TheScreen.now = event.xkey.time;
+			        StampTime(event.xkey.time);
 			      }
                               break;
       case ButtonRelease:     placing=0;
-                              TheScreen.now = event.xbutton.time;
+                              StampTime(event.xbutton.time);
                               state = event.xbutton.state & ( Button1Mask
                                       | Button2Mask | Button3Mask | Button4Mask
                                       | Button5Mask);

@@ -377,11 +377,11 @@ void GrabPointer(Window win,unsigned int mask,Cursor mouse)
 void UngrabPointer()
 {
   pgrabstat--;
-  if(pgrabstat<0) XUngrabPointer(disp,TheScreen.now);
+  if(pgrabstat<0) XUngrabPointer(disp,CurrentTime);
   else {
     XGrabPointer(disp,pgrabwins[pgrabstat],True,pgrabmasks[pgrabstat],\
                 GrabModeAsync,GrabModeAsync,None,pgrabmice[pgrabstat],\
-                                                          TheScreen.now);
+                                                          CurrentTime);
   }
 }
 

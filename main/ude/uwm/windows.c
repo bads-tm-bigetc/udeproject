@@ -373,7 +373,7 @@ void ActivateWin(UltimateContext *uc)
   
   if(uc!=OldActive){
     if(OldActive){
-      XSetInputFocus(disp, PointerRoot, RevertToPointerRoot, TheScreen.now);
+      XSetInputFocus(disp, PointerRoot, RevertToPointerRoot, TimeStamp);
       DrawWinBorder(OldActive);
     }
     if(uc){
@@ -381,7 +381,7 @@ void ActivateWin(UltimateContext *uc)
       XInstallColormap(disp,uc->Attributes.colormap);
       if(!((uc->WMHints) && (uc->WMHints->flags & InputHint)
                          && (uc->WMHints->input == False)))
-        XSetInputFocus(disp, ActiveWin->win, RevertToPointerRoot, TheScreen.now);
+        XSetInputFocus(disp, ActiveWin->win, RevertToPointerRoot, TimeStamp);
 
       if(ActiveWin->ProtocolFlags & TAKE_FOCUS)
         SendWMProtocols(ActiveWin, WM_TAKE_FOCUS);
