@@ -25,14 +25,14 @@ not use any special GUI-Libraries such as QT or GTK+ and
 is based on the standard Xlibs (also to make UDE faster).
 
 %changelog
-* Sun Aug 8 1999 Jaime Alberto Silva <mono@andromeda.utp.edu.co>
-- Created file ude.spec.in
 * Sat Jun 9 2001 Christian Ruppert <arc@gmx.li>
 - Added package description
 - Updated URL
 - configure.in shold be now set up in a way so that building rpms should work
   for releases, not for snaps (where we use <SNAP$(shell date +%d%m%Y)> as
   version string which works fine for makefiles but not for rpm.spec).
+* Sun Aug 8 1999 Jaime Alberto Silva <mono@andromeda.utp.edu.co>
+- Created file ude.spec.in
   
 %prep
 %setup
