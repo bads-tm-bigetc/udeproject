@@ -63,6 +63,11 @@
 *Font: @STANDARDFONT@
 *font: @STANDARDFONT@
 
+! some selected Xt-resources
+*AsciiSink.background: @TEXTBGR@
+*AsciiSink.foreground: @TEXTCOLOR@
+*AsciiSink.cursorColor: @TEXTCOLOR@
+
 ! MOTIF
 
 *XmScrollBar.background: @BACKGROUND@
