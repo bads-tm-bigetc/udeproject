@@ -1,3 +1,9 @@
+2004-08-08  Christian Ruppert <arc@users.sf.net>
+	* uwm/configconvertors.c(uopt_str_flt and uopt_str_int): added
+	  free(in->string) to close memory holes.
+	* uwm/confparse.tab.y(uwm_yy_PushContext): fixed erroneous memory
+	  reallocation size for workspaces.
+
 2004-05-01  Christian Ruppert <arc@users.sf.net>
 	* config/urdb: fixed ddd resource application name.
 

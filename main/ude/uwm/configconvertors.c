@@ -61,12 +61,14 @@ char *uopt_flt_flt(YYSTYPE *in, const uwm_init_index *out, void *base)
 char *uopt_str_int(YYSTYPE *in, const uwm_init_index *out, void *base)
 {
   deref(int) = atoi(in->string);
+  free(in->string);
   return NULL;
 }
 
 char *uopt_str_flt(YYSTYPE *in, const uwm_init_index *out, void *base)
 {
   deref(double) = atof(in->string);
+  free(in->string);
   return NULL;
 }
 

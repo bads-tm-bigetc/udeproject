@@ -331,7 +331,7 @@ void uwm_yy_PushContext(int type, void *data)
 	 if(wsno >= settings.workspace_settings_count) {
 	   int a;
 	   settings.workspace_settings = realloc(settings.workspace_settings,
-			         wsno * sizeof(*(settings.workspace_settings)));
+			(wsno + 1) * sizeof(*(settings.workspace_settings)));
 	   if(!settings.workspace_settings) {
 	     fprintf(TheScreen.errout, "Out of memory for workspaces.\n");
 	     exit(-1);
