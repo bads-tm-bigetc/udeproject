@@ -2,11 +2,10 @@
 # Copyright (C) 2002 David Weinehall.
 # David Weinehall <tao@acc.umu.se>, 2002.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: ude 0.2.8-final\n"
-"POT-Creation-Date: 2002-12-09 22:12+0100\n"
+"POT-Creation-Date: 2003-05-17 19:08+0200\n"
 "PO-Revision-Date: 2002-11-26 23:16+0100\n"
 "Last-Translator: David Weinehall <tao@kernel.org>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -53,7 +52,6 @@ msgstr "Säkert?!"
 msgid "UWM Menu"
 msgstr "UWM Meny"
 
-#. quit ude
 #: uwm/uwmmenu.c:142
 msgid "No!"
 msgstr "Nej!"
@@ -66,7 +64,6 @@ msgstr "Ja!"
 msgid "Quit UDE"
 msgstr "Avsluta UDE"
 
-#. restart
 #: uwm/uwmmenu.c:148 uwm/uwmmenu.c:154
 msgid "Restart UDE"
 msgstr "Starta om UDE"

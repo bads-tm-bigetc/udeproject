@@ -2,14 +2,13 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-12-09 22:12+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: 0.2.8\n"
+"POT-Creation-Date: 2003-05-17 19:08+0200\n"
+"PO-Revision-Date: unknown\n"
+"Last-Translator: Christian Ruppert <arc@users.sf.net>\n"
+"Language-Team: unknown\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -53,7 +52,6 @@ msgstr "Wirklich?!"
 msgid "UWM Menu"
 msgstr "UWM Menü"
 
-#. quit ude
 #: uwm/uwmmenu.c:142
 msgid "No!"
 msgstr "Nein!"
@@ -66,7 +64,6 @@ msgstr "Ja!"
 msgid "Quit UDE"
 msgstr "UDE verlassen"
 
-#. restart
 #: uwm/uwmmenu.c:148 uwm/uwmmenu.c:154
 msgid "Restart UDE"
 msgstr "UDE neu starten"

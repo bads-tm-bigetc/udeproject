@@ -2,11 +2,10 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: ude 0.2.6-beta\n"
-"POT-Creation-Date: 2002-12-09 22:12+0100\n"
+"POT-Creation-Date: 2003-05-17 19:08+0200\n"
 "PO-Revision-Date: 1999-11-23 18:03+0200\n"
 "Last-Translator: Fatih Demir <kabalak@gmx.net>\n"
 "Language-Team: Fatih Demir <kabalak@gmx.net>\n"
@@ -53,7 +52,6 @@ msgstr "Vallahi mi ?"
 msgid "UWM Menu"
 msgstr "UWM mönüsü"
 
-#. quit ude
 #: uwm/uwmmenu.c:142
 msgid "No!"
 msgstr ""
@@ -66,7 +64,6 @@ msgstr ""
 msgid "Quit UDE"
 msgstr "UDE'den Çýk"
 
-#. restart
 #: uwm/uwmmenu.c:148 uwm/uwmmenu.c:154
 msgid "Restart UDE"
 msgstr "UDE'yi yeniden baþlatýyorum"
