@@ -1,3 +1,16 @@
+2001-06-17  Christian Ruppert <arc@gmx.li>
+
+	* uwm/properties.c, uwm/handlers.c, uwm/uwm.c, uwm/windows.c,
+	  uwm/winmenu.c, uwm/workspaces.c: replaced SetWinMapState by
+	  SetIsMapState or SetSeemsMapState and uc->wmstate == ... by
+	  Is... or Seems... .
+	* uwm/uwm.h: added macros IsNormal, IsIconic, IsWithdrawn, SeemsNormal,
+	  SeemsIconic and SeemsWithdrawn as well as uwm's internal window
+	  status UltimateContext.uwmstatus.
+	* uwm/properties.c: split SetWinMapState in SetWinSeemsState and
+	  SetWinIsState.
+	* uwm/properties.h: corrected prototypes for SetWinXXXState.
+
 2001-05-28  Christian Ruppert <arc@gmx.li>
 
 	* uwm/winmenu.c(StopWinMenu): winmenu is now unmapped AFTER selected

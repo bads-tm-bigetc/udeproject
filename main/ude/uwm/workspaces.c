@@ -175,27 +175,20 @@ void ChangeWS(short WS)
   UpdateDesktop();
 
   n=NULL;
-  while((n= NodeNext(TheScreen.UltimateList, n)))
-    {
-      UltimateContext *uc;
-      
-      uc=n->data;
-      if(uc->wmstate == NormalState)
-	{
-	  if(uc->WorkSpace == oldws)
-	    {
-	      UnmapWin(uc);
-	    }
-	  else if(uc->WorkSpace==WS)
-	    {
-	      MapWin(uc,True);
-	    }
-	  else if(uc->WorkSpace==-1)
-	    {
-	      DrawWinBorder(uc);
-	    }
-	}
+  while((n= NodeNext(TheScreen.UltimateList, n))) {
+    UltimateContext *uc;
+
+    uc = n->data;
+    if(IsNormal(uc)) {
+      if(uc->WorkSpace == oldws) {
+	UnmapWin(uc);
+      } else if(uc->WorkSpace==WS) {
+        MapWin(uc,True);
+      } else if(uc->WorkSpace==-1) {
+        DrawWinBorder(uc);
+      }
     }
+  }
 
   if(activemen) {
     Menu2ws(RootMenu(activemen),WS);
@@ -233,5 +226,5 @@ void Win2WS(UltimateContext *uc, short ws)
   if(uc->WorkSpace == ws) return;
   if(OnActiveWS(uc->WorkSpace) && (!OnActiveWS(ws))) UnmapWin(uc);
   uc->WorkSpace = ws;
-  if(uc->wmstate == NormalState) MapWin(uc, True);
+  if(IsNormal(uc)) MapWin(uc, True);
 }

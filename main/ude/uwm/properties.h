@@ -9,6 +9,7 @@ void UpdateWMHints(UltimateContext *uc);
 void UpdateMotifHints(UltimateContext *uc);
 void UpdateTransientForHint(UltimateContext *uc);
 void UpdateWMProtocols(UltimateContext *uc);
-void SetWinMapState(UltimateContext *uc,int state);
+void SetIsMapState(UltimateContext *uc,int state);
+void SetSeemsMapState(UltimateContext *uc,int state);
 
 #endif

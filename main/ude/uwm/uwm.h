@@ -184,13 +184,21 @@ typedef struct _UltimateContext
   WinGroupPtr group;                /* group of window or NULL */
   unsigned char ProtocolFlags;    /* WM_PROTOCOLS */
 
-  unsigned long wmstate;
+  unsigned long uwmstate;         /* uwm's idea of the window's state */
+  unsigned long wmstate;          /* the state noted in WM_STATE (icccm 2.0) */
   unsigned char flags;
   unsigned short expected_unmap_events;
   unsigned short own_unmap_events;
   short WorkSpace;
 } UltimateContext;
 
+#define IsIconic(UC) ((uc)->uwmstate == IconicState)
+#define IsNormal(UC) ((uc)->uwmstate == NormalState)
+#define IsWithdrawn(UC) ((uc)->uwmstate == WithdrawnState)
+
+#define SeemsIconic(UC) ((uc)->wmstate == IconicState)
+#define SeemsNormal(UC) ((uc)->wmstate == NormalState)
+#define SeemsWithdrawn(UC) ((uc)->wmstate == WithdrawnState)
 
 /*** Structure describing an application programm that can be called by uwm ***/
 typedef struct {

@@ -264,7 +264,7 @@ void HandleUnmapNotify(XEvent *event)
       } else {
         UpdateUWMContext(uc);
         if(uc->own_unmap_events) uc->own_unmap_events--;
-        else SetWinMapState(uc, WithdrawnState);
+        else SetIsMapState(uc, WithdrawnState);
       }
       UngrabServer();
     } else UpdateUWMContext(uc);

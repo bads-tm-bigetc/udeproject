@@ -64,7 +64,7 @@ UltimateContext *ActiveWin=NULL;
 
 char WinVisible(UltimateContext *uc)
 {
-  if(OnActiveWS(uc->WorkSpace) && (uc->wmstate == NormalState)) return(-1);
+  if(SeemsNormal(uc)) return(-1);
   else return(0);
 }
 
@@ -247,7 +247,7 @@ void EnborderWin(UltimateContext *uc)
      || ((uc->Attributes.y + uc->Attributes.height) > TheScreen.height)
      || (uc->Attributes.x < 0) || (uc->Attributes.y < 0)) {
     uc->flags |= PLACEIT;
-    if((uc->Attributes.class == InputOutput) && (uc->wmstate != NormalState)) {
+    if((uc->Attributes.class == InputOutput) && (!IsNormal(uc))) {
       uc->Attributes.x = (TheScreen.width-uc->Attributes.width)/2;
       uc->Attributes.y = (TheScreen.height-uc->Attributes.height)/2;
     }
@@ -338,6 +338,7 @@ void UnmapWin(UltimateContext *uc)
   UpdateUWMContext(uc);
   if(uc->Attributes.map_state != IsUnmapped) uc->own_unmap_events++;
   XUnmapWindow(disp,uc->win);
+  if(!SeemsWithdrawn(uc)) SetSeemsMapState(uc, IconicState);
 }
 
 void MapWin(UltimateContext *uc,Bool NoPlacement){
@@ -345,7 +346,8 @@ void MapWin(UltimateContext *uc,Bool NoPlacement){
 
   if(OnActiveWS(uc->WorkSpace)) {
     if(!NoPlacement) PlaceWin(uc);
-    XMapRaised(disp,uc->win);
+    XMapRaised(disp, uc->win);
+    SetSeemsMapState(uc, NormalState);
     if(uc->frame != None){
       XMapSubwindows(disp, uc->frame);
       if(uc->flags & SHAPED) XUnmapWindow(disp, uc->border);
@@ -363,8 +365,10 @@ void MapWin(UltimateContext *uc,Bool NoPlacement){
 		     uc->Attributes.width*InitS.WarpPointerToNewWinH/100,
 		     uc->Attributes.height*InitS.WarpPointerToNewWinV/100);
     }
+  } else {
+    SetSeemsMapState(uc, IconicState);
   }
-  SetWinMapState(uc,NormalState);
+  uc->uwmstate = NormalState;
 }
 
 void ActivateWin(UltimateContext *uc)
@@ -380,7 +384,7 @@ void ActivateWin(UltimateContext *uc)
                   &dummy, &dummy, &dummy);
     if(XFindContext(disp, win, UWMContext, (XPointer *)&uc)) uc = NULL;
   }
-  if(uc && ((!OnActiveWS(uc->WorkSpace)) || (uc->wmstate != NormalState)))
+  if(uc && (!WinVisible(uc)))
     uc = NULL;
 
   OldActive=ActiveWin;
@@ -450,7 +454,7 @@ Node* PlainDeUltimizeWin(UltimateContext *uc,Bool alive)
 
 Node* DeUltimizeWin(UltimateContext *uc,Bool alive)
 {
-  if(alive) SetWinMapState(uc, WithdrawnState);
+  if(alive) SetIsMapState(uc, WithdrawnState);
   return(PlainDeUltimizeWin(uc, alive));
 }
 
@@ -494,8 +498,8 @@ DBG(fprintf(TheScreen.errout,"ULTIMIZING WIN #%d: no override redirect.\n",win);
   uc->expected_unmap_events = 0;
   uc->own_unmap_events = 0;
   
-/*  SetWinMapState(uc,WithdrawnState); */
-  uc->wmstate = WithdrawnState;
+/*  SetIsMapState(uc,WithdrawnState); */
+  uc->uwmstate = uc->wmstate = WithdrawnState;
 
   if(!NodeAppend(TheScreen.UltimateList,uc))
     SeeYa(1,"FATAL: out of memory!");
@@ -525,22 +529,22 @@ DBG(fprintf(TheScreen.errout,"ULTIMIZING WIN #%d: no override redirect.\n",win);
 
 void IconifyWin(UltimateContext *uc)
 {
-  if(uc->wmstate == IconicState) return;
+  if(IsIconic(uc)) return;
 
   UnmapWin(uc);
 
-  SetWinMapState(uc, IconicState);
+  SetIsMapState(uc, IconicState);
 }
 
 void DisplayWin(UltimateContext *uc)
 {
-  if(uc->wmstate == NormalState) return;
+  if(SeemsNormal(uc)) return;
 
   ChangeWS(uc->WorkSpace);
 
   MapWin(uc, False);
 
-  SetWinMapState(uc, NormalState);
+  SetIsMapState(uc, NormalState);
 }
 
 void CloseWin(UltimateContext *uc)
@@ -579,14 +583,14 @@ void DeiconifyMenu(int x, int y)
   while(ucn = NodeNext(TheScreen.UltimateList,ucn)){
     UltimateContext *uc;
     uc=ucn->data;
-    if(((uc->wmstate == NormalState) || (uc->wmstate == IconicState))
+    if(((IsNormal(uc)) || (IsIconic(uc)))
        && (uc->title.name || uc->title.iconname)){
       AppendMenuItem((uc->WorkSpace == -1) ? sticky : wspaces[uc->WorkSpace],
-                     ((uc->wmstate == IconicState) && uc->title.iconname)
-		     ? uc->title.iconname
-		     : (uc->title.name ? uc->title.name : uc->title.iconname),
-		     uc,
-	             (uc->wmstate == IconicState) ? I_SWITCH_OFF : I_SWITCH_ON);
+                     (IsIconic(uc) && uc->title.iconname) ? uc->title.iconname
+		     : (uc->title.name ? uc->title.name 
+		        : (uc->title.iconname ? uc->title.iconname 
+			   : _(">nameless window<"))),
+		     uc, (IsIconic(uc)) ? I_SWITCH_OFF : I_SWITCH_ON);
     }
   }
 
@@ -594,12 +598,12 @@ void DeiconifyMenu(int x, int y)
     if(SWITCHTYPE(item->type)){
       UltimateContext *uc;
       uc=item->data;
-      if(uc->wmstate == IconicState) {
+      if(SeemsIconic(uc)) {
         DisplayWin(uc);
       } else {
-        ChangeWS(uc->WorkSpace);
+/*        ChangeWS(uc->WorkSpace); */
         ActivateWin(uc);
-        if(uc->frame!=None) {
+        if(uc->frame != None) {
           XRaiseWindow(disp,uc->frame);
         } else {
           XRaiseWindow(disp,uc->win);

@@ -228,20 +228,25 @@ void UpdateWMProtocols(UltimateContext *uc)
   }
 }
 
-void SetWinMapState(UltimateContext *uc,int state)
+void SetIsMapState(UltimateContext *uc, int state)
+{
+  SetSeemsMapState(uc, uc->uwmstate = state);
+}
+
+void SetSeemsMapState(UltimateContext *uc, int state)
 {
   unsigned long data[2];
   uc->wmstate = data[0] = (unsigned long) state;
   data[1] = None;
 /*  if(uc->WMHints) data[1] = (unsigned long) uc->WMHints->icon_window; */
   switch(state){
-    case WithdrawnState: UnmapWin(uc);
+    case WithdrawnState: uc->uwmstate = state;
+                         UnmapWin(uc);
                          DisenborderWin(uc, True);
                          break;
     default: break;
   }
 
-  XChangeProperty(disp,uc->win,WM_STATE_PROPERTY,WM_STATE_PROPERTY,32,\
-                              PropModeReplace,(unsigned char *)data,2);
+  XChangeProperty(disp, uc->win, WM_STATE_PROPERTY, WM_STATE_PROPERTY, 32,
+                  PropModeReplace, (unsigned char *) data, 2);
 }
-
