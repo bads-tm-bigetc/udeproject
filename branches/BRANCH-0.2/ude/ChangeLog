@@ -1,3 +1,8 @@
+2003-11-25  Christian Ruppert <arc@users.sf.net>
+	* uwm/windows.c: fixed a bug in focus management (ActivateWin now no
+	  longer gives focus to root before setting focus to destination
+	  window)
+
 2003-11-11  Christian Ruppert <arc@users.sf.net>
 	* uwm/windows.c: added FocusWin global.
 	* uwm/widgets.h, uwm/widgets.c, uwm/windows.c, uwm/properties.c,
