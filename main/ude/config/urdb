@@ -268,10 +268,10 @@ Vim*menuBackground: @BACKGROUND@
 Vim*menuForeground: @STANDARDTEXT@
 Vim*tooltipBackground: @BACKGROUND@
 Vim*tooltipForeground: @STANDARDTEXT@
-Vim*menuFont: @FONT@
-Vim*menuFontSet: @FONT@
-Vim*tooltipFont: @FONT@
-Vim*tooltipFontSet: @FONT@
+Vim*menuFont: @STANDARDFONT@
+Vim*menuFontSet: @STANDARDFONT@
+Vim*tooltipFont: @STANDARDFONT@
+Vim*tooltipFontSet: @STANDARDFONT@
 Vim*borderWidth: @BEVELWIDTH@
 
 ! Emacs

@@ -1,3 +1,6 @@
+2004-10-14  Christian Ruppert <arc@users.sf.net>
+	* uwm/urdb: fixed a typo in gvim resources
+
 2004-10-13  Christian Ruppert <arc@users.sf.net>
 	* uwm/confparse.tab.y, uwm/confparse.lex.l: redefined atoms for event
 	  description language to be more natural.
