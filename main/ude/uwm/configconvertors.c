@@ -28,35 +28,42 @@
 #include "settings.h"
 #include "confparse.h"
 #include "uwm.h"
+#include "special.h"
+#include "init.h"
 
-#define derefptr(TYPE) ((TYPE *)((base) + ((unsigned long)out->offset)))
+#define derefptr(TYPE) ((TYPE *)(((void *)base) + (out->offset)))
 #define deref(TYPE) (*(derefptr(TYPE)))
 
 extern Display *disp;
+extern UDEScreen TheScreen;
 
-void uopt_int_int(YYSTYPE *in, uwm_init_index *out, void *base)
+char *uopt_int_int(YYSTYPE *in, const uwm_init_index *out, void *base)
 {
   deref(int) = in->intval;
+  return NULL;
 }
 
-void uopt_int_flt(YYSTYPE *in, uwm_init_index *out, void *base)
+char *uopt_int_flt(YYSTYPE *in, const uwm_init_index *out, void *base)
 {
   double d;
   d = (double)in->intval;
   deref(double) = d;
+  return NULL;
 }
 
-void uopt_flt_flt(YYSTYPE *in, uwm_init_index *out, void *base)
+char *uopt_flt_flt(YYSTYPE *in, const uwm_init_index *out, void *base)
 {
   deref(double) = in->floatval;
+  return NULL;
 }
 
-void uopt_str_str(YYSTYPE *in, uwm_init_index *out, void *base)
+char *uopt_str_str(YYSTYPE *in, const uwm_init_index *out, void *base)
 {
   deref(char *) = in->string;
+  return NULL;
 }
 
-void uopt_str_fnt(YYSTYPE *in, uwm_init_index *out, void *base)
+char *uopt_str_fnt(YYSTYPE *in, const uwm_init_index *out, void *base)
 {
   XFontStruct *nxfs;
   if(nxfs = XLoadQueryFont(disp, in->string)) {
@@ -66,5 +73,56 @@ void uopt_str_fnt(YYSTYPE *in, uwm_init_index *out, void *base)
     if(fs->name) free(fs->name);
     fs->xfs = nxfs;
     fs->name = in->string;
+  } else {
+    static char errmsg[256] = "Could not load font \"";
+    sprintf(errmsg + 21, "%.232s\"\n", in->string);
+    free(in->string);
+    return(errmsg);
+  }
+  return(NULL);
+}
+
+char *MultiplyColor(char *color, double factor)
+{
+  XColor xcol;
+  unsigned int r, g, b;
+  char *ret;
+  ret = MyCalloc(sizeof(char), 14);
+
+  if(XParseColor(disp, TheScreen.colormap, color, &xcol)) {
+    r = xcol.red * factor; r = (r > 0xFFFF) ? 0xFFFF : r;
+    g = xcol.green * factor; g = (g > 0xFFFF) ? 0xFFFF : g;
+    b = xcol.blue * factor; b = (b > 0xFFFF) ? 0xFFFF : b;
+  } else {
+    if(factor > 1) {
+      r = g = b = 0xFFFF;
+    } else {
+      r = g = b = 0x0000;
+    }
+  }
+  sprintf(ret, "#%.4X%.4X%.4X", r, g, b);
+  return(ret);
+}
+
+char *uopt_str_col(YYSTYPE *in, const uwm_init_index *out, void *base)
+{
+  XColor *xcol;
+  xcol = MyCalloc(1, sizeof(*xcol));
+  if(XParseColor(disp, TheScreen.colormap, in->string, xcol)) {
+    if(deref(XColor*)) {
+      XColor *oldcol = deref(XColor*);
+      FreeColor(oldcol);
+      free(oldcol);
+    }
+    AllocColor(xcol);
+    deref(XColor*) = xcol;
+    free(in->string);
+    return(NULL);
+  } else {
+    static char errmsg[128] = "Could not load color \"";
+    sprintf(errmsg + 22, "%.103s\"\n", in->string);
+    free(xcol);
+    free(in->string);
+    return(errmsg);
   }
 }

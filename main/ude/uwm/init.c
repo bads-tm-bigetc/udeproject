@@ -24,9 +24,9 @@
 
    ######################################################################## */
 
-/*
+
 #define NEW_CONFIG
-*/
+
 
 #define __USE_GNU
 
@@ -77,6 +77,7 @@
 #include "pix.h"
 #include "MwmUtil.h"
 #include "settings.h"
+#include "confparse.h"
 
 extern char **environ;
 
@@ -466,7 +467,6 @@ void CreateAppsMenu(char *filename)
   NodeListDelete(&Stack);
   fclose(mf);
 }
-#endif /* NEW_CONFIG */
 
 void AllocXColor(unsigned short R, unsigned short G, unsigned short B,\
                                                           XColor *xcol)
@@ -511,6 +511,28 @@ unsigned long AllocColor(unsigned short R, unsigned short G, unsigned short B)
   }
 }
 
+#else
+
+unsigned long AllocColor(XColor *xcol)
+{
+  if(XAllocColor(disp, TheScreen.colormap, xcol))
+    return(xcol->pixel);
+  else {
+    if((xcol->red + xcol->green + xcol->blue) < (384<<8)){
+      fprintf(TheScreen.errout,\
+              "UWM: Cannot alloc color: %d;%d;%d. Using BlackPixel.\n",
+              xcol->red, xcol->green, xcol->blue);
+      return(xcol->pixel = BlackPixel(disp,TheScreen.Screen));
+    } else {
+      fprintf(TheScreen.errout,\
+              "UWM: Cannot alloc color: %d;%d;%d. Using WhitePixel.\n",
+              xcol->red, xcol->green, xcol->blue);
+      return(xcol->pixel = WhitePixel(disp,TheScreen.Screen));
+    }
+  }
+}
+#endif /* NEW_CONFIG */
+
 void FreeXPMBackPixmap(int a)
 {
   if(TheScreen.BackPixmap[a]!=None){
@@ -521,6 +543,17 @@ void FreeXPMBackPixmap(int a)
   }
 }
 
+#ifdef NEW_CONFIG
+
+void FreeColor(XColor *color)
+{
+  if((color->pixel != BlackPixel(disp, TheScreen.Screen))
+     && (color->pixel != WhitePixel(disp, TheScreen.Screen)))
+    XFreeColors(disp, TheScreen.colormap, &(color->pixel), 1, 0);
+}
+
+#else
+
 void FreeColor(unsigned long color)
 {
   if((color!=BlackPixel(disp,TheScreen.Screen))&&\
@@ -528,8 +561,7 @@ void FreeColor(unsigned long color)
     XFreeColors(disp,TheScreen.colormap,&color,1,0);
 }
 
-void
-AllocXColors(R,G,B,c,l,s)
+void AllocXColors(R,G,B,c,l,s)
      unsigned short R,G,B;
      XColor *c,*l,*s;
 {
@@ -545,8 +577,7 @@ AllocXColors(R,G,B,c,l,s)
   AllocXColor(r,g,b,s);
 }
 
-void
-AllocColors(R,G,B,c,l,s)
+void AllocColors(R,G,B,c,l,s)
      unsigned short R,G,B;
      unsigned long *c,*l,*s;
 {
@@ -561,6 +592,7 @@ AllocColors(R,G,B,c,l,s)
   b=B/TheScreen.FrameBevelFactor;
   *s=AllocColor(r,g,b);
 }
+#endif /* NEW_CONFIG */
 
 #ifndef NEW_CONFIG
 int ParseColor(char *p,int *r,int *g,int *b)
@@ -1447,6 +1479,7 @@ void InitUWM()
   TheScreen.now = TheScreen.start_tstamp = event.xproperty.time;
   XSelectInput(disp, TheScreen.inputwin, INPUTWIN_EVENTS); /* set the real event mask */
 
+#ifndef NEW_CONFIG
   {
     char WM_Sx[64];
     sprintf(WM_Sx,"WM_S%d",TheScreen.Screen);
@@ -1511,6 +1544,7 @@ UWM ");
     /* in case this succeeds, we're in! */
   XSync(disp,False);   /* Never let an error wait... */
     /* in case we have not stopped yet we're accepted as window manager! */
+#endif /* NEW_CONFIG */
 
   XSetErrorHandler((XErrorHandler)UWMErrorHandler);
     /* The real UWM-Error-handler */
@@ -1584,8 +1618,11 @@ UWM ");
 
 #ifndef NEW_CONFIG
   InitDefaults();   
+#else
+  ReadConfigFile();
+  exit(0);
 #endif /* NEW_CONFIG */
- 
+
   PrepareIcons();
 
   /*** prepare menus ***/
@@ -1677,6 +1714,8 @@ UWM ");
   SetWSBackground();
 }
 
+#ifdef NEW_CONFIG
+
 uwm_global_settings global_settings = {
 	  10,			/* BorderWidth */
 	  3,			/* TransientWidth */
@@ -1706,9 +1745,68 @@ uwm_global_settings global_settings = {
 	  0			/* BehaviourFlags */
 	};
 
-#ifdef NEW_CONFIG
+uwm_settings settings = {
+	  &global_settings,	/* global_settings */
+	  0,			/* workspace_settings_count */
+	  NULL			/* workspace_settings */
+	};
+
 int ReadConfigFile()
 {
+  int a;
+  uwm_workspace_settings *default_workspace_settings = NULL;
+
   uwm_yyparse_wrapper("uwmrc.new");
+
+  /* complete global options with defaults */
+  for(a = 0; a < UWM_GLOBAL_OPTION_NR; a ++) {
+    YYSTYPE d;
+    switch(uwm_global_index[a].type) {
+      case UWM_S_FONT: {
+	   FontStruct *fs;
+	   fs = (FontStruct *)(((void *)settings.global_settings)
+		 + uwm_global_index[a].offset);
+	   if(!fs->xfs) {
+	     char *errmsg;
+	     d.string = MyStrdup(uwm_global_index[a].default_val_string);
+	     if(errmsg = uopt_str_fnt(&d, &(uwm_global_index[a]),
+				      settings.global_settings)) {
+	       SeeYa(1, errmsg);
+	     }
+	   }
+	   break; }
+    }
+  }
+
+  /* complete workspace options with defaults */
+  for(a = 0; a < settings.workspace_settings_count; a++) {
+    int b;
+    if(!settings.workspace_settings[a]) {
+      if(!default_workspace_settings) {
+	default_workspace_settings = MyCalloc(1,
+					      sizeof(uwm_workspace_settings));
+	memset(default_workspace_settings, 0, sizeof(uwm_workspace_settings));
+	for(b = 0; b < UWM_WORKSPACE_OPTION_NR; b ++) {
+	  YYSTYPE d;
+	  switch(uwm_workspace_index[b].type) {
+	    case UWM_S_COLOR:
+		 if(!(*((XColor**)((void *)default_workspace_settings
+				   + uwm_workspace_index[b].offset)))) {
+		   char *errmsg;
+		   d.string = MyStrdup(uwm_workspace_index[b].default_val_string);
+		   if(errmsg = uopt_str_col(&d, &(uwm_workspace_index[a]),
+					    default_workspace_settings)) {
+		     SeeYa(1, errmsg);
+		   }
+		 }
+		 break;
+	  }
+	}
+	default_workspace_settings->Name = _("Default Workspace");
+      }
+      settings.workspace_settings[a] = default_workspace_settings;
+    }
+  }
 }
+
 #endif /* NEW_CONFIG */

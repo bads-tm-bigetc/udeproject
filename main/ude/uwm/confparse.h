@@ -8,6 +8,37 @@
 #endif  /* UWM_CONFPARSE_TAB_H */
 #include "settings.h"
 
+/* configuration datatypes */
+/* ATTENTION: ONLY CHANGE TOGETHER WITH CONVERSION TABLE IN confparse.y */
+#define UWM_S_INT 0
+#define UWM_S_FLOAT 1
+#define UWM_S_STRING 2
+#define UWM_S_FONT 3
+#define UWM_S_COLOR 4
+
+#define UWM_S_TYPENO 5
+
+typedef struct _uwm_init_index {
+  char *name;
+  long offset;
+  int type;
+  char *default_val_string;
+} uwm_init_index;
+
+#define UWM_GLOBAL_OPTION_NR 26
+extern const uwm_init_index uwm_global_index[UWM_GLOBAL_OPTION_NR];
+#define UWM_WORKSPACE_OPTION_NR 20
+extern const uwm_init_index uwm_workspace_index[UWM_WORKSPACE_OPTION_NR];
+
+/* prototypes for configconvertors.c */
+char *uopt_int_int(YYSTYPE *in, const uwm_init_index *out, void *base);
+char *uopt_int_flt(YYSTYPE *in, const uwm_init_index *out, void *base);
+char *uopt_flt_flt(YYSTYPE *in, const uwm_init_index *out, void *base);
+char *uopt_str_str(YYSTYPE *in, const uwm_init_index *out, void *base);
+char *uopt_str_fnt(YYSTYPE *in, const uwm_init_index *out, void *base);
+char *uopt_str_col(YYSTYPE *in, const uwm_init_index *out, void *base);
+char *MultiplyColor(char *color, double factor);
+
 #define UWM_YY_GLOBAL_CONTEXT		0
 #define UWM_YY_MENU_CONTEXT		1
 #define UWM_YY_WORKSPACE_CONTEXT	2
@@ -45,11 +76,5 @@ void uwm_yypush_LineStack(char *file);
 struct uwm_yyParseLineStackStruct *uwm_yypop_LineStack();
 void uwm_yyinitscanner();
 
-/* prototypes of confibconvertors.c */
-void uopt_int_int(YYSTYPE *in, uwm_init_index *out, void *base);
-void uopt_int_flt(YYSTYPE *in, uwm_init_index *out, void *base);
-void uopt_flt_flt(YYSTYPE *in, uwm_init_index *out, void *base);
-void uopt_str_str(YYSTYPE *in, uwm_init_index *out, void *base);
-void uopt_str_fnt(YYSTYPE *in, uwm_init_index *out, void *base);
-
 #endif
+

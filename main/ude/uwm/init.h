@@ -42,4 +42,7 @@ typedef struct {
 
 void InitUWM();
 
+unsigned long AllocColor(XColor *xcol);
+void FreeColor(XColor *color);
+
 #endif

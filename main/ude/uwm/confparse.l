@@ -38,7 +38,7 @@ extern UDEScreen TheScreen;
 
 void uwm_yydrop(unsigned int n);
 
-#define KEYWORDS 11
+#define KEYWORDS 13
 const struct ude_configfile_keys_struct {
   char *keyword;
   int   token;
@@ -53,7 +53,9 @@ const struct ude_configfile_keys_struct {
 					{"OPTION", OptionAtom},
 					{"WORKSPACE", WorkspaceAtom},
 					{"EVENT", EventAtom},
-					{"KEYSTROKE", KeystrokeAtom}};
+					{"KEYSTROKE", KeystrokeAtom},
+					{"LightOf", LightOfAtom},
+					{"ShadowOf", ShadowOfAtom}};
 
 struct uwm_yyParseLineStackStruct *uwm_yyParseLineStack = NULL;
 
@@ -159,7 +161,7 @@ BEGIN Unquoted;
 <Unquoted>[#%].*$ ;		/* delete comments */
 <Unquoted>.		{
 			fprintf(TheScreen.errout,
-			        "UWM: error on line %d of file <%s>: >%s< does not parse\n",
+			        "UWM: error on line %d of file %s: >%s< does not parse\n",
 			        uwm_yyParseLineStack->linenumber,
 			        uwm_yyParseLineStack->filename, yytext);
 			if(yytext[0] == '\\') input();

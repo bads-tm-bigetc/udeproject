@@ -1,3 +1,42 @@
+2003-07     Christian Ruppert <arc@users.sf.net>
+	* uwm/configconvertors.c: changed derefptr define to be safer (using
+	  void* typecast for pointer arithmetic)
+	* uwm/settings.h, uwm/confparse.h: moved uwm_init_index structure
+	  where it belongs: to confparse.h
+	* uwm/confparse.y, uwm/confparse.h: changed type of
+	  uwm_init_index.offset to long.
+	* uwm/configconvertors.c: changed convertor function to return error
+	  strings in case resource allocation fails.
+	* uwm/confparse.y: errors returned by convertor functions are now
+	  being treated.
+	* uwm/configconvertors.c: added convertor for font and color datatypes.
+	* uwm/confparse.y, uwm/configconvertors.c, uwm/confparse.l: added
+	  LightOf and ShadowOf color processing functions to configuration
+	  file syntax.
+	* uwm/confparse.y: removed types from block constructions.
+	* uwm/confparse.h, uwm/confparse.y: added element for default value
+	  to uwm_init_index.
+	* uwm/confparse.y: added color options to workspace index structure.
+	* uwm/confparse.y: added color convertor to convertor table.
+	* uwm/confparse.y: uwm_yy_PopContext now free memory instead of
+	  returning the context.
+	* uwm/confparse.h, uwm/confparse.y: contexts now have a void pointer
+	  for context dependent custom data.
+	* uwm/confparse.h: PushContext now allocates memory for a workspace
+	  if necessary.
+	* uwm/init.c: changed #ifdef NEW_CONFIG s to work properly.
+	* uwm/init.c: AllocColor and FreeColor rewritten for new configuration
+	  method.
+	* uwm/init.c: added preliminary ReadConfigFile function for new
+	  configuration method.
+	* uwm/init.c, uwm/settings.h: added a wrapper to have all settings
+	  accessible via a single structure.
+	* uwm/settings.h: changed internal color datatype to XColor *.
+	* autogen.sh: added warning and automatic cvs downgrade for those
+	  who accidentally got the (currently non-functional) 0.3 branch from
+	  cvs.
+
+
 2003-06-30  Christian Ruppert <arc@users.sf.net>
 	* uwm/properties.c: uwm no longer updates window's borders in case
 	  motif hints changes when a window is mapped. fixes problems with
