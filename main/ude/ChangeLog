@@ -1,3 +1,10 @@
+2003-12-30  Christian Ruppert <arc@users.sf.net>
+	* autogen.sh: added creation of symlink from config/ude_config_consts.h
+	  to uwm/ude_config_consts.h
+	* uwm/Makefile.am: added ude_config_consts.h and uwm_intl.h to headers
+	* config/Makefile.am: added ude_config_consts.h to list of files to be
+	  installed.
+
 2003-12-26  Christian Ruppert <arc@users.sf.net>
 	* uwm/init.c: removed dead/defined out code from old configuration
 	  system.

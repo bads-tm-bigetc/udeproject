@@ -70,6 +70,8 @@ noinst_HEADERS= \
 	settings.h \
 	confparse.h \
 	confparse.tab.h \
+	ude_config_consts.h \
+	uwm_intl.h \
 	workspaces.h
 
 EXTRA_DIST= shape.bitmap

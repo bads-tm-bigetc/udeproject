@@ -18,7 +18,8 @@ udeconfig_DATA= \
 	uwmrc \
 	uwmrc-behaviour.hook \
 	uwmrc-layout.hook \
-	uwmrc-ws.hook
+	uwmrc-ws.hook \
+	ude_config_consts.h
 
 udeconfig_SCRIPTS= \
 	StartScript \

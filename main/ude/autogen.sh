@@ -92,6 +92,7 @@ s/\([^\n \t]\)[\t ]\{2,\}/\1 /g
 
 echo "============================== creating some symlinks"
 ln -s ../README doc
+ln -s ../uwm/ude_config_consts.h config
 
 echo "============================== gettextize"
 gettextize -f --intl --no-changelog
