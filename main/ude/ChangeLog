@@ -1,3 +1,17 @@
+2004-03-07  Christian Ruppert <arc@users.sf.net>
+	* uwm/confparse.tab.y, uwm/settings.h, uwm/confparse.h: added
+	  HexCenterX and HexCenterY config options.
+	* uwm/uwm.h, uwm/winmenu.c, uwm/init.c: grouped all hex-menu related
+	  elements in TheScreen into HexMenu substructure.
+
+2004-02-15  Christian Ruppert <arc@users.sf.net>
+	* uwm/init.h, uwm/uwm.h, uwm/handlers.c, uwm/uwm.c, uwm/uwmmenu.c:
+	  moved icccmFlags from InitS to TheScreen.
+	* uwm/init.h, uwm/init.c: removed HexPath from InitS.
+	* uwm/uwm.h, uwm/init.c: PrepareIcons changed to allow a different
+	  shape for each hex icon. THE SHAPE IS TAKEN FROM THE UNSELECTED
+	  PIXMAP, THE HOTSPOT DEFINES THE POSITION IN THE PARENT WINDOW!
+
 2004-02-07  Christian Ruppert <arc@users.sf.net>
 	* uwm/workspaces.c(SetWSBackground), uwm/uwm.h: replaced
 	  TheScreen.BackCommand by settings.WorkspaceSettings[]->ScreenCommand.

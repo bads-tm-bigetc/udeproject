@@ -81,11 +81,16 @@
 #define I_MENU 5
 #define I_REALLY 6
 
+/* icccmFlags */
+#define ICF_STAY_ALIVE    (1<<0)  /* don't let yourself replace by another wm */
+#define ICF_TRY_HARD      (1<<1)  /* try to replace other icccm wms */
+#define ICF_HOSTILE       (1<<2)  /* try to replace other icccm wms violently */
 typedef struct {
   int Screen;
   Bool DoesSaveUnders, DoesBackingStore;
   Colormap colormap;
   unsigned int width, height;
+  unsigned char icccmFlags;
   Window root, inputwin;
 
   Cursor Mice[CURSORS];
@@ -109,12 +114,17 @@ typedef struct {
   FILE *errout;
 
   struct {
-    Window IconWins[ICONWINS];
-    Pixmap IconPixs[ICONWINS];
-    Pixmap IconSelectPixs[ICONWINS];
-    Pixmap shape;
+    int width, height;
+    int x, y;
     Window IconParent;
-  } icons;
+    struct {
+      int x, y;
+      Window IconWin;
+      Pixmap IconPix;
+      Pixmap IconSelectPix;
+      Pixmap IconShape;
+    } icons [ICONWINS];
+  } HexMenu;
 
   Menu *AppsMenu;
   Menu *UWMMenu;

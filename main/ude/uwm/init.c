@@ -77,16 +77,6 @@
 
 extern char **environ;
 
-const int iconpostab[ICONWINS][2] = {
-  {0,14},
-  {24,0},
-  {24,56},
-  {0,42},
-  {48,14},
-  {48,42},
-  {72,28}
-};
-
 extern UDEScreen TheScreen;
 extern Display *disp;
 extern XContext UWMContext;
@@ -116,6 +106,16 @@ void SetupCursors(void)
   TheScreen.Mice[C_WINDOW] = XCreateFontCursor(disp,XC_top_left_arrow);
 }
 
+const int iconpostab[ICONWINS][2] = {
+  {0,14},
+  {24,0},
+  {24,56},
+  {0,42},
+  {48,14},
+  {48,42},
+  {72,28}
+};
+
 char *iconfiles[7] = {
   "iconify",
   "close",
@@ -127,70 +127,103 @@ char *iconfiles[7] = {
 };
 
 #include "shape.bitmap"
+Pixmap DefaultHexShape;
 
 void PrepareIcons()
 {
   XpmAttributes xa;
-  char filename[512], dirname[300];
+  char *path, *filename;
   XSetWindowAttributes xswa;
-  int a,b;
+  int a, b;
+
+  DefaultHexShape = XCreateBitmapFromData(disp, TheScreen.root, shape_bits,
+                                          shape_width, shape_height);
+  if(DefaultHexShape == None) {
+    SeeYa(1, "Problem generating default Hex icon shape.");
+  }
 
   a = 0;
-  if(InitS.HexPath[0] =='\0') sprintf(dirname, "%sgfx/", TheScreen.udedir);
-  else sprintf(dirname,"%s/",InitS.HexPath);
-
-  for(b = 0;b<7;b++){
-    xa.valuemask = 0;
-    sprintf(filename,"%s%s.xpm",dirname,iconfiles[b]);
-    a |= XpmReadFileToPixmap(disp,TheScreen.root,filename,&TheScreen.icons.\
-                                  IconPixs[b],&TheScreen.icons.shape,&xa);
-    if(TheScreen.icons.shape != None) XFreePixmap(disp,TheScreen.icons.shape);
-    xa.valuemask = 0;
-    sprintf(filename,"%s%ss.xpm",dirname,iconfiles[b]);
-    a |= XpmReadFileToPixmap(disp,TheScreen.root,filename,&TheScreen.icons.\
-                            IconSelectPixs[b],&TheScreen.icons.shape,&xa);
-    if(TheScreen.icons.shape != None) XFreePixmap(disp,TheScreen.icons.shape);
+  if(settings.global_settings->HexPath) {
+    path = MyCalloc(strlen(settings.global_settings->HexPath) + 15,
+		    sizeof(char));
+    strcpy(path, settings.global_settings->HexPath);
+    filename = path + strlen(settings.global_settings->HexPath);
+  } else {
+    path = MyCalloc(strlen(TheScreen.udedir) + 19, sizeof(char));
+    sprintf(path, "%sgfx", TheScreen.udedir);
+    filename = path + strlen(TheScreen.udedir) + 3;
   }
+
+  for(b = 0; b < 7; b++){
+    Pixmap dummy;
+    xa.valuemask = 0;
+    sprintf(filename, "/%s.xpm", iconfiles[b]);
+    a |= XpmReadFileToPixmap(disp, TheScreen.root, path,
+			     &TheScreen.HexMenu.icons[b].IconPix,
+			     &TheScreen.HexMenu.icons[b].IconShape, &xa);
+    TheScreen.HexMenu.icons[b].x = - xa.x_hotspot;
+    TheScreen.HexMenu.icons[b].y = - xa.y_hotspot;
+    if(TheScreen.HexMenu.icons[b].IconShape == None) {
+      TheScreen.HexMenu.icons[b].IconShape = DefaultHexShape;
+      TheScreen.HexMenu.icons[b].x = iconpostab[b][0];
+      TheScreen.HexMenu.icons[b].y = iconpostab[b][1];
+    }
+    xa.valuemask = 0;
+    sprintf(filename, "/%ss.xpm", iconfiles[b]);
+    a |= XpmReadFileToPixmap(disp, TheScreen.root, path,
+			     &TheScreen.HexMenu.icons[b].IconSelectPix,
+                             &dummy, &xa);
+    if(dummy != None) XFreePixmap(disp, dummy);
+  }
+
+  free(path);
+
   if(a) {
-    if(InitS.HexPath[0] =='\0') SeeYa(1,"Icon pixmaps could not be loaded");
-    else {
-      InitS.HexPath[0] = '\0';
-      fprintf(TheScreen.errout,
-              "UWM: icons specified in uwmrc not found, trying to load default.\n");
+    if(settings.global_settings->HexPath) {
+      free(settings.global_settings->HexPath);
+      settings.global_settings->HexPath = NULL;
+      fprintf(TheScreen.errout, "UWM: icons specified in uwmrc not found, "
+				"trying to load default.\n");
       PrepareIcons();
+    } else {
+      SeeYa(1,"Icon pixmaps could not be loaded");
     }
     return;
   }
 
-  TheScreen.icons.shape = XCreateBitmapFromData(disp,TheScreen.root,\
-                              shape_bits,shape_width,shape_height);
-
   xswa.override_redirect = True;
   xswa.save_under = True;
 
-  TheScreen.icons.IconParent = XCreateWindow(disp,TheScreen.root,0,0,104,84,0,\
-                                  CopyFromParent,InputOutput,CopyFromParent,
-                               (TheScreen.DoesSaveUnders ? CWSaveUnder : 0)|
-				                   CWOverrideRedirect,&xswa);
-  XSelectInput(disp,TheScreen.icons.IconParent,LeaveWindowMask|\
-                                          VisibilityChangeMask);
-  XShapeCombineMask(disp,TheScreen.icons.IconParent,ShapeBounding,\
-                                iconpostab[0][0],iconpostab[0][1],\
-                                   TheScreen.icons.shape,ShapeSet);
+  TheScreen.HexMenu.IconParent = XCreateWindow(disp, TheScreen.root, 0, 0,
+					       104, 84, 0, CopyFromParent,
+					       InputOutput, CopyFromParent,
+					       (TheScreen.DoesSaveUnders
+						 ? CWSaveUnder : 0)
+					       | CWOverrideRedirect, &xswa);
+  XSelectInput(disp, TheScreen.HexMenu.IconParent,
+	       LeaveWindowMask | VisibilityChangeMask);
+  XShapeCombineMask(disp, TheScreen.HexMenu.IconParent, ShapeBounding,
+                    TheScreen.HexMenu.icons[0].x, TheScreen.HexMenu.icons[0].y,
+                    TheScreen.HexMenu.icons[0].IconShape, ShapeSet);
   for(a = 0;a<ICONWINS;a++) {
-    TheScreen.icons.IconWins[a] = XCreateWindow(disp,TheScreen.icons.IconParent,\
-                                    iconpostab[a][0],iconpostab[a][1],32,28,0,\
-           CopyFromParent,InputOutput,CopyFromParent,CWOverrideRedirect,&xswa);
-    XSelectInput(disp,TheScreen.icons.IconWins[a],EnterWindowMask);
-    XSetWindowBackgroundPixmap(disp,TheScreen.icons.IconWins[a],\
-                                    TheScreen.icons.IconPixs[a]);
-    XShapeCombineMask(disp,TheScreen.icons.IconWins[a],ShapeBounding,0,0,\
-                                          TheScreen.icons.shape,ShapeSet);
-    XShapeCombineMask(disp,TheScreen.icons.IconParent,ShapeBounding,\
-            iconpostab[a][0],iconpostab[a][1],TheScreen.icons.shape,\
-                                                         ShapeUnion);
+    TheScreen.HexMenu.icons[a].IconWin = XCreateWindow(disp,
+						TheScreen.HexMenu.IconParent,
+						TheScreen.HexMenu.icons[a].x,
+						TheScreen.HexMenu.icons[a].y,
+						32, 28, 0, CopyFromParent,
+						InputOutput, CopyFromParent,
+						CWOverrideRedirect, &xswa);
+    XSelectInput(disp, TheScreen.HexMenu.icons[a].IconWin, EnterWindowMask);
+    XSetWindowBackgroundPixmap(disp, TheScreen.HexMenu.icons[a].IconWin,
+                               TheScreen.HexMenu.icons[a].IconPix);
+    XShapeCombineMask(disp, TheScreen.HexMenu.icons[a].IconWin, ShapeBounding,
+                      0, 0, TheScreen.HexMenu.icons[a].IconShape, ShapeSet);
+    XShapeCombineMask(disp, TheScreen.HexMenu.IconParent, ShapeBounding,
+		      TheScreen.HexMenu.icons[a].x,
+		      TheScreen.HexMenu.icons[a].y,
+		      TheScreen.HexMenu.icons[a].IconShape, ShapeUnion);
   }
-  XMapSubwindows(disp,TheScreen.icons.IconParent);
+  XMapSubwindows(disp, TheScreen.HexMenu.IconParent);
 }
 
 unsigned long AllocColor(XColor *xcol)
@@ -438,35 +471,7 @@ void InitUWM()
   SetWSBackground();
 }
 
-uwm_global_settings global_settings = {
-	  10,			/* BorderWidth */
-	  3,			/* TransientBorderWidth */
-	  0,			/* TitleHeight */
-	  2,			/* FrameBevelWidth */
-	  39,			/* FrameFlags */
-	  0,			/* LayoutFlags */
-	  2,			/* BevelWidth */
-	  2,			/* MenuXOffset */
-	  2,			/* MenuYOffset */
-	  { NULL, NULL },	/* TitleFont */
-	  { NULL, NULL },	/* Font */
-	  { NULL, NULL },	/* MonoFont */
-	  { NULL, NULL },	/* HighlightFont */
-	  { NULL, NULL },	/* InactiveFont */
-	  NULL,			/* StartScript */
-	  NULL,			/* StopScript */
-	  NULL,			/* ResourceFile */
-	  NULL,			/* HexPath */
-	  5,			/* PlacementStrategy */
-	  0,			/* PlacementThreshold */
-	  0,			/* OpaqueMoveSize */
-	  0,			/* MaxWinWidth */
-	  0,			/* MaxWinHeight */
-	  -1,			/* WarpPointerToNewWinH */
-	  -1,			/* WarpPointerToNewWinV */
-	  10,			/* SnapDistance */
-	  0			/* BehaviourFlags */
-	};
+uwm_global_settings global_settings;
 
 uwm_settings settings = {
 	  &global_settings,	/* global_settings */
@@ -478,6 +483,7 @@ int ReadConfigFile()
 {
   int a;
 
+  memset(&global_settings, 0, sizeof(global_settings));
   uwm_yyparse_wrapper("uwmrc.new");
 
   /* initialize gettext defaults */

@@ -17,6 +17,9 @@ typedef struct _uwm_global_settings {
   int TitleHeight;
   int FrameBevelWidth;
   int FrameFlags;
+  char *HexPath;
+  int HexCenterX;
+  int HexCenterY;
 
 /*** general layout */
   int LayoutFlags;
@@ -34,7 +37,6 @@ typedef struct _uwm_global_settings {
   char *StartScript;
   char *StopScript;
   char *ResourceFile;
-  char *HexPath;
 
 /*** behaviour */
   int PlacementStrategy;

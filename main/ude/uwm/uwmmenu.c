@@ -60,7 +60,7 @@ void RestartUWM(Bool ClUp, Bool StartStopScript)
     argv[a] = "--NoStartScript"; a++; }
   if(InitS.StopScript[0] == '\n') {
     argv[a] = "--NoStopScript"; a++; }
-  if(InitS.icccmFlags & ICF_STAY_ALIVE) {
+  if(TheScreen.icccmFlags & ICF_STAY_ALIVE) {
     argv[a] = "--StayAlive"; a++; }
   argv[a] = NULL;
 

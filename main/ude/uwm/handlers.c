@@ -527,7 +527,7 @@ void HandleSelectionClear(XEvent *event)
 
   if((event->xselectionclear.selection == TheScreen.WM_Sx)
      && (TheScreen.inputwin != XGetSelectionOwner(disp, TheScreen.WM_Sx))){
-    if(!(InitS.icccmFlags & ICF_STAY_ALIVE))
+    if(!(TheScreen.icccmFlags & ICF_STAY_ALIVE))
       SeeYa(0,"passing on control to another wm");
     else XSetSelectionOwner(disp, TheScreen.WM_Sx, TheScreen.inputwin,
                             event->xselectionclear.time);

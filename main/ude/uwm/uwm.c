@@ -239,7 +239,7 @@ void PromptCommandLine(int argc,char **argv)
 
   InitS.StartScript[0]='\0';
   InitS.StopScript[0]='\0';
-  InitS.icccmFlags = 0;
+  TheScreen.icccmFlags = 0;
 
   printf("\n");
 
@@ -248,11 +248,16 @@ void PromptCommandLine(int argc,char **argv)
       for(b=0;b<HELPARRAYLINES;b++) printf("%s\n",HelpArray[b]);
       exit(0);
     }
-    else if(!strcmp("--NoStartScript",argv[a])) InitS.StartScript[0]='\n';
-    else if(!strcmp("--NoStopScript",argv[a])) InitS.StopScript[0]='\n';
-    else if(!strcmp("--TryHard",argv[a])) InitS.icccmFlags |= ICF_TRY_HARD;
-    else if(!strcmp("--Hostile",argv[a])) InitS.icccmFlags |= ICF_HOSTILE;
-    else if(!strcmp("--StayAlive",argv[a])) InitS.icccmFlags |= ICF_STAY_ALIVE;
+    else if(!strcmp("--NoStartScript",argv[a]))
+      InitS.StartScript[0]='\n';
+    else if(!strcmp("--NoStopScript",argv[a]))
+      InitS.StopScript[0]='\n';
+    else if(!strcmp("--TryHard",argv[a]))
+      TheScreen.icccmFlags |= ICF_TRY_HARD;
+    else if(!strcmp("--Hostile",argv[a]))
+      TheScreen.icccmFlags |= ICF_HOSTILE;
+    else if(!strcmp("--StayAlive",argv[a]))
+      TheScreen.icccmFlags |= ICF_STAY_ALIVE;
     else {
       printf("Unknown Option: %s\nType %s --help for more info\n",argv[a],\
                                                                   argv[0]);

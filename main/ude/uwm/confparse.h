@@ -28,7 +28,7 @@ typedef struct _uwm_init_index {
 
 #define UWM_DEFAULT_NAME_LENGTH 100
 extern char uwm_default_ws_name[UWM_DEFAULT_NAME_LENGTH];
-#define UWM_GLOBAL_OPTION_NR 27
+#define UWM_GLOBAL_OPTION_NR 29
 extern const uwm_init_index uwm_global_index[UWM_GLOBAL_OPTION_NR];
 #define UWM_WORKSPACE_OPTION_NR 21
 extern uwm_init_index uwm_workspace_index[UWM_WORKSPACE_OPTION_NR];
