@@ -224,15 +224,17 @@ void TermSig(int dummy)
   SeeYa(0,"Signal received!");
 }
 
-#define HELPARRAYLINES 9
-char *HelpArray[HELPARRAYLINES]=
- {"UWM HELP\n","Options & Switches:",
-  "  --NoStartScript     prevents uwm from executing StartScript",
-  "  --NoStopScript      prevents uwm from executing StopScript",
-  "  --TryHard           try to replace another running icccm compliant wm",
-  "  --Hostile           try harder replacing another icccm \'compliant\' wm",
-  "  --StayAlive         don't give away wmment control voluntarily",
-  "  --version, -v       print version information and exit",""};
+const char uwm_versionstring[] =
+  "\n     UWM - the UDE Window Manager\nVersion " UWMVERSION "\n\n";
+
+const char uwm_helpstring[] =
+  "Options & Switches:\n"
+  "  --NoStartScript     prevents uwm from executing StartScript\n"
+  "  --NoStopScript      prevents uwm from executing StopScript\n"
+  "  --TryHard           try to replace another running icccm compliant wm\n"
+  "  --Hostile           try harder replacing another icccm \'compliant\' wm\n"
+  "  --StayAlive         don\'t give up windowmanagement control voluntarily\n"
+  "  --version, -v       print version information and exit\n\n";
 
 void ParseCommandLine(int argc,char **argv)
 {
@@ -244,8 +246,7 @@ void ParseCommandLine(int argc,char **argv)
 
   for(a = 1; a < argc; a++) {
     if(!strcmp("--help",argv[a])) {
-      printf("\n");
-      for(b=0;b<HELPARRAYLINES;b++) printf("%s\n",HelpArray[b]);
+      printf("%s%s", uwm_versionstring, uwm_helpstring);
       exit(0);
     } else if(!strcmp("--NoStartScript", argv[a])) {
       InitS.StartScript[0]='\n';
@@ -258,11 +259,10 @@ void ParseCommandLine(int argc,char **argv)
     } else if(!strcmp("--StayAlive", argv[a])) {
       TheScreen.icccmFlags |= ICF_STAY_ALIVE;
     } else if((!strcmp("--version", argv[a])) || (!strcmp("-v", argv[a]))) {
-      printf("\n     UWM - the UDE Window Manager\n");
-      printf("Version %s\n\n", UWMVERSION);
+      printf("%s", uwm_versionstring);
       exit(0);
     } else {
-      printf("\nUnknown Option: %s\nType %s --help for more info\n",
+      printf("UWM: unknown option %s\nType %s --help for more info\n",
 	     argv[a], argv[0]);
       exit(0);
     }

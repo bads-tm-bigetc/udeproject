@@ -579,6 +579,8 @@ int ReadConfigFile()
       }
     }
   }
+#ifdef OPTION_DEBUG
+/***/printf("\n\n********************************************************\n");
 /***/for(a = 0; a < UWM_GLOBAL_OPTION_NR; a ++) {
 /***/  switch(uwm_global_index[a].type) {
 /***/    case UWM_S_INT: printf("%s = %d\n", uwm_global_index[a].name,
@@ -596,6 +598,7 @@ int ReadConfigFile()
 /***/         break;
 /***/  }
 /***/}
+#endif /* OPTION_DEBUG */
 #undef derefptr
 #undef deref
 
@@ -638,8 +641,9 @@ int ReadConfigFile()
   }
   for(a = 0; a < settings.workspace_settings_count; a++) {
     int b;
+#ifdef OPTION_DEBUG
 /***/printf("\nws%d:\n", a);
-    for(b = 0; b < UWM_WORKSPACE_OPTION_NR; b ++) {
+/***/for(b = 0; b < UWM_WORKSPACE_OPTION_NR; b ++) {
 /***/  switch(uwm_workspace_index[b].type) {
 /***/    case UWM_S_INT: printf("  %s = %d\n", uwm_workspace_index[b].name,
 /***/                           deref(int));
@@ -667,7 +671,8 @@ int ReadConfigFile()
 /***/                              deref(XColor*)->blue);
 /***/         break;
 /***/ }
-    }
+/***/}
+#endif /* OPTION_DEBUG */
   }
 #undef derefptr
 #undef deref

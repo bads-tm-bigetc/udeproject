@@ -7,7 +7,7 @@
    distributed with this file for details. */
 
 #ifdef GO__STRUCT
-#define UWM_GLOBAL_OPTION_NR 29
+#define UWM_GLOBAL_OPTION_NR 27
 #undef GO__STRUCT
 
 #define TY_INT int

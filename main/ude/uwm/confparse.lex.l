@@ -39,7 +39,7 @@ extern UDEScreen TheScreen;
 
 void uwm_yydrop(unsigned int n);
 
-#define KEYWORDS 45
+#define KEYWORDS 43
 const struct ude_configfile_keys_struct {
   char *keyword;
   int   token;
@@ -56,8 +56,8 @@ const struct ude_configfile_keys_struct {
 /* Global and Workspace Options */
 	{"OPTION", OptionAtom},		/* Global setting */
 	{"WORKSPACE", WorkspaceAtom},	/* Workspace specific setting */
-	{"LightOf", LightOfAtom},	/* Calculate color of light bevel */
-	{"ShadowOf", ShadowOfAtom},	/* Calculate color of shadow bevel */
+	{"LIGHT_OF", LightOfAtom},	/* Calculate color of light bevel */
+	{"SHADOW_OF", ShadowOfAtom},	/* Calculate color of shadow bevel */
 /* Event definitions */
 	{"EVENT", EventAtom},		/* Define event */
 	{"KEYSTROKE", KeystrokeAtom},	/* Keyboard */
@@ -77,10 +77,11 @@ const struct ude_configfile_keys_struct {
 	{"ASK", AskAtom},		/* Display Requester */
 #endif
 	{"QUIT", QuitAtom},		/* Exit gracefully */
-/* Window specifications */
+/* Window and workspace specifications */
 	{"ANY", AnyAtom},		/* Any window, whatever is selected */
 	{"NEXT", NextAtom},		/* Next window or None */
 	{"PREVIOUS", PrevAtom},		/* Previous window or None */
+	{"NEW", NewAtom},		/* Previous window or None */
 	{"APPLICATION", AppAtom},	/* WM_CLASS */
 	{"STATE", StateAtom},		/* WM_STATE */
 #if 0
@@ -129,7 +130,6 @@ BEGIN Unquoted;
 			s = strrchr(yytext, '$');
 			t = getenv(&s[2]);
 			uwm_yydrop(yyleng - ((s - yytext) / sizeof(char)));
-			printf("ENV: %s = %s\n", &s[2], t);
 			if(t) {
 			  for(a = (strlen(t) - 1); a >= 0; a--) {
 			      unput(t[a]);

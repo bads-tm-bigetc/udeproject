@@ -41,7 +41,8 @@
 %token EventAtom KeystrokeAtom ButtonAtom OpenAtom
 %token CloseAtom IconifyAtom DeiconifyAtom
 %token WindowAtom /* MessageAtom AskAtom */ QuitAtom
-%token AnyAtom NextAtom PrevAtom AppAtom StateAtom /* PropertyAtom */ NoneAtom
+%token AnyAtom NextAtom PrevAtom NewAtom AppAtom
+%token StateAtom /* PropertyAtom */ NoneAtom
 %token DragPosAtom DragSizeAtom HexMenuAtom
 %token SetFocusAtom ShowAtom RaiseAtom LowerAtom
 %token MaxAtom VMaxAtom HMaxAtom DemaxAtom
@@ -109,8 +110,10 @@ const ConverterFunction uwm_yy_to_setting_table[UWM_S_TYPENO][UWM_YY_TYPENO] = {
 %%
 
 TopLevel : TopLine
-         | TopLevel TopLine
-	 | error ErrDelim { yyerrok; } ;
+	 | TopLevel TopLine
+	 | RecoverFromERR ;
+
+RecoverFromERR : error ErrDelim { yyerrok; } ;
 
 TopLine : AnyLine
         | MenuBlock
@@ -123,8 +126,10 @@ AnyLine : PreProc
 	| ';' ;
 
 ErrDelim : ';' { uwm_yy_LEX_FLAG_Newline_Requested = 0; }
-	 | '\n' 
-	 | ';' '\n' ;
+	 | '}' { uwm_yy_LEX_FLAG_Newline_Requested = 0; }
+	 | '\n'
+	 | ';' '\n'
+	 | '}' '\n';
 
 String : StringAtom
        | LightOfAtom '(' String ',' FloatVal ')' {
@@ -166,7 +171,7 @@ OptionSetting : OptionLine
 
 OptionLines : OptionLine
             | OptionLines OptionLine
-	    | error ErrDelim { yyerrok; } ;
+	    | RecoverFromERR ;
 
 OptionLine : AnyLine
 	   | IntOption
@@ -198,10 +203,11 @@ EventSetting : EventLine
 
 EventLines : EventLine
 	   | EventLines EventLine
-	   | error ErrDelim { yyerrok; } ;
+	   | RecoverFromERR ;
 
 EventLine : AnyLine
 	  | KeystrokeAtom Integer ',' Integer ':' FunctionBlock
+	  | ButtonAtom Integer ',' Integer ':' FunctionBlock
 	  | FileLine ;
 
 FunctionBlock : { uwm_yy_PushContext(UWM_YY_FUNCTION_CONTEXT, NULL); }
@@ -211,19 +217,65 @@ FunctionBlock_ : Function
 	       | '{' Functions '}' ;
 
 Functions : Function
-	  | Functions Function ;
+	  | Functions Function
+	  | RecoverFromERR ;
+
+WorkspaceSpecifier : NextAtom { }
+		   | PrevAtom { }
+		   | String { }
+		   | NewAtom { }
+		   | CloseAtom { } ;
+
+WorkspaceFunction : WorkspaceAtom WorkspaceSpecifier ';' { } ;
+
+TopFunction : WorkspaceFunction { }
+	    | String ';' { }      /* shell command */
+	    | MenuAtom Integer { }
+/*	    | MessageAtom { }
+	    | AskAtom { } */ ;
+
+AnyWinSpecifier : AnyAtom | { } ; /* No specifier is the same as ANY */
+
+WinSpecifier : AnyWinSpecifier { }
+	     | String { }
+	     | AppAtom { }
+	     | NextAtom { }
+	     | PrevAtom { }
+	     | StateAtom { }
+	     | NoneAtom { } ;
+
+WinAction : DragPosAtom ';' { } 
+	  | DragSizeAtom ';' { }
+	  | HexMenuAtom ';' { }
+	  | SetFocusAtom ';' { }
+	  | ShowAtom ';' { }
+	  | RaiseAtom ';' { }
+	  | LowerAtom ';' { }
+	  | MaxAtom ';' { }
+	  | VMaxAtom ';' { }
+	  | HMaxAtom ';' { }
+	  | DemaxAtom ';' { }
+	  | ResizeAtom '(' Integer ',' Integer ')' ';' { }
+	  | SetSizeAtom '(' Integer ',' Integer ')' ';' { }
+	  | ReposAtom '(' Integer ',' Integer ')' ';' { }
+	  | SetPosAtom '(' Integer ',' Integer ')' ';' { } 
+	  | WorkspaceFunction { } 
+	  | CloseAtom ';' { }
+	  | IconifyAtom ';' { }
+	  | KillAtom ';' { } ;
+
+WinActionBlock  : WinAction
+		| '{' WinActions '}' ;
+
+WinActions : WinAction
+	   | WinActions WinAction
+	   | RecoverFromERR ;
+
+WinFunction : WindowAtom WinSpecifier WinActionBlock { } ;
 
 Function : AnyLine { }
-	 | Identifier '(' FunctionArgs ')' ';' { }
-	 | Identifier '(' ')' ';' { }
-	 | String ';' { } ;
-
-FunctionArgs : FunctionArg
-	     | FunctionArgs ',' FunctionArg ;
-
-FunctionArg : String { }
-	    | Integer { }
-	    | FloatVal { } ;
+	 | TopFunction { }
+	 | WinFunction { } ;
 
 MenuBlock : MenuAtom Integer Menu ;
 
@@ -236,16 +288,16 @@ Menu_ : '{' MenuLines '}'
       | WinmenuAtom ';' ;
 
 MenuLines : MenuLine
-          | MenuLines MenuLine
-	  | error ErrDelim { yyerrok; } ;
+	  | MenuLines MenuLine
+	  | RecoverFromERR ;
 
 MenuLine : AnyLine
 	 | DrawLine
-         | MenuItem
+	 | MenuItem
 	 | SubmenuBlock
 	 | FileLine ;
 
-DrawLine : LineAtom ';' { printf("line\n"); } ;
+DrawLine : LineAtom ';' { } ;
 
 MenuItem : ItemAtom String ':' FunctionBlock ;
 
@@ -356,8 +408,8 @@ void uwm_yy_PushContext(int type, void *data)
 	 s->data_index_size = UWM_WORKSPACE_OPTION_NR;
 	 break;
     case UWM_YY_FUNCTION_CONTEXT:
-         s->context_data = NULL; /* from event context */
-	 s->data_index = cf_functions;
+	 s->context_data = NULL; /* from event context */
+	 s->data_index = NULL;
 	 s->data_index_size = CONFIG_FUNC_COUNT;
     case UWM_YY_EVENT_CONTEXT:
     case UWM_YY_MENU_CONTEXT:

@@ -1,3 +1,19 @@
+2004-10-20  Christian Ruppert <arc@users.sf.net>
+	* uwm/uwm.c(ParseCommandLine): code to print help and version
+	  information slightly rewritten.
+	* uwm/settings_global_list.h: fixed UWM_GLOBAL_OPTION_NR which was
+	  probably forgotten when deleting some old options.
+	* uwm/init.c(ReadConfigFile): added some #ifdefs around debug code
+	  so we're not too verbose when we don't have to be.
+	* uwm/confparse.lex.l: changed LightOf and ShadowOf to be LIGHT_OF
+	  and SHADOW_OF which is more consistent with the rest of the config
+	  file syntax.
+	* uwm/confparselex.l, uwm/confparse.tab.y: added config file keyword
+	  NEW.
+	* uwm/confparse.tab.y: added the event syntax definitions.
+	* uwm/confparse.tab.y: added RecoverFromERR rule to make error recovery
+	  more consistent/easier and added '}' as an error delimiter.
+
 2004-10-14  Christian Ruppert <arc@users.sf.net>
 	* uwm/urdb: fixed a typo in gvim resources
 
