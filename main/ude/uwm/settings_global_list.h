@@ -39,8 +39,6 @@
   GLOBAL_OPTION(FrameBevelWidth, TY_INT, "2")
   GLOBAL_OPTION(FrameFlags, TY_INT, "39")
   GLOBAL_OPTION(HexPath, TY_STRING, NULL)
-  GLOBAL_OPTION(HexCenterX, TY_INT, "40")
-  GLOBAL_OPTION(HexCenterY, TY_INT, "42")
 
 /*** general layout */
   GLOBAL_OPTION(LayoutFlags, TY_INT, "0")

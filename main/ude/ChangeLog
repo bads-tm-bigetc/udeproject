@@ -1,4 +1,13 @@
 2004-09-19  Christian Ruppert <arc@users.sf.net>
+	* doc/icons: added directory with latex2html navigation icons.
+	* doc/l2h.conf: modified settings for documentation to be more
+	  similar to ude web page.
+	* doc/manual.tex: some minor updates.
+	* uwm/settings_global_list.h: removed obsolete hex menu center
+	  coordinate options.
+	* uwm/winmenumenu.c: small bugfix.
+
+2004-09-19  Christian Ruppert <arc@users.sf.net>
 	* uwm/workspaces.c(SetWSBackground): fixed segfault in case no
 	  background image is defined for a workspace.
 	* uwm/special.c(MyOpen): added error treatment in case we can't
