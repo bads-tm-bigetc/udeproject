@@ -268,7 +268,26 @@ int main(int argc,char **argv)
   /*** too lazy to alloc Mem... ***/
 
   /* init i18n */
-  setlocale (LC_ALL, "");
+  /*setlocale (LC_ALL, "");  don't need everything, LC_NUMERIC will confuse
+                             initialisation (dec points in BevelFactor)*/
+#ifdef LC_COLLATE
+  setlocale(LC_COLLATE, "");
+#endif
+#ifdef LC_CTYPE
+  setlocale(LC_CTYPE, "");
+#endif
+#ifdef LC_MONETARY
+  setlocale(LC_MONETARY, "");
+#endif
+#ifdef LC_TIME
+  setlocale(LC_TIME, "");
+#endif
+#ifdef LC_MESSAGES
+  setlocale(LC_MESSAGES,"");
+#endif
+#ifdef LC_RESPONSES
+  setlocale(LC_RESPONSES,"");
+#endif
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 

@@ -1,3 +1,9 @@
+2001-01-21  Christian Ruppert <arc@gmx.li>
+
+	* uwm.c(main): changed internationalisation so that we will now require
+	  '.' as decimal seperator in all config files no matter what language
+	  the user set in LANG.
+
 2001-01-11  Christian Ruppert <arc@gmx.li>
 
 	* windows.c: fixed a bug in MoveResizeWin(), artificial Configure
