@@ -14,11 +14,11 @@
 #define CFD_FUNC 2
 typedef struct _cf_data {
   int type;
-  union data {
+  union _cf_data_data {
     int i;
     char *s;
     struct _cf_func_def *f;
-  } ;
+  } data;
 } cf_data;
 
 typedef struct _cf_data_array {

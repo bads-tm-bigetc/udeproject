@@ -68,7 +68,10 @@ const struct ude_configfile_keys_struct {
 	{"DEICONIFY", DeiconifyAtom},	/* Window Iconic -> Normal */
 /* Top level actions */
 	{"WINDOW", WindowAtom},		/* Specify window */
+#if 0
+   the following atom is used in this context but defined above:
 	{"WORKSPACE", WorkspaceAtom},	/* Go to workspace */
+#endif
 #if 0
 	{"MESSAGE", MessageAtom},	/* Display Message */
 	{"ASK", AskAtom},		/* Display Requester */
@@ -85,25 +88,28 @@ const struct ude_configfile_keys_struct {
 #endif
 	{"NONE", NoneAtom},		/* no window/deselect if selected */
 /* Interactive window actions */
-	{"DragPosition", DragPosAtom},	/* Use mouse to reposition window */
-	{"DragSize", DragSizeAtom},	/* Use mouse to resize window */
-	{"HexMenu", HexMenuAtom},	/* Display HexMenu */
+	{"DRAG_POSITION", DragPosAtom},	/* Use mouse to reposition window */
+	{"DRAG_SIZE", DragSizeAtom},	/* Use mouse to resize window */
+	{"HEX_MENU", HexMenuAtom},	/* Display HexMenu */
 /* Noninteractive window actions */
-	{"SetWinFocus", SetWinFocusAtom},/* Give Window the focus */
-	{"ShowWin", ShowWinAtom},	/* Deiconify, go to ws and raise win */
-	{"RaiseWin", RaiseWinAtom},	/* Raise window */
-	{"LowerWin", LowerWinAtom},	/* Lower window */
-	{"MaximizeWin", MaxWinAtom},	/* Maximize window in X and Y */
-	{"VerticalMaximizeWin", VMaxAtom},/* Maximize window in Y only */
-	{"HorizontalMaximizeWin", HMaxAtom},/* Maximize window in X only */
-	{"DemaximizeWin", DemaxWinAtom},/* Restore original size */
-	{"ResizeWin", ResizeWinAtom},	/* Add or subtract from window size */
-	{"SetWinSize", SetWinSizeAtom},	/* Set absolute window size */
-	{"RepositionWin", ReposWinAtom},/* Add or subtract from position */
-	{"SetWinPosition", SetWinPosAtom},/* Set absolute window position */
-	{"CloseWin", CloseWinAtom},	/* Close window */
-	{"IconifyWin", IconifyWinAtom},	/* Iconify window */
-	{"KillWin", KillWinAtom},	/* XKill window */
+	{"SET_FOCUS", SetFocusAtom},	/* Give Window the focus */
+	{"SHOW", ShowAtom},		/* Deiconify, go to ws and raise win */
+	{"RAISE", RaiseAtom},		/* Raise window */
+	{"LOWER", LowerAtom},		/* Lower window */
+	{"MAXIMIZE", MaxAtom},		/* Maximize window in X and Y */
+	{"VERTICAL_MAXIMIZE", VMaxAtom},/* Maximize window in Y only */
+	{"HORIZONTAL_MAXIMIZE", HMaxAtom},/* Maximize window in X only */
+	{"DEMAXIMIZE", DemaxAtom},	/* Restore original size */
+	{"RESIZE", ResizeAtom},		/* Add or subtract from window size */
+	{"SET_SIZE", SetSizeAtom},	/* Set absolute window size */
+	{"REPOSITION", ReposAtom},	/* Add or subtract from position */
+	{"SET_POSITION", SetPosAtom},	/* Set absolute window position */
+#if 0
+   the following atoms are used in this context but defined above:
+	{"CLOSE", CloseAtom},		/* Close window */
+	{"ICONIFY", IconifyAtom},	/* Iconify window */
+#endif
+	{"KILL", KillAtom},		/* XKill window */
 };
 
 struct uwm_yyParseLineStackStruct *uwm_yyParseLineStack = NULL;

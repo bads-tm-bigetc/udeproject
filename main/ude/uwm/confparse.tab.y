@@ -40,13 +40,12 @@
 %token OptionAtom WorkspaceAtom LightOfAtom ShadowOfAtom
 %token EventAtom KeystrokeAtom ButtonAtom OpenAtom
 %token CloseAtom IconifyAtom DeiconifyAtom
-%token WindowAtom WorkspaceAtom /* MessageAtom AskAtom */ QuitAtom
+%token WindowAtom /* MessageAtom AskAtom */ QuitAtom
 %token AnyAtom NextAtom PrevAtom AppAtom StateAtom /* PropertyAtom */ NoneAtom
 %token DragPosAtom DragSizeAtom HexMenuAtom
-%token SetWinFocusAtom ShowWinAtom RaiseWinAtom LowerWinAtom
-%token MaxWinAtom VMaxAtom HMaxAtom DemaxWinAtom
-%token ResizeWinAtom SetWinSizeAtom ReposWinAtom SetWinPosAtom
-%token CloseWinAtom IconifyWinAtom KillWinAtom
+%token SetFocusAtom ShowAtom RaiseAtom LowerAtom
+%token MaxAtom VMaxAtom HMaxAtom DemaxAtom
+%token ResizeAtom SetSizeAtom ReposAtom SetPosAtom KillAtom
 %token PreprocessorAtom
 %token <string> IdentifierAtom StringAtom
 %token <intval> IntegerAtom
@@ -316,7 +315,6 @@ int yyerror(char *s)
 
 extern void *YY_CURRENT_BUFFER;
 
-char *types[] = {"Global", "Menu", "Workspace", "Event", "Function"};
 void uwm_yy_PushContext(int type, void *data)
 {
   struct uwm_yy_ContextStackStruct *s;
