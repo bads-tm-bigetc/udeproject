@@ -1,3 +1,7 @@
+2003-06-05  Christian Ruppert <arc@users.sf.net>
+        * autogen.sh: added cleanup code to remove modifications made by
+          new gettext in case they are accidentally checked into cvs.
+
 2003-05-17  Christian Ruppert <arc@users.sf.net>
 	* po/Makevars: added file
 	* autogen.sh: changed the order of gettextize and aclocal and added
