@@ -1,3 +1,14 @@
+2001-10-29  Christian Ruppert <arc@gmx.li>
+
+	* uwm/handlers.c (HandleButtonPress): removed one XQueryPointer call,
+	  consulting now event structure instead.
+	* uwm/handlers.c (HandleButtonPress): added else for non-menu button
+	  presses (optimisation)
+	* uwm/handlers.c (HandleButtonPress): added window selection depending
+	  on if subwindow member is set in button event (for button grab stuff)
+	* uwm/init.c (InitUWM): added ButtonGrab to 'extend' window border
+	  over whole window if ctrl-alt are pressed.
+
 2001-06-18  Christian Ruppert <arc@gmx.li>
 
 	* uwm/placement.c: moved removal of PLACEIT flag to the end of PlaceWin

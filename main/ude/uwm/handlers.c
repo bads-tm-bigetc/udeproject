@@ -275,15 +275,16 @@ void HandleButtonPress(XEvent *event)
 {
   UltimateContext *uc;
   int dummy;
-  Window rootret,childret;
+  Window rootret, childret, win;
 
   DBG(fprintf(TheScreen.errout,"HandleButtonPress\n");)
 
   StampTime(event->xbutton.time);
 
-  XQueryPointer(disp,TheScreen.root,&rootret,&childret,&dummy,&dummy,\
-                                                &dummy,&dummy,&dummy);
-  if((event->xbutton.window == TheScreen.root) && (childret == None)){
+/*  XQueryPointer(disp,TheScreen.root,&rootret,&childret,&dummy,&dummy,\
+                                                &dummy,&dummy,&dummy); */
+  if((event->xbutton.window == TheScreen.root)
+     && (event->xbutton.subwindow == None)){
     switch(event->xbutton.button){
       case Button1: ShowMenu(0,event->xbutton.x,event->xbutton.y);
                     break;
@@ -294,26 +295,31 @@ void HandleButtonPress(XEvent *event)
       case Button4: break;
       case Button5: break;
     }
-  }
- 
-  if(!XFindContext(disp,event->xbutton.window,UWMContext,(XPointer *)&uc)){
-    int x,y;
+  } else {
+    Window win;
 
-    if(uc->frame!=None) XQueryPointer(disp,uc->frame,&rootret,&childret,\
-                                             &dummy,&dummy,&x,&y,&dummy);
-    ActivateWin(uc);
-    switch(event->xbutton.button){
-      case Button1: BorderButton(0,uc,x,y,event->xbutton.x_root,\
-                                          event->xbutton.y_root);
-                    break;
-      case Button2: BorderButton(1,uc,x,y,event->xbutton.x_root,\
-                                          event->xbutton.y_root);
-                    break;
-      case Button3: BorderButton(2,uc,x,y,event->xbutton.x_root,\
-                                          event->xbutton.y_root);
-                    break;
-      case Button4: DBG(fprintf(TheScreen.errout,"4\n");)break;
-      case Button5: DBG(fprintf(TheScreen.errout,"5\n");)break;
+    win = (event->xbutton.subwindow == None) ? event->xbutton.window 
+          : event->xbutton.subwindow;
+ 
+    if(!XFindContext(disp, win, UWMContext, (XPointer *)&uc)){
+      int x,y;
+
+      if(uc->frame!=None) XQueryPointer(disp,uc->frame,&rootret,&childret,\
+                                               &dummy,&dummy,&x,&y,&dummy);
+      ActivateWin(uc);
+      switch(event->xbutton.button){
+        case Button1: BorderButton(0,uc,x,y,event->xbutton.x_root,\
+                                            event->xbutton.y_root);
+                      break;
+        case Button2: BorderButton(1,uc,x,y,event->xbutton.x_root,\
+                                            event->xbutton.y_root);
+                      break;
+        case Button3: BorderButton(2,uc,x,y,event->xbutton.x_root,\
+                                            event->xbutton.y_root);
+                      break;
+        case Button4: DBG(fprintf(TheScreen.errout,"4\n");)break;
+        case Button5: DBG(fprintf(TheScreen.errout,"5\n");)break;
+      }
     }
   }
 }

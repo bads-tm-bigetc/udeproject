@@ -1580,20 +1580,21 @@ UWM ");
   TheScreen.blackcontext=XCreateGC(disp,TheScreen.root,GCFunction|\
             GCCapStyle|GCLineStyle|GCLineWidth|GCForeground,&xgcv);
 
-  XGrabKey(disp,XKeysymToKeycode(disp,XK_Right),ControlMask|Mod1Mask,\
-                            TheScreen.root,True,GrabModeAsync,GrabModeAsync);
-  XGrabKey(disp,XKeysymToKeycode(disp,XK_Left),ControlMask|Mod1Mask,\
-                            TheScreen.root,True,GrabModeAsync,GrabModeAsync);
-  XGrabKey(disp,XKeysymToKeycode(disp,XK_Up),ControlMask|Mod1Mask,\
-                            TheScreen.root,True,GrabModeAsync,GrabModeAsync);
-  XGrabKey(disp,XKeysymToKeycode(disp,XK_Down),ControlMask|Mod1Mask,\
-                            TheScreen.root,True,GrabModeAsync,GrabModeAsync);
-  XGrabKey(disp,XKeysymToKeycode(disp,XK_Page_Down),ControlMask|Mod1Mask,\
-                            TheScreen.root,True,GrabModeAsync,GrabModeAsync);
-  XGrabKey(disp,XKeysymToKeycode(disp,XK_Page_Up),ControlMask|Mod1Mask,\
-                            TheScreen.root,True,GrabModeAsync,GrabModeAsync);
-  XGrabKey(disp,XKeysymToKeycode(disp,XK_End),ControlMask|Mod1Mask,\
-                            TheScreen.root,True,GrabModeAsync,GrabModeAsync);
+  XGrabKey(disp, XKeysymToKeycode(disp,XK_Right), ControlMask | Mod1Mask,
+           TheScreen.root, True, GrabModeAsync, GrabModeAsync);
+  XGrabKey(disp, XKeysymToKeycode(disp,XK_Left), ControlMask | Mod1Mask,
+           TheScreen.root, True, GrabModeAsync, GrabModeAsync);
+  XGrabKey(disp, XKeysymToKeycode(disp,XK_Up), ControlMask | Mod1Mask,
+           TheScreen.root, True, GrabModeAsync, GrabModeAsync);
+  XGrabKey(disp, XKeysymToKeycode(disp,XK_Down), ControlMask | Mod1Mask,
+           TheScreen.root, True, GrabModeAsync, GrabModeAsync);
+  XGrabKey(disp, XKeysymToKeycode(disp,XK_Page_Down), ControlMask | Mod1Mask,
+           TheScreen.root, True, GrabModeAsync, GrabModeAsync);
+  XGrabKey(disp, XKeysymToKeycode(disp,XK_Page_Up), ControlMask | Mod1Mask,
+           TheScreen.root, True, GrabModeAsync, GrabModeAsync);
+  XGrabButton(disp, AnyButton, ControlMask | Mod1Mask, TheScreen.root,
+              True, ButtonPressMask | ButtonReleaseMask, GrabModeAsync,
+	      GrabModeAsync, None, None);
 
   /* set up ude stuff (broadcast color and desktop information) */
   TheScreen.UDE_WORKSPACES_PROPERTY = XInternAtom(disp,\

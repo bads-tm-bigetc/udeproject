@@ -1,3 +1,7 @@
+* pressing ctrl-alt-mousebutton somewhere over a window will result in the
+  same behaviour as if the mousebutton was pressed over the window's border
+  (draging, resizing etc.).
+
 SNAP07052001
 
 * fixed built and installation procedures
