@@ -1,3 +1,12 @@
+2001-05-28  Christian Ruppert <arc@gmx.li>
+
+	* uwm/winmenu.c: changed global variables name from x1 to hexX and from
+	  y1 to hexY.
+	* uwm/winmenu.c: changed pointer warping to be done after pointer
+	  grabbing in StartWinMenu.
+	* uwm/winmenu.c: changed pointer ungrabbing to be done after warping
+	  back the pointer.
+
 2001-05-26  Christian Ruppert <arc@gmx.li>
 
 	* uwm/menu.c: changed SelectItem syntax (added state argument)

@@ -48,7 +48,7 @@ extern const int iconpostab[ICONWINS][2];
 extern InitStruct InitS;
 
 short selectedHex;
-int x1,y1,move_back;
+int hexX,hexY,move_back;
 UltimateContext *TheWin;
 
 void StartWinMenu(UltimateContext *uc,int x,int y)
@@ -56,38 +56,35 @@ void StartWinMenu(UltimateContext *uc,int x,int y)
   TheWin=uc;
   selectedHex=ICONWINS;
 
-  x1=x;y1=y;
+  hexX=x;hexY=y;
   if(x<40) x=40;
   if(x>(TheScreen.width-64)) x=TheScreen.width-64;
   if(y<42) y=42;
   if(y>(TheScreen.height-42)) y=TheScreen.height-42;
   
-  move_back=False;
-  if((x!=x1)|(y!=y1)){
-    XWarpPointer(disp,None,TheScreen.root,0,0,0,0,x,y);
-    move_back=True;
-    x1-=x;y1-=y;
-  }
-
-  x-=40;
-  y-=42;
- 
   XUnmapWindow(disp,TheScreen.icons.IconWins[I_REALLY]);
   XShapeCombineMask(disp,TheScreen.icons.IconParent,ShapeBounding,\
                   iconpostab[I_REALLY][0],iconpostab[I_REALLY][1],\
                               TheScreen.icons.shape,ShapeSubtract);
 
-  XMoveWindow(disp,TheScreen.icons.IconParent,x,y);
+  XMoveWindow(disp, TheScreen.icons.IconParent, x - 40, y - 42);
   XInstallColormap(disp,TheScreen.colormap);
   XMapRaised(disp,TheScreen.icons.IconParent);
   GrabPointer(TheScreen.icons.IconParent,ButtonPressMask|ButtonReleaseMask|\
                                   EnterWindowMask,TheScreen.Mice[C_BORDER]);
+
+  move_back=False;
+  if((x!=hexX)|(y!=hexY)){
+    XWarpPointer(disp,None,TheScreen.root,0,0,0,0,x,y);
+    move_back=True;
+    hexX-=x;hexY-=y;
+  }
+
   InstallWinMenuHandle();
 }
 
 void StopWinMenu(short selected, XEvent *event)
 {
-  UngrabPointer();
   XUnmapWindow(disp,TheScreen.icons.IconParent);
   if(TheWin) XInstallColormap(disp,TheWin->Attributes.colormap);
   ReinstallDefaultHandle();
@@ -137,8 +134,9 @@ void StopWinMenu(short selected, XEvent *event)
       XKillClient(disp,TheWin->win);
       break;
     default:
-      if(move_back) XWarpPointer(disp,None,None,0,0,0,0,x1,y1);
+      if(move_back) XWarpPointer(disp,None,None,0,0,0,0,hexX,hexY);
   }
+  UngrabPointer();
 }
 
 void WinMenuEnterNotify(XEvent *event)
