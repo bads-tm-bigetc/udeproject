@@ -8,7 +8,7 @@
 WorkSpaces=3
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% settings for workspace #0
+%%% Settings for workspace #0
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % WorkSpaceNr = <nr>
@@ -30,6 +30,23 @@ WorkSpaceName=Dionysus
 %
 %       Sets the current workspace´s screen background color.
 ScreenColor=64;40;64
+
+% ScreenPixmap = <filename>
+%       Default: ""
+%
+%       Sets the current workspace´s screen background image to the
+%       image file defined by <filename>. Overrides "ScreenColor" if
+%       set. Currently only the xpm file format is supported.
+%ScreenPixmap=/usr/share/ude/gfx/bgr1.xpm
+
+% ScreenCommand = <string>
+%       Default: ""
+%
+%       Defines a command line which is run when the current workspace
+%       is entered and killed when it is left. You can e.g. use this
+%       to have xearth on the background of one workspace while xsnow
+%       makes it winter on another one. Nice toy... 
+%ScreenCommand=floatbg
 
 % BevelFactor = <float>
 %       Default: 1.5

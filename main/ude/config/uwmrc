@@ -1,11 +1,11 @@
-% this is uwmrc, uwms central configuration file.
+% This is uwmrc, uwms central configuration file.
 % Please consult manual.dvi for further information.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% this file sources three files which can be individually replaced by      %%%
+%%% This file sources three files which can be individually replaced by      %%%
 %%% users in case they want to e.g. use the system´s default behaviour       %%%
 %%% but don´t like the default layout.                                       %%%
-%%% another file is sourced (if it is found in the user´s home configdir)    %%%
+%%% Another file is sourced (if it is found in the user´s home configdir)    %%%
 %%% which can be used by users to individually override system settings in   %%%
 %%% case they want to use them in general but don´t like particular settings.%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

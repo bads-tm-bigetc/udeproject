@@ -1,3 +1,6 @@
+2002-04-21  Christian Ruppert <arc@gmx.li>
+	* config/urdb, config/uwmrc*: applied Stephan Helma's (Debian) patches.
+
 2002-03-05  Christian Ruppert <arc@gmx.li>
 	* doc/manual.tex: added documentation for SubMenuTitles option.
 	* AUTHORS: added Brian Roberts and corrected obsolete www adress

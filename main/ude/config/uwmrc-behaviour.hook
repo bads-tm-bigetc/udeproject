@@ -1,7 +1,7 @@
 % uwm system default behaviour
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% scripts executed at startup and stop
+%%% General behaviour.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % BehaviourFlags = <nr>
@@ -17,7 +17,7 @@
 BehaviourFlags=0
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% scripts executed at startup and stop
+%%% Scripts executed at startup and stop.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % StartScript = <filename>
@@ -39,7 +39,7 @@ StartScript=StartScript
 StopScript=StopScript
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% menu behaviour
+%%% Menu behaviour.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Submenu Titles
@@ -69,6 +69,16 @@ TransientMenues=1
 %       menus can be reached.
 UWMMenuButton=1
 
+% DeiconifyButton = {1|2|3}
+%       Default: 2
+%
+%       Defines the button which starts the "Windows Menu" from the
+%       root window. Since uwm doesn´t check if all root window menus
+%       are accessible, this option should always be used together
+%       with "UWMMenuButton" and "AppMenuButton" to make sure all
+%       three menus can be reached.
+DeiconifyButton=2
+
 % AppMenuButton = {1|2|3}
 %       Default: 3
 %
@@ -80,7 +90,7 @@ UWMMenuButton=1
 AppMenuButton=3
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% window movement and placement
+%%% Window movement and placement.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % PlacementStrategy = {0-7}
@@ -111,7 +121,7 @@ PlacementStrategy=5
 %       change.
 %       If you want this option to make sense your values shouldn´t be
 %       too small (I tried out 100000 to be quite a good value at a
-%       screen-size of 1200<D7>1024).
+%       screen-size of 1200x1024).
 PlacementThreshold=100000
 
 % SnapDistance = <nr>
@@ -152,6 +162,26 @@ WarpPointerToNewWinH=-1
 %       Only takes effect if "WarpPointerToNewWinH" is set between 0
 %       and 100.
 WarpPointerToNewWinV=-1
+
+% RubberMove = {0|1}
+%       Default: 0
+%
+%       0       enables opaque window movement,
+%       1       disables opaque window movement.
+RubberMove=0
+
+% OpaqueMoveSize = <nr>
+%       Default: 0
+%
+%       Specifies the size in pixels from which on windows are no
+%       longer moved opaquely but transparently. A value of 0, which
+%       is also the default, means move always opaque, any other value
+%       means move transparent from that size on. Values greater than
+%       0 might be useful on slower machines with some
+%       applications. You should try out your favourite value or if
+%       e.g. transparent movement for all windows works better on your
+%       machine with your frequently used applications.
+OpaqueMoveSize=500000
 
 % MaxWinWidth = <nr>
 %       Default: 0
