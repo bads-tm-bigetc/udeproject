@@ -635,8 +635,41 @@ int ReadConfigFile()
         }
       }
     }
+  }
+  for(a = 0; a < settings.workspace_settings_count; a++) {
+    int b;
+/***/printf("\nws%d:\n", a);
+    for(b = 0; b < UWM_WORKSPACE_OPTION_NR; b ++) {
+/***/  switch(uwm_workspace_index[b].type) {
+/***/    case UWM_S_INT: printf("  %s = %d\n", uwm_workspace_index[b].name,
+/***/                           deref(int));
+/***/         break;
+/***/    case UWM_S_FLOAT: printf("  %s = %f\n", uwm_workspace_index[b].name,
+/***/                             deref(double));
+/***/         break;
+/***/    case UWM_S_STRING: printf("  %s = %s\n", uwm_workspace_index[b].name,
+/***/                             deref(char*));
+/***/         break;
+/***/    case UWM_S_FONT: if(deref(FontStruct*))
+/***/                       printf("  %s = %s\n", uwm_workspace_index[b].name,
+/***/                              deref(FontStruct*)->name);
+/***/         break;
+/***/    case UWM_S_PIXMAP: if(deref(uwm_image*))
+/***/                       printf("  %s = 0x%X\n",
+/***/                              uwm_workspace_index[b].name,
+/***/                              deref(uwm_image*)->image);
+/***/         break;
+/***/    case UWM_S_COLOR: if(deref(XColor*))
+/***/                       printf("  %s = #%.4X%.4X%.4X\n",
+/***/                              uwm_workspace_index[b].name,
+/***/                              deref(XColor*)->red,
+/***/                              deref(XColor*)->green,
+/***/                              deref(XColor*)->blue);
+/***/         break;
+/***/ }
+    }
+  }
 #undef derefptr
 #undef deref
-  }
 }
 
