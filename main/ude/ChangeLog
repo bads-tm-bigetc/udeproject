@@ -1,3 +1,8 @@
+2003-11-25  Christian Ruppert <arc@users.sf.net>
+	* uwm/windows.c: fixed a bug in focus management (ActivateWin now no
+	  longer gives focus to root before setting focus to destination
+	  window)
+
 2003-10-26  Christian Ruppert <arc@users.sf.net>
 	* uwm/pix.c, uwm/pix.h: added FreePic function to free pixmaps and
 	  colormaps.

@@ -403,15 +403,10 @@ void ActivateWin(UltimateContext *uc)
   if(uc && (!WinVisible(uc)))
     uc = NULL;
 
-  OldActive=ActiveWin;
-  ActiveWin=uc;
+  OldActive = ActiveWin;
+  ActiveWin = uc;
 
-  if(ActiveWin != FocusWin) {
-    if(OldActive){
-      XSetInputFocus(disp, PointerRoot, RevertToPointerRoot, TimeStamp);
-    }
-  }
-  if(uc){
+  if(uc) {
     int focus_set;
 
     focus_set = 0;
@@ -427,8 +422,11 @@ void ActivateWin(UltimateContext *uc)
       focus_set = 1;
     }
 
-    if((!focus_set) && (ActiveWin->frame != None))
+    if((!focus_set) && (ActiveWin->frame != None)) {
       XSetInputFocus(disp, ActiveWin->frame, RevertToPointerRoot, TimeStamp);
+    }
+  } else if(OldActive) {
+    XSetInputFocus(disp, PointerRoot, RevertToPointerRoot, TimeStamp);
   }
 }
 
