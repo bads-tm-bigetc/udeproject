@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ude 0.2.6-beta\n"
-"POT-Creation-Date: 2000-11-24 13:33-0700\n"
+"POT-Creation-Date: 2000-12-04 00:57-0700\n"
 "PO-Revision-Date: 1999-11-23 18:03+0200\n"
 "Last-Translator: Fatih Demir <kabalak@gmx.net>\n"
 "Language-Team: Fatih Demir <kabalak@gmx.net>\n"
@@ -14,11 +14,11 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-9\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: uwm/windows.c:563
+#: uwm/windows.c:570
 msgid "Windows Menu"
 msgstr "Pencereler"
 
-#: uwm/windows.c:574 uwm/windows.c:575
+#: uwm/windows.c:581 uwm/windows.c:582
 msgid "Sticky Windows"
 msgstr ""
 

@@ -339,7 +339,7 @@ void GrabPointer(Window win,unsigned int mask,Cursor mouse)
   pgrabwins[pgrabstat]=win;
   while(XGrabPointer(disp,pgrabwins[pgrabstat],True,pgrabmasks[pgrabstat],\
                     GrabModeAsync,GrabModeAsync,None,pgrabmice[pgrabstat],\
-                                              TheScreen.now)!=GrabSuccess){
+                                                CurrentTime)!=GrabSuccess){
 #ifdef HAVE_NANOSLEEP
     struct timespec req,dummy;
     req.tv_sec = 0;

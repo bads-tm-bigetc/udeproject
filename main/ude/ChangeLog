@@ -1,3 +1,9 @@
+last change until 2000-12-05 Christian Ruppert <arc@gmx.li>
+
+	* massive changes to window management kernel, too complex and much to
+	  make sense being documented here... i'll continue this ChangeLog from
+	  now on i promise.
+
 2000-06-26  Christian Ruppert <arc@gmx.li>
 
 	* config/urdb: added some resource definitions (taken from the gnome
