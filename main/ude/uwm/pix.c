@@ -72,16 +72,18 @@ Pixmap LoadJpeg(Display *disp, Drawable draw, char *filename, XpmAttributes *xpa
   struct jpeg_decompress_struct dobj;
   struct jerrstruct jerr;
   FILE *jpg_file = NULL;
-  XImage *image = NULL;
   Pixmap ret = None;
   XGCValues xgcv;
   GC gc;
-  JSAMPLE *data = NULL;
   JSAMPROW *rows = NULL;
-  unsigned long *idata = NULL;
   XColor col;
-  int a,b,c = 0;
+  int b;
   unsigned long d;
+/* we need these to be static to make sure they won't be affected by longjmp */
+  static XImage *image = NULL;
+  static JSAMPLE *data = NULL;
+  static unsigned long *idata = NULL;
+  static int  c = 0;
 
   if(!(jpg_file = fopen(filename,"rb"))) return(None);
   xpa->pixels = NULL;
@@ -154,7 +156,7 @@ Pixmap LoadJpeg(Display *disp, Drawable draw, char *filename, XpmAttributes *xpa
 #endif
   image->bits_per_pixel = 8 * sizeof(unsigned long);
 
-/*  _XInitImageFuncPtrs(image);  /*** Not quite sure if this is needed, works fine ***/
+/*  _XInitImageFuncPtrs(image);  *** Not quite sure if this is needed, works fine ***/
    /*** without it on my system and the function is to be considered private to Xlib ***/
 
   for(c=0; c < dobj.actual_number_of_colors; c++) {

@@ -139,10 +139,12 @@ void MoveResizeWin(UltimateContext *uc,int x,int y,int width,int height)
   int ow,oh,ox,oy;
   DBG(fprintf(TheScreen.errout, "MoveResizeWin (%d): (%d|%d) - %dx%d\n",
               uc->win, x, y, width, height);)
-  if(((x==(ox=uc->Attr.x))&&(y==(oy=uc->Attr.y)))&&\
-       ((width==(ow=uc->Attr.width))||(width==0))&&\
-      ((height==(oh=uc->Attr.height))||(height==0)))
-    return;
+  ox=uc->Attr.x;
+  oy=uc->Attr.y;
+  ow=uc->Attr.width;
+  oh=uc->Attr.height;
+  if(((x == ox) && (y == oy)) && ((width == ow) || (width == 0))
+     && ((height == oh) || (height == 0))) return;
 
   if(!(width||height)){
     if(uc->frame != None) XMoveWindow(disp, uc->frame, x, y);
@@ -212,7 +214,6 @@ void GravitizeWin(UltimateContext *uc,int *x, int *y, int mode)
 void EnborderWin(UltimateContext *uc)
 {
   XSetWindowAttributes SAttr;
-  Window dummy;
   int a,w,h;
   char HasTitle=-1;
 
@@ -443,7 +444,6 @@ Node* PlainDeUltimizeWin(UltimateContext *uc,Bool alive)
 
 Node* DeUltimizeWin(UltimateContext *uc,Bool alive)
 {
-  Node *n;
   if(alive) SetWinMapState(uc, WithdrawnState);
   return(PlainDeUltimizeWin(uc, alive));
 }
@@ -547,7 +547,7 @@ void DeiconifyMenu(int x, int y)
 {
   int a;
   Node *ucn;
-  Menu *men,**wspaces=NULL,*sticky;
+  Menu *men, **wspaces=NULL, *sticky;
   MenuItem *item;
 
   men=MenuCreate(_("Windows Menu"));
@@ -561,7 +561,7 @@ void DeiconifyMenu(int x, int y)
       AppendMenuItem(men,TheScreen.WorkSpace[a],wspaces[a],I_SUBMENU);
     }
     AppendMenuItem (men, NULL, NULL, I_LINE);
-    sticky=MenuCreate (_("Sticky Windows"));
+    sticky = MenuCreate (_("Sticky Windows"));
     AppendMenuItem (men, _("Sticky Windows"), sticky, I_SUBMENU);
   } else {
     wspaces[0]=men;
@@ -570,7 +570,7 @@ void DeiconifyMenu(int x, int y)
   GrabServer();  /* Make sure no window gets destroyed meanwhile */
 
   ucn=NULL;
-  while(ucn=NodeNext(TheScreen.UltimateList,ucn)){
+  while(ucn = NodeNext(TheScreen.UltimateList,ucn)){
     UltimateContext *uc;
     uc=ucn->data;
     if(((uc->wmstate == NormalState) || (uc->wmstate == IconicState))
@@ -584,7 +584,7 @@ void DeiconifyMenu(int x, int y)
     }
   }
 
-  if(item=StartMenu(men, x, y, True, True, NULL)){
+  if(item = StartMenu(men, x, y, True, True, NULL)){
     if(SWITCHTYPE(item->type)){
       UltimateContext *uc;
       uc=item->data;

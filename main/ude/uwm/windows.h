@@ -23,5 +23,6 @@ void IconifyWin(UltimateContext *uc);
 void DisplayWin(UltimateContext *uc);
 void CloseWin(UltimateContext *uc);
 void DeiconifyMenu();
+void DrawWinBorder(UltimateContext *uc);
 
 #endif

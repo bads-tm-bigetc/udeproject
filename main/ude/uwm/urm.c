@@ -36,12 +36,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #include <X11/Xlib.h>
 #include <X11/X.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 #include <X11/Xresource.h>
+#include <X11/Xmu/SysUtil.h>
 
 #include "uwm.h"
 #include "lib/ude-desktop.h"
@@ -195,7 +197,7 @@ char *ClassNames[] = {
 char *Initurdbcppopts()
 {
 #define MAXHOSTNAME 255
-  char client[MAXHOSTNAME], server[MAXHOSTNAME], *colon, p;
+  char client[MAXHOSTNAME], server[MAXHOSTNAME], *colon;
   char **extnames, *strings[2];
   int n;
 /***/

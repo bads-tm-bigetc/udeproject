@@ -63,6 +63,7 @@
 #include "handlers.h"
 #include "menu.h"
 #include "special.h"
+#include "properties.h"
 
 Display *disp=NULL; 	/* 'global' display to Server... */ 
 UDEScreen TheScreen;    /* structure that keeps all important global info */

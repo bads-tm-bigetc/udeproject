@@ -43,6 +43,8 @@
 #include "init.h"
 #include "properties.h"
 #include "wingroups.h"
+#include "widgets.h"
+#include "special.h"
 
 extern UDEScreen TheScreen;
 extern Display *disp;
@@ -218,7 +220,7 @@ void UpdateWMProtocols(UltimateContext *uc)
     for(a=0;a<count;a++){
       if(prots[a]==WM_TAKE_FOCUS) {
         uc->ProtocolFlags|=TAKE_FOCUS;
-        if(uc == ActiveWin) SendWMProtocols(uc, WM_TAKE_FOCUS, TimeStamp);
+        if(uc == ActiveWin) SendWMProtocols(uc, WM_TAKE_FOCUS);
       }
       if(prots[a]==WM_DELETE_WINDOW) uc->ProtocolFlags|=DELETE_WINDOW;
     }

@@ -149,12 +149,13 @@ void HandleEnterNotify(XEvent *event)
 
   StampTime(event->xcrossing.time);
 
-  if(!XFindContext(disp, event->xcrossing.window, UWMContext, (XPointer *)&uc))
+  if(!XFindContext(disp, event->xcrossing.window, UWMContext, (XPointer *)&uc)){
     if(event->xcrossing.window == uc->frame)
       ActivateWin(uc);
     else if((event->xcrossing.window == uc->title.win)
             && (InitS.BorderTitleFlags & BT_DODGY_TITLE))
       XLowerWindow(disp,uc->title.win);
+  }
 }
 
 void HandleLeaveNotify(XEvent *event)
@@ -244,7 +245,6 @@ void HandleUnmapNotify(XEvent *event)
   DBG(fprintf(TheScreen.errout,"HandleUnmapNotify\n");)
 
   if(!XFindContext(disp, event->xunmap.window, UWMContext, (XPointer *)&uc)) {
-    int NoUpdate;
     if(uc->expected_unmap_events) {
       uc->expected_unmap_events--;
       return;
@@ -353,34 +353,35 @@ void HandleConfigureRequest(XEvent *event)
   if((!XFindContext(disp, event->xconfigurerequest.window, UWMContext,
                     (XPointer *)&uc))
      && (event->xconfigurerequest.window == uc->win)) {
-    if(event->xconfigurerequest.value_mask & (CWX | CWY | CWWidth | CWHeight))
-    if(uc->frame != None) {
-      XConfigureWindow(disp, uc->win, event->xconfigurerequest.value_mask
-                       & (CWWidth | CWHeight), &xwc);
-      xwc.width += 2 * uc->BorderWidth;
-      xwc.height += TheScreen.TitleHeight + 2 * uc->BorderWidth;
-      XConfigureWindow(disp, uc->border, event->xconfigurerequest.value_mask
-                       & (CWWidth | CWHeight), &xwc);
-      if(event->xconfigurerequest.value_mask & (CWX | CWY))
-        GravitizeWin(uc, &(xwc.x), &(xwc.y), UWM_GRAVITIZE);
-      XConfigureWindow(disp, uc->frame, event->xconfigurerequest.value_mask
-                       & (CWSibling | CWStackMode | CWX | CWY
-		          | CWWidth | CWHeight), &xwc);
-      if((event->xconfigurerequest.value_mask & CWWidth)
-         && (uc->title.win != None)
-	 && ((InitS.BorderTitleFlags & BT_CENTER_TITLE) 
-	     || (uc->flags & SHAPED))) {
-        XMoveWindow(disp, uc->title.win,
-	            uc->title.x = (xwc.width - uc->title.width) / 2,
-	            uc->title.y);
+    if(event->xconfigurerequest.value_mask & (CWX | CWY | CWWidth | CWHeight)) {
+      if(uc->frame != None) {
+        XConfigureWindow(disp, uc->win, event->xconfigurerequest.value_mask
+                         & (CWWidth | CWHeight), &xwc);
+        xwc.width += 2 * uc->BorderWidth;
+        xwc.height += TheScreen.TitleHeight + 2 * uc->BorderWidth;
+        XConfigureWindow(disp, uc->border, event->xconfigurerequest.value_mask
+                         & (CWWidth | CWHeight), &xwc);
+        if(event->xconfigurerequest.value_mask & (CWX | CWY))
+          GravitizeWin(uc, &(xwc.x), &(xwc.y), UWM_GRAVITIZE);
+        XConfigureWindow(disp, uc->frame, event->xconfigurerequest.value_mask
+                         & (CWSibling | CWStackMode | CWX | CWY
+		            | CWWidth | CWHeight), &xwc);
+        if((event->xconfigurerequest.value_mask & CWWidth)
+           && (uc->title.win != None)
+	   && ((InitS.BorderTitleFlags & BT_CENTER_TITLE) 
+	       || (uc->flags & SHAPED))) {
+          XMoveWindow(disp, uc->title.win,
+	              uc->title.x = (xwc.width - uc->title.width) / 2,
+	              uc->title.y);
+        }
+        if((event->xconfigurerequest.value_mask & CWStackMode)
+           || ((event->xconfigurerequest.value_mask & (CWX|CWY))
+           && (!(event->xconfigurerequest.value_mask & (CWWidth|CWHeight)))))
+          SendConfigureEvent(uc);
+      } else {
+        XConfigureWindow(disp, uc->win, event->xconfigurerequest.value_mask,
+                         &xwc);
       }
-      if((event->xconfigurerequest.value_mask & CWStackMode)
-         || ((event->xconfigurerequest.value_mask & (CWX|CWY))
-         && (!(event->xconfigurerequest.value_mask & (CWWidth|CWHeight)))))
-        SendConfigureEvent(uc);
-    } else {
-      XConfigureWindow(disp, uc->win, event->xconfigurerequest.value_mask,
-                       &xwc);
     }
     UpdateUWMContext(uc);
   } else XConfigureWindow(disp, event->xconfigurerequest.window,

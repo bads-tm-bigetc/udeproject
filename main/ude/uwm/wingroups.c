@@ -108,7 +108,6 @@ int RemoveWinFromGroup(UltimateContext *uc)
 
 void DeleteWinGroup(WinGroup *group)
 {
-  Node *n;
   while(-1 != RemoveWinFromGroup(NodeNext(group->members, NULL)->data));
 }
 

@@ -42,6 +42,7 @@
 #include "special.h"
 #include "nodes.h"
 #include "menu.h"
+#include "urm.h"
 
 extern UDEScreen TheScreen;
 extern Display *disp;

@@ -52,6 +52,8 @@
 #endif
 
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xresource.h>
 #include <X11/xpm.h>
 #include <X11/keysym.h>
 #include <X11/extensions/shape.h>
@@ -222,10 +224,10 @@ void PrepareIcons()
 
 char *ReadQuoted(FILE *f) /* allocs mem and writes string to it*/
 {
-  char c,text[256],*p;
+  char c, text[256], *p;
   int i;
 
-  sprintf(text,"");
+  text[0] = '\0';
   do {
     if(EOF==fscanf(f,"%c",&c)) return(NULL);
   } while(c!='"');
@@ -431,7 +433,6 @@ void CreateAppsMenu(char *filename)
 {
   AppStruct *app;
   FILE *mf;
-  char s[256];
 
   Stack=NodeListCreate();
   if(!Stack)
@@ -759,11 +760,9 @@ enum KeyNames {
 void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
 {
   char s[256],*p,*token;
-  char temp[256]; /* needed for case 27 */
   int b,r,g;
   enum KeyNames a;
   FILE *secuwmrc;
-  struct stat stats;
 
   while(fgets (s, 255, uwmrc))
     {
@@ -1242,7 +1241,7 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
 void InitDefaults()
 {
   FILE *uwmrc;
-  char s[256],MenuFileName[256];
+  char MenuFileName[256];
 
 /*** set values to default before reading config file. ***/
 

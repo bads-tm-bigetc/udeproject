@@ -10,7 +10,7 @@
 //BEGIN: Old workspace function definitions
 #define OnActiveWS(A) (((A)==TheScreen.desktop.ActiveWorkSpace)||((A)==(-1)))
 
-void BroadcastWorkspacesInfo();
+void BroadcastWorkSpacesInfo();
 void ChangeWS(short WS);
 void StickyWin(UltimateContext *uc);
 void WithWin2WS(UltimateContext *uc,short ws);

@@ -57,6 +57,7 @@
 #include "move.h"
 #include "resize.h"
 #include "ude-desktop.h"
+#include "urm.h"
 
 extern UDEScreen TheScreen;
 extern Display *disp;
