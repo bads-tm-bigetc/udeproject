@@ -360,6 +360,8 @@ void HandleConfigureRequest(XEvent *event)
       xwc.height += TheScreen.TitleHeight + 2 * uc->BorderWidth;
       XConfigureWindow(disp, uc->border, event->xconfigurerequest.value_mask
                        & (CWWidth | CWHeight), &xwc);
+      if(event->xconfigurerequest.value_mask & (CWX | CWY))
+        GravitizeWin(uc, &(xwc.x), &(xwc.y), UWM_GRAVITIZE);
       XConfigureWindow(disp, uc->frame, event->xconfigurerequest.value_mask
                        & (CWSibling | CWStackMode | CWX | CWY
 		          | CWWidth | CWHeight), &xwc);

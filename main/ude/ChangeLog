@@ -1,3 +1,10 @@
+2001-04-13  Christian Ruppert <arc@gmx.li>
+
+	* uwm/windows.c: moved gravity handling out of window reparenting
+	  routines
+	* uwm/windows.h: added prototype and defines for GravitizeWin
+	* uwm/handlers.c: added gravity handling in HandleConfigureRequest
+
 2001-02-27  Christian Ruppert <arc@gmx.li>
 
 	* config/urdb: added resources for rxvt

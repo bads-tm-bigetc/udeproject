@@ -165,6 +165,44 @@ void MoveResizeWin(UltimateContext *uc,int x,int y,int width,int height)
 /***************************************************************************/
 }
 
+void GravitizeWin(UltimateContext *uc,int *x, int *y, int mode)
+{
+  /*** pay respect to gravity ***/
+  switch(uc->ra.gravity){        /*** Y ***/
+    case SouthGravity:
+    case SouthEastGravity:
+    case SouthWestGravity:
+      *y -= mode * (2 * (uc->BorderWidth - uc->OldBorderWidth)
+                                  + TheScreen.TitleHeight);
+      break;
+    case CenterGravity:
+    case EastGravity:
+    case WestGravity:
+      *y -= mode * (uc->BorderWidth - uc->OldBorderWidth 
+                                  + TheScreen.TitleHeight / 2);
+      break;
+    case StaticGravity:
+      *y -= mode * (uc->BorderWidth - uc->OldBorderWidth
+                                  + TheScreen.TitleHeight / 2);
+      break;
+    default: break;
+  }
+  switch(uc->ra.gravity){        /*** X ***/
+    case EastGravity:
+    case SouthEastGravity:
+    case NorthEastGravity:
+      *x -= mode * (2 * (uc->BorderWidth - uc->OldBorderWidth));
+      break;
+    case CenterGravity:
+    case NorthGravity:
+    case StaticGravity:
+    case SouthGravity:
+      *x -= mode * (uc->BorderWidth - uc->OldBorderWidth);
+      break;
+    default: break;
+  }
+}
+
 /***  Will add a Frame-Window behind (and around) the   ***
  ***  real Window. The Frame Window is used as an eazy  ***
  ***  realisation of window borders etc...              ***/
@@ -198,40 +236,7 @@ void EnborderWin(UltimateContext *uc)
   if((InitS.PlacementStrategy & 1) && ((uc->Attributes.x!=0) ||\
                  (uc->Attributes.y!=0))) uc->flags &= ~PLACEIT;
 
-  /*** pay respect to gravity ***/
-  switch(uc->ra.gravity){        /*** Y ***/
-    case SouthGravity:
-    case SouthEastGravity:
-    case SouthWestGravity:
-      uc->Attributes.y -= (2 * (uc->BorderWidth - uc->OldBorderWidth)
-                           + TheScreen.TitleHeight);
-      break;
-    case CenterGravity:
-    case EastGravity:
-    case WestGravity:
-      uc->Attributes.y -= (uc->BorderWidth - uc->OldBorderWidth 
-                           + TheScreen.TitleHeight / 2);
-      break;
-    case StaticGravity:
-      uc->Attributes.y -= (uc->BorderWidth - uc->OldBorderWidth
-                           + TheScreen.TitleHeight / 2);
-      break;
-    default: break;
-  }
-  switch(uc->ra.gravity){        /*** X ***/
-    case EastGravity:
-    case SouthEastGravity:
-    case NorthEastGravity:
-      uc->Attributes.x -= (2 * (uc->BorderWidth - uc->OldBorderWidth));
-      break;
-    case CenterGravity:
-    case NorthGravity:
-    case StaticGravity:
-    case SouthGravity:
-      uc->Attributes.x -= (uc->BorderWidth - uc->OldBorderWidth);
-      break;
-    default: break;
-  }
+  GravitizeWin(uc, &(uc->Attributes.x), &(uc->Attributes.y), UWM_GRAVITIZE);
 
   if(((uc->Attributes.x + uc->Attributes.width) > TheScreen.width)
      || ((uc->Attributes.y + uc->Attributes.height) > TheScreen.height)
@@ -304,7 +309,7 @@ DBG(fprintf(TheScreen.errout,"reparenting: %d\n",uc->win);)
   UngrabServer();
 
   Updatera(uc);
-    UpdateName(uc);
+  UpdateName(uc);
 
   if(TheScreen.MaxWinWidth||TheScreen.MaxWinHeight){
     w=TheScreen.MaxWinWidth?((TheScreen.MaxWinWidth<uc->Attr.width)?\
@@ -394,39 +399,7 @@ void DisenborderWin(UltimateContext *uc, Bool alive)
 {
   if(uc->frame!=None) {
     if(alive){
-      switch(uc->ra.gravity){        /*** Y ***/
-        case SouthGravity:
-        case SouthEastGravity:
-        case SouthWestGravity:
-          uc->Attr.y += (2 * (uc->BorderWidth - uc->OldBorderWidth)
-                               + TheScreen.TitleHeight);
-          break;
-        case CenterGravity:
-        case EastGravity:
-        case WestGravity:
-          uc->Attr.y += (uc->BorderWidth - uc->OldBorderWidth 
-                               + TheScreen.TitleHeight / 2);
-          break;
-        case StaticGravity:
-          uc->Attr.y += (uc->BorderWidth - uc->OldBorderWidth
-                               + TheScreen.TitleHeight / 2);
-          break;
-        default: break;
-      }
-      switch(uc->ra.gravity){        /*** X ***/
-        case EastGravity:
-        case SouthEastGravity:
-        case NorthEastGravity:
-          uc->Attr.x += (2 * (uc->BorderWidth - uc->OldBorderWidth));
-          break;
-        case CenterGravity:
-        case NorthGravity:
-        case StaticGravity:
-        case SouthGravity:
-          uc->Attr.x += (uc->BorderWidth - uc->OldBorderWidth);
-          break;
-        default: break;
-      }
+      GravitizeWin(uc, &(uc->Attr.x), &(uc->Attr.y), UWM_DEGRAVITIZE);
       ReparentWin(uc, uc->parent, uc->Attr.x, uc->Attr.y);
       XRemoveFromSaveSet(disp, uc->win);
     }
