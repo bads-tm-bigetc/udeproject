@@ -22,6 +22,8 @@ AC_DEFINE_UNQUOTED(CPP_CALL, "$CPP", [command line for preprocessor])
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
+AC_PROG_LEX
+AC_PROG_YACC
 dnl ******* LIB ********
 dnl The next line must be activated when we need to compile the library
 dnl AM_PROG_LIBTOOL
@@ -89,4 +91,4 @@ dnl AC_SUBST(LTALLOCA)
 dnl ******* LIB ********
 
 dnl ATTENTION: AC_OUTPUT(...) must remain a single line for autogen.sh to work!
-AC_OUTPUT(lib/Makefile uwm/Makefile config/Makefile doc/Makefile doc/html/Makefile extras/Makefile extras/tools/Makefile gfx/Makefile Makefile ude.spec config/StartScript)
+AC_OUTPUT(lib/Makefile uwm/Makefile config/Makefile doc/Makefile doc/html/Makefile extras/Makefile extras/tools/Makefile gfx/Makefile Makefile ude.spec config/StartScript )
