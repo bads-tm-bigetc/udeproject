@@ -1,0 +1,14 @@
+# ONLY APPLY THIS PATCH TO UWM VERSIONS 0.2.8a OR EARLIER (prior to
+# cvs 9.2.2003)
+--- udeold/uwm/workspaces.c        17 Jun 2001 17:43:03 -0000      1.7
++++ ude/uwm/workspaces.c        9 Feb 2003 18:04:15 -0000
+@@ -171,8 +171,8 @@
+   oldws=TheScreen.desktop.ActiveWorkSpace;
+   TheScreen.desktop.ActiveWorkSpace=WS;
+ 
+-  SetWSBackground();
+   UpdateDesktop();
++  SetWSBackground();
+ 
+   n=NULL;
+   while((n= NodeNext(TheScreen.UltimateList, n))) {
