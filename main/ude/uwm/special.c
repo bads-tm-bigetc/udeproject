@@ -286,8 +286,9 @@ int CheckCPP()
   if(!(pid=fork())) {     /* Child Process */
     char *temp;
 
-    temp = MyCalloc(strlen(TheScreen.cppcall) + 43, sizeof(char));
-    sprintf(temp, "%.500s - || while read t ; do echo ERROR ; done",
+    temp = MyCalloc(strlen(TheScreen.cppcall) + 55, sizeof(char));
+    sprintf(temp,
+	    "%s -Dtest=toast - || while read t ; do echo ERROR ; done",
 	    TheScreen.cppcall);
 
     close(files[0]);
@@ -329,7 +330,7 @@ int CheckCPP()
   fprintf(w,"preprocessor test\n");
   fclose(w);
   ok=-1;
-  while(fgets(buffer, 512, r)) if(strstr(buffer, "preprocessor test")) ok = 0;
+  while(fgets(buffer, 512, r)) if(strstr(buffer, "preprocessor toast")) ok = 0;
   waitpid(pid, &ret, 0);
   fclose(r);
 
