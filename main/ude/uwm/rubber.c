@@ -31,6 +31,7 @@
 #endif
 
 #include "uwm.h"
+#include "special.h"
 
 extern UDEScreen TheScreen;
 extern Display *disp;

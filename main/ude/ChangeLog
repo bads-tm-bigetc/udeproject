@@ -18,7 +18,7 @@
 	* uwm/uwm.c: included properties.h for SetWinMapState prototype
 	* uwm/rubber.h: included special.h for GrabServer prototype
 	* uwm/workspaces.h: corrected a typo in BroadcastWorkSpacesInfo proto
-	  
+	* uwm/rubber.c: included special.h for GrabServer prototype
 
 2001-04-22  Christian Ruppert <arc@gmx.li>
 
