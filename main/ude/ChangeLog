@@ -1,5 +1,10 @@
 2001-04-13  Christian Ruppert <arc@gmx.li>
 
+	* uwm/uwm.h: removed UltimateContext.parent
+	* uwm/windows.c: replaced uc->parent by TheScreen.root, remoced argument
+	  parent from UltimizeWin()
+	* uwm/handlers.c: removed parent arguments from UltimizeWin calls.
+	* uwm/uwm.c: removed parent arguments from UltimizeWin calls.
 	* uwm/windows.c: moved gravity handling out of window reparenting
 	  routines
 	* uwm/windows.h: added prototype and defines for GravitizeWin

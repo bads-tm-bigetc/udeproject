@@ -18,7 +18,7 @@ void MoveResizeWin(UltimateContext *uc,int x,int y,int width,int height);
 void DisenborderWin(UltimateContext *uc,Bool alive);
 Node* DeUltimizeWin(UltimateContext *uc,Bool alive);
 Node* PlainDeUltimizeWin(UltimateContext *uc,Bool alive);
-UltimateContext *UltimizeWin(Window win,Window Parent);
+UltimateContext *UltimizeWin(Window win);
 void IconifyWin(UltimateContext *uc);
 void DisplayWin(UltimateContext *uc);
 void CloseWin(UltimateContext *uc);

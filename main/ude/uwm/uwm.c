@@ -160,7 +160,7 @@ void CatchWindows()
                                      False, WM_STATE_PROPERTY, &type,
 				     &format, &number, &bytesafter,
 				     (unsigned char **)&data)) data = NULL;
-      if(uc = UltimizeWin(children[a], TheScreen.root)) {
+      if(uc = UltimizeWin(children[a])) {
         if(!uc->Attributes.override_redirect) {
 	  CARD32 state = WithdrawnState;
 	

@@ -186,7 +186,7 @@ void HandleMapRequest(XEvent *event)
   if(XFindContext(disp, event->xmaprequest.window, UWMContext, 
                   (XPointer *)&uc)) {
     DBG(fprintf(TheScreen.errout, "HandleMapRequest: ultimizing... ");)
-    uc = UltimizeWin(event->xmaprequest.window, event->xmaprequest.parent);
+    uc = UltimizeWin(event->xmaprequest.window);
     if(!uc) {
       DBG(fprintf(TheScreen.errout, "fail.\n");)
       XMapWindow(disp, event->xmaprequest.window);

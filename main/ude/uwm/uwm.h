@@ -152,7 +152,6 @@ typedef struct
 typedef struct _UltimateContext
 {
   Window win,frame; /* frame: if created: Frame-Window else: None */
-  Window parent;
   Window border;    /* a child of the frame to set the Mouse pointer correct */
 
   int BorderWidth,OldBorderWidth;

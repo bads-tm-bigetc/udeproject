@@ -254,11 +254,11 @@ DBG(fprintf(TheScreen.errout,"reparenting: %d\n",uc->win);)
   /*** create a frame to keep the window and its border ***/
   SAttr.override_redirect=True;
   SAttr.cursor=TheScreen.Mice[C_WINDOW];
-  uc->frame=XCreateWindow(disp,uc->parent,uc->Attributes.x,uc->Attributes.y,\
-                                     uc->Attributes.width+2*uc->BorderWidth,\
-               uc->Attributes.height+2*uc->BorderWidth+TheScreen.TitleHeight\
-                               ,0,CopyFromParent,InputOutput,CopyFromParent,\
-                                         CWCursor|CWOverrideRedirect,&SAttr);
+  uc->frame=XCreateWindow(disp,TheScreen.root,uc->Attributes.x,uc->Attributes.y,
+                                        uc->Attributes.width+2*uc->BorderWidth,\
+                  uc->Attributes.height+2*uc->BorderWidth+TheScreen.TitleHeight\
+                                  ,0,CopyFromParent,InputOutput,CopyFromParent,\
+                                            CWCursor|CWOverrideRedirect,&SAttr);
   if(XSaveContext(disp,uc->frame,UWMContext,(XPointer)uc))
     fprintf(TheScreen.errout,"UWM FATAL: Couldn't save Context\n");
   XSelectInput(disp,uc->frame,FRAME_EVENTS);
@@ -400,7 +400,7 @@ void DisenborderWin(UltimateContext *uc, Bool alive)
   if(uc->frame!=None) {
     if(alive){
       GravitizeWin(uc, &(uc->Attr.x), &(uc->Attr.y), UWM_DEGRAVITIZE);
-      ReparentWin(uc, uc->parent, uc->Attr.x, uc->Attr.y);
+      ReparentWin(uc, TheScreen.root, uc->Attr.x, uc->Attr.y);
       XRemoveFromSaveSet(disp, uc->win);
     }
     XDeleteContext(disp,uc->border,UWMContext);
@@ -440,7 +440,7 @@ Node* DeUltimizeWin(UltimateContext *uc,Bool alive)
 }
 
 /***************************************************************************/
-UltimateContext *UltimizeWin(Window win, Window parent)
+UltimateContext *UltimizeWin(Window win)
 {
   UltimateContext *uc;
   XWindowAttributes Attr;
@@ -457,7 +457,6 @@ DBG(fprintf(TheScreen.errout,"ULTIMIZING WIN #%d: no override redirect.\n",win);
 
   uc->win=win;
   uc->frame=None;
-  uc->parent=parent;
   uc->border=None;
 
   uc->BorderWidth=0;
