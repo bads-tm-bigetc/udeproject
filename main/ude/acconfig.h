@@ -11,6 +11,10 @@
 #undef PACKAGE
 #undef VERSION
 
+/* define this if you don't want uwm to use your x-servers BackingStore *
+ * and SaveUnder features (which are buggy in XF4).                     */
+#undef DISABLE_BACKING_STORE
+
 /* command line for preprocessor */
 #undef CPP_CALL
 

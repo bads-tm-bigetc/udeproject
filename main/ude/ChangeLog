@@ -1,4 +1,15 @@
 2002-04-21  Christian Ruppert <arc@gmx.li>
+	* configure.in, acconfig.h: added option to disable use of
+	  BackingStore and SaveUnder which seem to be buggy under XFree4.
+	* init.c: implemented switching off backing store at configure time.
+	* uwm/menu.c, uwm/uwm.h: added TheScreen.MenuBackGC to work around
+	  buggy XFree4 BackingStore and to make menu drawing slightly more
+	  efficient on other servers.
+	* uwm/menu.c, uwm/init.c: moved GCs init from menu.c to init.c since
+	  menu GCs now are global.
+	* uwm/menu.c: adopted file to new location of menu GCs in TheScreen.
+	* uwm/menu.h, uwm/uwm.h: moved GCs from menu structure to TheScreen
+	  for reasons of efficiency.
 	* uwm/menu.c: fixed a typo-bug by replacing backing_store=True by
 	  backing_store=WhenMapped
 	* uwm/uwm.c, uwm/init.c: moved sigchld installation from init.c to

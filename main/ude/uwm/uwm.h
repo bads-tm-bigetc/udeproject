@@ -122,6 +122,7 @@ typedef struct
   XpmAttributes *BackPixmapAttributes;
   XContext MenuContext, MenuFrameContext;
   XFontStruct *MenuFont;
+  GC MenuTextGC, MenuLightGC, MenuShadowGC, MenuBackGC;
   UDEColors *Colors;
   UDEDesktop desktop;
   char udedir[256];

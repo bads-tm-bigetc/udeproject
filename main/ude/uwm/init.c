@@ -1406,10 +1406,15 @@ void InitUWM()
   TheScreen.Screen= DefaultScreen (disp);
   TheScreen.width= DisplayWidth (disp,TheScreen.Screen);
   TheScreen.height= DisplayHeight (disp,TheScreen.Screen);
+#ifndef DISABLE_BACKING_STORE
   TheScreen.DoesSaveUnders = DoesSaveUnders(ScreenOfDisplay(disp,
                                                             TheScreen.Screen));
   TheScreen.DoesBackingStore = DoesBackingStore(ScreenOfDisplay(disp,
                                                             TheScreen.Screen));
+#else
+  TheScreen.DoesSaveUnders = False;
+  TheScreen.DoesBackingStore = False;
+#endif
 
   /* Mark Display as close-on-exec (important for restarts and starting other wms) */
   if(fcntl (ConnectionNumber(disp), F_SETFD, 1) == -1)
@@ -1592,6 +1597,41 @@ UWM ");
   xgcv.foreground=BlackPixel(disp,TheScreen.Screen);
   TheScreen.blackcontext=XCreateGC(disp,TheScreen.root,GCFunction|\
             GCCapStyle|GCLineStyle|GCLineWidth|GCForeground,&xgcv);
+
+  xgcv.function=GXcopy;
+  xgcv.foreground=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]
+                                  [UDE_Light].pixel;
+  xgcv.line_width=0;
+  xgcv.line_style=LineSolid;
+  xgcv.cap_style=CapButt;
+  TheScreen.MenuLightGC=XCreateGC(disp, TheScreen.root, GCFunction
+                                  | GCForeground | GCCapStyle | GCLineWidth
+				  | GCLineStyle, &xgcv);
+  xgcv.function=GXcopy;
+  xgcv.foreground=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]
+                                  [UDE_Shadow].pixel;
+  xgcv.line_width=0;
+  xgcv.line_style=LineSolid;
+  xgcv.cap_style=CapButt;
+  TheScreen.MenuShadowGC=XCreateGC(disp, TheScreen.root, GCFunction
+                                  | GCForeground | GCCapStyle | GCLineWidth
+				  | GCLineStyle, &xgcv);
+  xgcv.function=GXcopy;
+  xgcv.foreground=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]
+                                  [UDE_Back].pixel;
+  xgcv.line_width=0;
+  xgcv.line_style=LineSolid;
+  xgcv.cap_style=CapButt;
+  TheScreen.MenuBackGC=XCreateGC(disp, TheScreen.root, GCFunction
+                                 | GCForeground | GCCapStyle | GCLineWidth
+				 | GCLineStyle, &xgcv);
+  xgcv.function=GXcopy;
+  xgcv.foreground=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]\
+                                             [UDE_StandardText].pixel;
+  xgcv.fill_style=FillSolid;
+  xgcv.font=TheScreen.MenuFont->fid;
+  TheScreen.MenuTextGC=XCreateGC(disp,TheScreen.root, GCFunction
+                                 | GCForeground | GCFillStyle | GCFont, &xgcv);
 
   XGrabKey(disp, XKeysymToKeycode(disp,XK_Right), UWM_MODIFIERS,
            TheScreen.root, True, GrabModeAsync, GrabModeAsync);

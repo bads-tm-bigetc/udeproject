@@ -31,7 +31,6 @@ typedef struct _Menu{
   int x,y;
   struct _Menu *parent;
   int width,height,ItemHeight;
-  GC TextGC,LightGC,ShadowGC;
 } Menu;
 
 Menu *MenuCreate(char *name);
