@@ -572,8 +572,8 @@ int ReadConfigFile()
       char *errmsg;
       d.string = MyStrdup(uwm_global_index[a].default_val_string);
       if(errmsg = uwm_yy_to_setting_table
-                        [uwm_global_index[a].type][UWM_YY_STRING]
-                        (&d, &(uwm_global_index[a]),
+			[uwm_global_index[a].type][UWM_YY_STRING]
+			(&d, &(uwm_global_index[a]),
 			 settings.global_settings)) {
         SeeYa(1, errmsg);
       }
@@ -606,6 +606,14 @@ int ReadConfigFile()
   strncpy(uwm_default_ws_name, _("Default Workspace"),
           UWM_DEFAULT_NAME_LENGTH);
   uwm_default_ws_name[UWM_DEFAULT_NAME_LENGTH - 1] = '\0';
+
+  /* we want at least one workspace */
+  if((!settings.workspace_settings_count) || (!settings.workspace_settings)) {
+    settings.workspace_settings_count = 1;
+    settings.workspace_settings = MyCalloc(settings.workspace_settings_count,
+					 sizeof(*settings.workspace_settings));
+    settings.workspace_settings[0] = NULL;
+  }
 
   /* complete workspace options with defaults */
   for(a = 0; a < settings.workspace_settings_count; a++) {

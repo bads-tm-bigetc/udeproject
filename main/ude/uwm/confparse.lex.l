@@ -241,7 +241,7 @@ void uwm_yydrop(unsigned int n)
   yytext[yyleng] = '\0'; 
 }
 
-void uwm_yypush_LineStack(char *file, int ispipe)
+int uwm_yypush_LineStack(char *file, int ispipe)
 {
   struct uwm_yyParseLineStackStruct *s;
 
@@ -253,7 +253,7 @@ void uwm_yypush_LineStack(char *file, int ispipe)
       int files[2];
       if(pipe(files)) {
         free(s);
-        return;
+        return(-1);
       }
       if(!(pid = fork())) {
 	close(files[0]);
@@ -269,13 +269,13 @@ void uwm_yypush_LineStack(char *file, int ispipe)
       if(!(s->file = fdopen(files[0], "r")) || (pid < 0)) {
 	close(files[0]);
 	free(s);
-	return;
+	return(-1);
       }
     } else {
       s->file = MyOpen(file, "");
       if(! s->file) {
         free(s);
-        return;
+        return(-1);
       }
     }
     s->filename = s->topfilename = file;
@@ -288,6 +288,7 @@ void uwm_yypush_LineStack(char *file, int ispipe)
   s->linenumber = 1;
   s->stacked = uwm_yyParseLineStack;
   uwm_yyParseLineStack = s;
+  return(0);
 }
 
 struct uwm_yyParseLineStackStruct *uwm_yypop_LineStack()

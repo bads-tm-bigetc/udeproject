@@ -38,7 +38,7 @@
   GLOBAL_OPTION(TitleHeight, TY_INT, "0")
   GLOBAL_OPTION(FrameBevelWidth, TY_INT, "2")
   GLOBAL_OPTION(FrameFlags, TY_INT, "39")
-  GLOBAL_OPTION(HexPath, TY_STRING, NULL)
+  GLOBAL_OPTION(HexPath, TY_STRING, UDE_DIR "/gfx")
 
 /*** general layout */
   GLOBAL_OPTION(LayoutFlags, TY_INT, "0")

@@ -90,7 +90,7 @@ extern struct uwm_yyParseLineStackStruct *uwm_yyParseLineStack;
 extern int uwm_yy_LEX_FLAG_Newline_Requested;
 
 /* prototypes */
-void uwm_yypush_LineStack(char *file, int ispipe);
+int uwm_yypush_LineStack(char *file, int ispipe);
 struct uwm_yyParseLineStackStruct *uwm_yypop_LineStack();
 void uwm_yyinitscanner();
 

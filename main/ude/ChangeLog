@@ -1,3 +1,20 @@
+2004-11-14  Christian Ruppert <arc@users.sf.net>
+	* uwm/confparse.tab.y: removed a segfault on unexpected end of file.
+	* uwm/confparse.tab.y: removed all reduce/reduce conflicts.
+	* uwm/confparse.tab.y: examined remaining shift/reduce conflicts and
+	  they're okay.
+	* uwm/confparse.tab.y: we now need semicolons after every expression,
+	  even after curly braces. This is much cleaner than without them.
+	* uwm/settings_global_list.h: HexPath now has the default value
+	  UDE_DIR "/gfx".
+	* uwm/init.c (ReadConfigFile): added code to initialize at least one
+	  workspace, even if none is defined in configuration file.
+	* uwm/confparse.lex.l, uwm/confparse.h: uwm_yypush_LineStack now
+	  returns -1 on error and 0 on success.
+	* uwm/confparse.* uwm/init.c uwm/settings*: configuration parser now
+	  seems quite solid, I was no longer able to crash it, no matter what
+	  input I fed in.
+
 2004-11-13  Christian Ruppert <arc@users.sf.net>
 	* uwm/confparse.tab.y: some major cleanups, the new config file syntax
 	  is now almost completely implemented (except for some event

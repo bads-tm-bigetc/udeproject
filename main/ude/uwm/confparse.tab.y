@@ -31,6 +31,13 @@
 #include "conf_func.h"
 %}
 
+/* 124 shift/reduce conflicts expected:					 *
+      - 123 are caused by the empty GenericLine rule which permits the	 *
+ |	user to have empty { } blocks.					 *
+ |    - 1 is caused by the empty IntegerGarbage rule which is necessary	 *
+ V	because cpp can also give 0 flags.				 */
+%expect 124
+
 %union {
   int intval;
 #define UWM_YY_INT 0
@@ -113,6 +120,7 @@ const ConverterFunction uwm_yy_to_setting_table[UWM_S_TYPENO][UWM_YY_TYPENO] = {
 /* UWM_S_COLOR 	*/ {	NULL,		NULL,		uopt_str_col	},
 /* UWM_S_PIXMAP	*/ {	NULL,		NULL,		uopt_str_pix	}
 };
+int uwm_yy_add_brace=0;
 #define YYERROR_VERBOSE
 %}
 
@@ -120,6 +128,9 @@ const ConverterFunction uwm_yy_to_setting_table[UWM_S_TYPENO][UWM_YY_TYPENO] = {
 
 TopLevel : TopLine
 	 | TopLevel TopLine ;
+
+TopLine : GenericLine
+	| AnyTop ';' ;
 
 GenericLine : /* nothing */
 	    | PreProc
@@ -130,9 +141,6 @@ GenericLine : /* nothing */
 ErrDelim : ';' { uwm_yy_LEX_FLAG_Newline_Requested = 0; }
 	 | '\n'
 	 | ';' '\n' ;
-
-TopLine : GenericLine
-	| AnyTop ;
 
 AnyTop: MenuBlock
       | WorkspaceBlock
@@ -161,9 +169,9 @@ PreProc : PreprocessorAtom Integer StringAtom IntegerGarbage '\n' {
 				      ? $3 : uwm_yyParseLineStack->topfilename;
 				} ;
 
-IntegerGarbage : Integer { }
-	       | IntegerGarbage Integer { }
-	       | { } ;
+IntegerGarbage : IntegerAtom { }
+	       | IntegerGarbage IntegerAtom { }
+	       | /* nothing */ ;
 
 WorkspaceBlock : WorkspaceAtom Integer
 		 { uwm_yy_PushContext(UWM_YY_WORKSPACE_CONTEXT, &$2); }
@@ -171,7 +179,7 @@ WorkspaceBlock : WorkspaceAtom Integer
 
 OptionBlock : OptionAtom OptionSetting ;
 
-OptionSetting : OptionLine
+OptionSetting : AnyOption
               | '{' OptionLines '}' ;
 
 OptionLines : OptionLine
@@ -197,16 +205,7 @@ StringOption : IdentifierAtom '=' String {
 	} ;
 
 EventBlock : EventAtom { uwm_yy_PushContext(UWM_YY_EVENT_CONTEXT, NULL); }
-	     EventSetting { uwm_yy_PopContext(); } ;
-
-EventSetting : EventLine
-	     | '{' EventLines '}' ;
-
-EventLines : EventLine
-	   | EventLines EventLine ;
-
-EventLine : GenericLine
-	  | EventDescriptor ':' FunctionBlock ;
+	     EventDescriptor ':' FunctionBlock { uwm_yy_PopContext(); } ;
 
 EventDescriptor : KeystrokeAtom Integer ',' Integer
 		| ButtonAtom Integer ',' Integer ;
@@ -214,14 +213,15 @@ EventDescriptor : KeystrokeAtom Integer ',' Integer
 FunctionBlock : { uwm_yy_PushContext(UWM_YY_FUNCTION_CONTEXT, NULL); }
 		FunctionBlock_ { uwm_yy_PopContext(); } ;
 
-FunctionBlock_ : Function
+FunctionBlock_ : WinFunction
+	       | AnyFunction
 	       | '{' Functions '}' ;
 
 Functions : Function
 	  | Functions Function ;
 
-Function : GenericLine { }
-	 | WinFunction { }
+Function : GenericLine
+	 | WinFunction ';'
 	 | AnyFunction ';' ;
 
 AnyFunction : WorkspaceFunction { }
@@ -272,18 +272,15 @@ AnyWinAction : DragPosAtom { }
 	     | WorkspaceFunction { } ;
 
 WinAction : GenericLine
-	  | AnyWinAction ;
+	  | AnyWinAction ';' ;
 
-WinActionSemi : GenericLine
-	      | AnyWinAction ';' ;
-
-WinActions : WinActionSemi
-	   | WinActions WinActionSemi ;
+WinActions : WinAction
+	   | WinActions WinAction ;
 
 WinActionBlock : { uwm_yy_PushContext(UWM_YY_FUNCTION_CONTEXT, NULL); }
 		WinActionBlock_ { uwm_yy_PopContext(); } ;
 
-WinActionBlock_ : WinAction
+WinActionBlock_ : AnyWinAction
 		 | '{' WinActions '}' ;
 
 WinLimitBlocks : WinLimit
@@ -310,18 +307,19 @@ Menu : { uwm_yy_PushContext(UWM_YY_MENU_CONTEXT, NULL); }
        Menu_ { uwm_yy_PopContext(); } ;
 
 Menu_ : '{' MenuLines '}'
-      | WinmenuAtom ';' ;
+      | WinmenuAtom ;
 
 MenuLines : MenuLine
 	  | MenuLines MenuLine ;
 
 MenuLine : GenericLine
-	 | DrawLine
-	 | MenuItem
-	 | SubmenuBlock
-	 | FileLine ;
+	 | AnyMenu ';' ;
 
-DrawLine : LineAtom ';' { } ;
+AnyMenu : DrawLine
+	| MenuItem
+	| SubmenuBlock ;
+
+DrawLine : LineAtom { } ;
 
 MenuItem : ItemAtom String ':' FunctionBlock ;
 
@@ -329,7 +327,10 @@ FileLine : FileAtom String ';' { uwm_yypush_LineStack($2, 0); }
          | PipeAtom String ';' { uwm_yypush_LineStack($2, 1); } ;
 
 /*** more or less standard yacc stuff for arithmetics ***/
-
+/*
+Integer: IntegerAtom { $$ = $1 ; } ;
+FloatVal : FloatAtom { $$ = $1 ; } ;
+*/
 Integer : '(' Integer ')' { $$ = $2 ; }
 	| Integer '+' Integer { $$ = $1 + $3 ; }
 	| Integer '-' Integer { $$ = $1 - $3 ; }
@@ -385,9 +386,13 @@ FloatVal : '(' FloatVal ')' { $$ = $2 ; }
 int yyerror(char *s)
 {
   uwm_yy_LEX_FLAG_Newline_Requested = 1;
-  fprintf(stderr, "UWM: error on line %d of file %s: %s\n",
-	  uwm_yyParseLineStack->linenumber,
-	  uwm_yyParseLineStack->filename, s);
+  if(uwm_yyParseLineStack) {
+    fprintf(stderr, "UWM: error on line %d of file %s: %s\n",
+	    uwm_yyParseLineStack->linenumber,
+	    uwm_yyParseLineStack->filename, s);
+  } else {
+    fprintf(stderr, "UWM: error on end of configuration files: %s\n", s);
+  }
 }
 
 extern void *YY_CURRENT_BUFFER;
@@ -453,9 +458,6 @@ void uwm_yy_PopContext()
   if(s = uwm_yy_ContextStack) {
     uwm_yy_ContextStack = s->stacked;
     free(s);
-
-    if(uwm_yy_ContextStack) {
-    }
   }
 }
 
@@ -466,10 +468,11 @@ struct uwm_yy_ContextStackStruct *uwm_yy_PeekContext()
 
 int uwm_yyparse_wrapper(char *initialfilename)
 {
+  int retval;
   uwm_yyinitscanner();
-  uwm_yypush_LineStack(initialfilename, 0);
+  if(uwm_yypush_LineStack(initialfilename, 0)) return(-1);
   uwm_yy_PushContext(UWM_YY_GLOBAL_CONTEXT, NULL);
-  return yyparse();
+  return(yyparse() || uwm_yy_ContextStack);
 }
 
 void uwm_init_set_option(char *name, int type, YYSTYPE *value)
