@@ -30,6 +30,7 @@
 #include "uwm.h"
 #include "special.h"
 #include "init.h"
+#include "pix.h"
 
 #define derefptr(TYPE) ((TYPE *)(((void *)base) + (out->offset)))
 #define deref(TYPE) (*(derefptr(TYPE)))
@@ -124,5 +125,25 @@ char *uopt_str_col(YYSTYPE *in, const uwm_init_index *out, void *base)
     free(xcol);
     free(in->string);
     return(errmsg);
+  }
+}
+
+char *uopt_str_pix(YYSTYPE *in, const uwm_init_index *out, void *base)
+{
+  FreePic(&(deref(uwm_image).image), &(deref(uwm_image).attributes));
+
+  if(in->string) {
+    deref(uwm_image).attributes = MyCalloc(1, sizeof(XpmAttributes));
+
+    if(LoadPic(in->string, &(deref(uwm_image).image),
+		deref(uwm_image).attributes)) {
+      return(NULL);
+    } else {
+      static char errmsg[256] = "Could not load background image \"";
+      sprintf(errmsg + 33, "%.220s\"\n", in->string);
+      free(deref(uwm_image).attributes);
+      deref(uwm_image).attributes = NULL;
+      return(errmsg);
+    }
   }
 }

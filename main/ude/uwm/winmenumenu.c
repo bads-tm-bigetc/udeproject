@@ -35,6 +35,7 @@
 #include "menu.h"
 #include "workspaces.h"
 #include "ude-i18n.h"
+#include "settings.h"
 
 extern UDEScreen TheScreen;
 
@@ -83,8 +84,8 @@ void WinMenuMenu(UltimateContext *TheWin,int x, int y)
 	SeeYa(1,"FATAL: out of memory!");
       for (a=0; a<TheScreen.desktop.WorkSpaces; a++)
 	 if (a != TheScreen.desktop.ActiveWorkSpace)
-	   AppendMenuItem (wsmen, TheScreen.WorkSpace[a], &wsprocs[a],
-			   I_SELECT);
+	   AppendMenuItem (wsmen, settings.workspace_settings[a]->Name,
+			   &wsprocs[a], I_SELECT);
       AppendMenuItem (men, _("Move to WorkSpace"), wsmen, I_SUBMENU);
     }
 

@@ -109,6 +109,7 @@ char uwm_default_ws_name[UWM_DEFAULT_NAME_LENGTH];
         {#NAME,    OFFSET_OF(_uwm_workspace_settings, NAME),    TYPE,   DEFAULT}
 uwm_init_index uwm_workspace_index[UWM_WORKSPACE_OPTION_NR] = {
   WORKSPACE_OPTION_STRUCT_LINE(Name, UWM_S_STRING, uwm_default_ws_name),
+  WORKSPACE_OPTION_STRUCT_LINE(Wallpaper, UWM_S_PIXMAP, NULL),
   WORKSPACE_OPTION_STRUCT_LINE(ScreenColor, UWM_S_COLOR, "grey30"),
   WORKSPACE_OPTION_STRUCT_LINE(InactiveColor, UWM_S_COLOR, "grey30"),
   WORKSPACE_OPTION_STRUCT_LINE(InactiveShadow, UWM_S_COLOR, "grey10"),
@@ -140,7 +141,8 @@ const ConverterFunction uwm_yy_to_setting_table[UWM_S_TYPENO][UWM_YY_TYPENO] = {
 /* UWM_S_FLOAT	*/ {	uopt_int_flt,	uopt_flt_flt,	NULL		},
 /* UWM_S_STRING	*/ {	NULL,		NULL,		uopt_str_str	},
 /* UWM_S_FONT  	*/ {	NULL,		NULL,		uopt_str_fnt	},
-/* UWM_S_COLOR 	*/ {	NULL,		NULL,		uopt_str_col	}
+/* UWM_S_COLOR 	*/ {	NULL,		NULL,		uopt_str_col	},
+/* UWM_S_PIXMAP	*/ {	NULL,		NULL,		uopt_str_pix	}
 };
 %}
 

@@ -5,5 +5,6 @@
 #include <X11/xpm.h>
 
 int LoadPic(char *filename, Pixmap *pm, XpmAttributes *xa);
+void FreePic(Pixmap *pm, XpmAttributes **xa);
 
 #endif

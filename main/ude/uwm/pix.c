@@ -234,3 +234,17 @@ int LoadPic(char *filename, Pixmap *pm, XpmAttributes *xa)
 #endif
   return(1);
 }
+
+void FreePic(Pixmap *pm, XpmAttributes **xa)
+{
+  if(pm && ((*pm) != None)) {
+    XFreePixmap(disp, *pm);
+    *pm = None;
+  }
+  if(xa && (*xa)) {
+    XFreeColors(disp, (*xa)->colormap, (*xa)->alloc_pixels,
+		(*xa)->nalloc_pixels, 0);
+    free(*xa);
+    *xa = NULL;
+  }
+}

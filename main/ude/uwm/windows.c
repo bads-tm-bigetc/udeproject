@@ -593,8 +593,10 @@ void DeiconifyMenu(int x, int y)
   wspaces=MyCalloc(TheScreen.desktop.WorkSpaces,sizeof(Menu *));
   if(TheScreen.desktop.WorkSpaces>1){
     for(a=0;a<TheScreen.desktop.WorkSpaces;a++){
-      wspaces[a]=MenuCreate(useTitle ? TheScreen.WorkSpace[a] : NULL);
-      AppendMenuItem(men,TheScreen.WorkSpace[a],wspaces[a],I_SUBMENU);
+      wspaces[a] = MenuCreate(useTitle ? settings.workspace_settings[a]->Name
+				       : NULL);
+      AppendMenuItem(men, settings.workspace_settings[a]->Name,
+		     wspaces[a], I_SUBMENU);
     }
     AppendMenuItem (men, NULL, NULL, I_LINE);
     sticky = MenuCreate (useTitle ? _("Sticky Windows") : NULL);

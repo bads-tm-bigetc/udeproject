@@ -533,6 +533,17 @@ unsigned long AllocColor(XColor *xcol)
 }
 #endif /* NEW_CONFIG */
 
+#ifdef NEW_CONFIG
+
+void FreeColor(XColor *color)
+{
+  if((color->pixel != BlackPixel(disp, TheScreen.Screen))
+     && (color->pixel != WhitePixel(disp, TheScreen.Screen)))
+    XFreeColors(disp, TheScreen.colormap, &(color->pixel), 1, 0);
+}
+
+#else /* NEW_CONFIG */
+
 void FreeXPMBackPixmap(int a)
 {
   if(TheScreen.BackPixmap[a]!=None){
@@ -543,16 +554,6 @@ void FreeXPMBackPixmap(int a)
   }
 }
 
-#ifdef NEW_CONFIG
-
-void FreeColor(XColor *color)
-{
-  if((color->pixel != BlackPixel(disp, TheScreen.Screen))
-     && (color->pixel != WhitePixel(disp, TheScreen.Screen)))
-    XFreeColors(disp, TheScreen.colormap, &(color->pixel), 1, 0);
-}
-
-#else
 
 void FreeColor(unsigned long color)
 {

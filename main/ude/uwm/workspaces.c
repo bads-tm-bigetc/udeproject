@@ -43,6 +43,7 @@
 #include "nodes.h"
 #include "menu.h"
 #include "urm.h"
+#include "settings.h"
 
 extern UDEScreen TheScreen;
 extern Display *disp;
@@ -65,8 +66,8 @@ void SetWSBackground()
 {
   unsigned char back_changed= 0;
   
-  if(TheScreen.BackPixmap[TheScreen.desktop.ActiveWorkSpace]!=None)
-    {
+  if(settings.workspace_settings[TheScreen.desktop.ActiveWorkSpace]
+	     ->Wallpaper.image != None) {
       /* To set the root pixmap and properties pointing to it XGrabServer
 	 must be called to make sure that we don't leak the pixmap if
 	 somebody else is setting it at the same time. */
@@ -99,19 +100,21 @@ void SetWSBackground()
       XChangeProperty (disp, TheScreen.root,
 		       XInternAtom (disp, "ESETROOT_PMAP_ID", 0), XA_PIXMAP,
 		       32, PropModeReplace,
-		       (unsigned char *) \
-		       &(TheScreen.BackPixmap[TheScreen.desktop.ActiveWorkSpace]),
-		       1);
+		       (unsigned char *)
+			settings.workspace_settings
+				[TheScreen.desktop.ActiveWorkSpace]
+				->Wallpaper.image, 1);
       XChangeProperty (disp, TheScreen.root,
 		       XInternAtom (disp, "_XROOTPMAP_ID", 0), XA_PIXMAP,
 		       32, PropModeReplace,
-		       (unsigned char *) \
-		       &(TheScreen.BackPixmap[TheScreen.desktop.ActiveWorkSpace]),
-		       1);
-      XSetWindowBackgroundPixmap(disp,TheScreen.root,
-				 TheScreen.BackPixmap\
-				 [TheScreen.desktop.ActiveWorkSpace]);
-      
+		       (unsigned char *)
+			settings.workspace_settings
+				[TheScreen.desktop.ActiveWorkSpace]
+				->Wallpaper.image, 1);
+      XSetWindowBackgroundPixmap(disp, TheScreen.root,
+				 settings.workspace_settings
+					 [TheScreen.desktop.ActiveWorkSpace]
+					 ->Wallpaper.image);
       back_changed= 1;
       UngrabServer (disp);
       XFlush (disp);

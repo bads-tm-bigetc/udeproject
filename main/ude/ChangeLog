@@ -1,15 +1,32 @@
+2003-10-26  Christian Ruppert <arc@users.sf.net>
+	* uwm/pix.c, uwm/pix.h: added FreePic function to free pixmaps and
+	  colormaps.
+	* uwm/configconvertors.c, uwm/confparse.h: added uopt_str_pix and uwm
+	  type UWM_S_PIXMAP for picture loading.
+	* uwm/confparse.tab.y: added uopt_str_pix to convertor table.
+	* uwm/confparse.tab.y: added Wallpaper config option to workspace
+	  option table.
+	* uwm/init.c: moved FreeXPMBackPixmap to old config file stuff, i.e.
+	  "defined it out".
+	* uwm/settings.h: moved wallpaper data from an anonymous structure
+	  inside uwm_workspace_settings to structure uwm_image referenced from
+	  uwm_workspace_settings.
+	* uwm/uwm.h, uwm/windows.c, uwm/winmenumenu.c, uwm/workspaces.c:
+	  stitched in workspace names of new config.
+	* uwm/uwm.h, uwm/workspaces.c: stitched in wallpaper from new config.
+
 2003-08-29  Christian Ruppert <arc@users.sf.net>
 	* lib/ude-desktop.h: some minor changes, the whole communication will
 	  need to be rewritten, however: the current strategy of putting whole
 	  structures containing data of variable types into properties is
 	  clearly a bug (luckily the lib isn't in use yet).
 	* uwm/menu.c, uwm/init.c, uwm/settings.h, uwm/urm.c, uwm/urm.h,
-	  uwm/uwm.h, uwm/workspaces.c: stiched in some more of the new config,
+	  uwm/uwm.h, uwm/workspaces.c: stitched in some more of the new config,
 	  i.e. replaced the colors array from TheScreen by the new colors in
 	  workspace_settings.
 
 2003-08-29  Christian Ruppert <arc@users.sf.net>
-	* uwm/uwm.h, windows.c, uwm/init.c, uwm/menu.c: some more stiching in
+	* uwm/uwm.h, windows.c, uwm/init.c, uwm/menu.c: some more stitching in
 	  of the new config system.
 	* uwm/confparse.l, uwm/confparse.lex.l: renamed file from
 	  uwm/confparse.l to uwm/confparse.lex.l for automake-compatible built.

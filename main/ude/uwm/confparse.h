@@ -15,8 +15,9 @@
 #define UWM_S_STRING 2
 #define UWM_S_FONT 3
 #define UWM_S_COLOR 4
+#define UWM_S_PIXMAP 5
 
-#define UWM_S_TYPENO 5
+#define UWM_S_TYPENO 6
 
 typedef struct _uwm_init_index {
   char *name;
@@ -29,7 +30,7 @@ typedef struct _uwm_init_index {
 extern char uwm_default_ws_name[UWM_DEFAULT_NAME_LENGTH];
 #define UWM_GLOBAL_OPTION_NR 26
 extern const uwm_init_index uwm_global_index[UWM_GLOBAL_OPTION_NR];
-#define UWM_WORKSPACE_OPTION_NR 20
+#define UWM_WORKSPACE_OPTION_NR 21
 extern uwm_init_index uwm_workspace_index[UWM_WORKSPACE_OPTION_NR];
 
 /* convertors */
@@ -45,6 +46,7 @@ char *uopt_flt_flt(YYSTYPE *in, const uwm_init_index *out, void *base);
 char *uopt_str_str(YYSTYPE *in, const uwm_init_index *out, void *base);
 char *uopt_str_fnt(YYSTYPE *in, const uwm_init_index *out, void *base);
 char *uopt_str_col(YYSTYPE *in, const uwm_init_index *out, void *base);
+char *uopt_str_pix(YYSTYPE *in, const uwm_init_index *out, void *base);
 char *MultiplyColor(char *color, double factor);
 
 #define UWM_YY_GLOBAL_CONTEXT		0

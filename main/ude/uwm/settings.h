@@ -51,15 +51,17 @@ typedef struct _uwm_global_settings {
 /*  void *ButtonsOnWin;   /* to be implemented/changed */
 } uwm_global_settings;
 
+typedef struct _uwm_image {
+  Pixmap image;
+  XpmAttributes *attributes;
+} uwm_image;
+
 /* workspace specific settings */
 typedef struct _uwm_workspace_settings {
 /*** general workspace options */
   char *Name;
   char *ScreenCommand;
-  struct {
-    Pixmap *image;
-    XpmAttributes *attributes;
-  } Wallpaper;
+  uwm_image Wallpaper;
 
 /*** colors */
   XColor *ScreenColor;

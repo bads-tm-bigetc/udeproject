@@ -82,8 +82,6 @@
 #define I_MENU 5
 #define I_REALLY 6
 
-typedef char WSName[32];
-
 typedef struct {
   int Screen;
   Bool DoesSaveUnders, DoesBackingStore;
@@ -121,14 +119,13 @@ typedef struct {
 
   Menu *AppsMenu;
   Menu *UWMMenu;
-  WSName *WorkSpace;
   /* if SetBackground[ws#] is set to 0 the background of that ws is not
      changed unless BackPixmap[ws#] is not NULL */
   unsigned char *SetBackground;
   unsigned long *Background;
   char **BackCommand;
-  Pixmap *BackPixmap;
-  XpmAttributes *BackPixmapAttributes;
+//  Pixmap *BackPixmap;
+//  XpmAttributes *BackPixmapAttributes;
   UDEDesktop desktop;
 } UDEScreen;
 
