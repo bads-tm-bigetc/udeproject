@@ -1,0 +1,18 @@
+TODO-list for the ude desktop-library:
+
+ude-button.c:
+  * add support for radio lists (UDEButtonRadio flag)
+  * add support for deactivated buttons (UDEButtonSelectable flag)
+  * add a destructor and a modifier function.
+  * save wether the hex shape was created by the constructor to free it in the
+    destructor
+
+ude-box.c:
+  * add and support a children's list for each box. we can use the uwm
+    nodes-module for that.
+  * do refreshs in case of a workspace switch
+  * set a box's background color automatically to the selected background color
+    if not overriden.
+  * add a ude default handler 'refresh' which will (re-) draw the box.
+
+very incomplete yet... however this should be the most urgent things.
