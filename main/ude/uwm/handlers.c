@@ -245,11 +245,11 @@ void HandleUnmapNotify(XEvent *event)
   DBG(fprintf(TheScreen.errout,"HandleUnmapNotify\n");)
 
   if(!XFindContext(disp, event->xunmap.window, UWMContext, (XPointer *)&uc)) {
-    if(uc->expected_unmap_events) {
-      uc->expected_unmap_events--;
-      return;
-    }
     if(event->xunmap.window == uc->win) {
+      if(uc->expected_unmap_events) {
+        uc->expected_unmap_events--;
+        return;
+      }
       if((!XCheckTypedWindowEvent(disp, event->xunmap.event, MapNotify,
                                   &event2))
          && (uc->frame != None)) XUnmapWindow(disp, uc->frame);

@@ -1,5 +1,12 @@
 2001-10-29  Christian Ruppert <arc@gmx.li>
 
+	* uwm/handlers.c (HandleUnmapNotify): we can only expect unmap events
+	  for the managed window itself so i moved decreasing of
+	  expected_unmap_events into the event.window == uc->win conditional
+	  code. fixes the 'disapearing xmms on restart'-bug
+
+2001-10-29  Christian Ruppert <arc@gmx.li>
+
 	* uwm/handlers.c (HandleButtonPress): removed one XQueryPointer call,
 	  consulting now event structure instead.
 	* uwm/handlers.c (HandleButtonPress): added else for non-menu button
