@@ -425,7 +425,7 @@ void HandleKeyRelease(XEvent *event)
   
   StampTime(event->xkey.time);
 
-  if(event->xkey.state==(ControlMask|Mod1Mask)){
+  if(event->xkey.state==UWM_MODIFIERS){
     Node *n,*n2;
     switch(XKeycodeToKeysym(disp,event->xkey.keycode,0)){
       case XK_Right: ChangeWS((TheScreen.desktop.ActiveWorkSpace +1)\

@@ -1,4 +1,8 @@
 2002-04-21  Christian Ruppert <arc@gmx.li>
+	* uwm/handlers.c: replaced forgotten (ControlMask|Mod1Mask) by
+	  UWM_MODIFIERS in HandleKeyRelease.
+
+2002-04-21  Christian Ruppert <arc@gmx.li>
 	* configure.in, acconfig.h: added option to disable use of
 	  BackingStore and SaveUnder which seem to be buggy under XFree4.
 	* init.c: implemented switching off backing store at configure time.
