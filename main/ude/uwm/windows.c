@@ -347,9 +347,10 @@ void MapWin(UltimateContext *uc,Bool NoPlacement){
   if(OnActiveWS(uc->WorkSpace)) {
     if(!NoPlacement) PlaceWin(uc);
     XMapRaised(disp,uc->win);
-    if(uc->frame!=None){
-      XMapSubwindows(disp,uc->frame);
-      XMapRaised(disp,uc->frame);
+    if(uc->frame != None){
+      XMapSubwindows(disp, uc->frame);
+      if(uc->flags & SHAPED) XUnmapWindow(disp, uc->border);
+      XMapRaised(disp, uc->frame);
       DrawWinBorder(uc);
     }
     if(!((InitS.WarpPointerToNewWinH == -1) ||

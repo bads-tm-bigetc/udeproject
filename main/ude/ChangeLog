@@ -1,3 +1,8 @@
+2001-05-09  Christian Ruppert <arc@gmx.li>
+
+	* uwm/windows.c: a small bugfix that unmaps border wins of shaped
+	  windows again in case win is mapped
+
 2001-04-22  Christian Ruppert <arc@gmx.li>
 
 	* uwm/special.c: included urm.h for SetResourceDB prototype
