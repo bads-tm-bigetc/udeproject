@@ -1,5 +1,4 @@
 * iconified windows are now listed in the windows menu using their icon names
-* transient windows now should no longer be obscured by their TransientFors
 * window groups are now treated as a whole in workspace management.
 * support for xservers not supporting saveunder and backingstore (xf4.0)
 * further icccm-code

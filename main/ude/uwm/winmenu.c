@@ -193,7 +193,7 @@ void WinMenuVisibility(XEvent *event)
       XRaiseWindow(disp,TheScreen.icons.IconParent);
     } else while(XCheckTypedWindowEvent(disp, TheScreen.icons.IconParent,
                                         VisibilityNotify, &dummy));
-  } else HandleVisibilityNotify(event);
+  }
 }
 
 void ButtonAction(int a)

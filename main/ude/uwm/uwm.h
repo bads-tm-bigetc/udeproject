@@ -52,7 +52,7 @@
 
 #define TITLE_EVENTS ExposureMask|ButtonPressMask|ButtonReleaseMask|EnterWindowMask
 
-#define FRAME_EVENTS EnterWindowMask|LeaveWindowMask|SubstructureRedirectMask|SubstructureNotifyMask|VisibilityChangeMask
+#define FRAME_EVENTS EnterWindowMask|LeaveWindowMask|SubstructureRedirectMask|SubstructureNotifyMask
 
 /*** used structures ***/ 
 

@@ -204,22 +204,20 @@ void ChangeWS(short WS)
 
 void StickyWin(UltimateContext *uc)
 {
-  if(uc->WorkSpace==-1) uc->WorkSpace=TheScreen.desktop.ActiveWorkSpace;
-  else {
-    if((uc->WorkSpace != TheScreen.desktop.ActiveWorkSpace) 
-       && (uc->wmstate == NormalState)){
-      uc->WorkSpace=-1;
-      MapWin(uc,True);
+  if(uc->WorkSpace==-1) Win2WS(uc, TheScreen.desktop.ActiveWorkSpace);
+  else Win2WS(uc, -1);
+  if(uc->group) {
+    Node *n = NULL;
+    while(n = NodeNext(uc->group->members, n)) { 
+      Win2WS(n->data, uc->WorkSpace);
     }
-    uc->WorkSpace=-1;
   }
 }
 
 void WithWin2WS(UltimateContext *uc,short ws)
 {
   if(uc->group) {
-    Node *n;
-    n = NULL;
+    Node *n = NULL;
     while(n = NodeNext(uc->group->members, n)) { 
       ((UltimateContext *)(n->data))->WorkSpace = ws;
     }
@@ -230,8 +228,7 @@ void WithWin2WS(UltimateContext *uc,short ws)
 void Win2WS(UltimateContext *uc, short ws)
 {
   if(uc->WorkSpace == ws) return;
-  if(OnActiveWS(uc->WorkSpace)) UnmapWin(uc);
+  if(OnActiveWS(uc->WorkSpace) && (!OnActiveWS(ws))) UnmapWin(uc);
   uc->WorkSpace = ws;
-  if(OnActiveWS(uc->WorkSpace) && (uc->wmstate == NormalState))
-    MapWin(uc, True);
+  if(uc->wmstate == NormalState) MapWin(uc, True);
 }

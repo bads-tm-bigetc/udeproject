@@ -532,7 +532,7 @@ void MenuVisibility(XEvent *event)
       RaiseMenuNParents(activemen);
     else while(XCheckTypedWindowEvent(disp, activemen->win, VisibilityNotify,
                                       &dummy));
-  } else HandleVisibilityNotify(event);
+  }
 }
 
 void MenuDontKeepItAnymore()
