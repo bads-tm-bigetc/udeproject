@@ -49,6 +49,7 @@
 #define UWM_YY_TYPENO 3
 /*** what follows are internal data types ***/
   cf_func rawfunction;
+  cf_func_call *function;
 /*  struct uwm_yy_ContextStackStruct *uwm_yy_Context;
 ***/
 }
@@ -81,6 +82,7 @@
 %type <floatval> FloatVal
 /*%type <uwm_yy_Context> FunctionBlock Menu WorkspaceSetting EventSettings*/
 %type <string> String
+%type <function> AnyFunction
 %type <rawfunction> WinSpecifier
 
 %{
@@ -213,21 +215,27 @@ EventDescriptor : KeystrokeAtom Integer ',' Integer
 FunctionBlock : { uwm_yy_PushContext(UWM_YY_FUNCTION_CONTEXT, NULL); }
 		FunctionBlock_ { uwm_yy_PopContext(); } ;
 
-FunctionBlock_ : WinFunction
-	       | AnyFunction
+FunctionBlock_ : AnyFunction {
+		 NodeAppend(uwm_yy_PeekContext()->context_data, $1); }
 	       | '{' Functions '}' ;
 
 Functions : Function
 	  | Functions Function ;
 
 Function : GenericLine
-	 | WinFunction ';'
-	 | AnyFunction ';' ;
+	 | AnyFunction ';' {
+		 NodeAppend(uwm_yy_PeekContext()->context_data, $1); } ;
 
-AnyFunction : WorkspaceFunction { }
-	    | String { }      /* shell command */
-	    | MenuAtom Integer { }
-	    | QuitAtom { }
+AnyFunction : WorkspaceFunction { $$ = NULL; }
+	    | WinFunction { $$ = NULL; }
+	    | String {		/* shell command */
+		$$ = MyCalloc(1, sizeof(cf_func_call));
+		$$->args.shell = $1;
+		$$->func = cf_Shell; }
+	    | MenuAtom Integer { $$ = NULL; }
+	    | QuitAtom {
+		$$ = MyCalloc(1, sizeof(cf_func_call));
+		$$->func = cf_Quit; }
 /*	    | MessageAtom { }
 	    | AskAtom { } */ ;
 
@@ -239,13 +247,17 @@ WorkspaceSpecifier : NextAtom { }
 
 WorkspaceFunction : WorkspaceAtom WorkspaceSpecifier { } ;
 
-AnyWinSpecifier : AnyAtom | { } ; /* No specifier is the same as ANY */
+AnySpecifier : AnyAtom | { } ; /* No specifier is the same as ANY */
 
-WinSpecifier : AnyWinSpecifier { $$ = cf_AnyWindow; }
+WinSpecifier : AnySpecifier { $$ = cf_AnyWindow; }
 	     | String { $$ = cf_NameWindow; }
 	     | AppAtom String { $$ = cf_AppWindow; }
-	     | NextAtom { $$ = cf_NextWindow; }
-	     | PrevAtom { $$ = cf_PrevWindow; }
+	     | NextAtom AnyAtom { $$ = cf_NextWindow; }
+	     | PrevAtom AnyAtom { $$ = cf_PrevWindow; }
+	     | NextAtom VisibleAtom { $$ = cf_NextVisibleWindow; }
+	     | PrevAtom VisibleAtom { $$ = cf_PrevVisibleWindow; }
+	     | NextAtom { $$ = cf_NextWSWindow; }
+	     | PrevAtom { $$ = cf_PrevWSWindow; }
 	     | UniconicAtom { $$ = cf_UniconicWindow; }
 	     | IconicAtom { $$ = cf_IconicWindow; }
 	     | VisibleAtom { $$ = cf_VisibleWindow; }
@@ -441,6 +453,7 @@ void uwm_yy_PushContext(int type, void *data)
 	 s->context_data = NodeListCreate(); /* list of functions to call */
 	 s->data_index = NULL;
 	 s->data_index_size = 0;
+	 break;
     case UWM_YY_EVENT_CONTEXT:
     case UWM_YY_MENU_CONTEXT:
          s->context_data = NULL;

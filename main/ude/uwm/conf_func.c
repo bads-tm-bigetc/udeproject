@@ -25,6 +25,7 @@
    ######################################################################## */
 
 #include "windows.h"
+#include "workspaces.h"
 #include "conf_func.h"
 
 void cf_execute(NodeList *functions, NodeList *wins)
@@ -73,14 +74,126 @@ cf_function(cf_NameWindow)
 
 cf_function(cf_AppWindow)
 {
+/***/printf(TheScreen.errout,
+/***/	    "WINDOW FIND APPLICATION (cf_AppWindow) not yet implemented!\n");
 }
 
 cf_function(cf_NextWindow)
 {
+  NodeList *FoundWins;
+  Node *current;
+
+  FoundWins = NodeListCreate();
+  current = NULL;
+  while(current = NodeNext(wins, current)) {
+    Node *n, *n2;
+    n = n2 = InNodeList(TheScreen.UltimateList, current->data);
+    do {
+      if(n2 = NodeNext(TheScreen.UltimateList, n2)) break;
+    } while(n != n2);
+    if(n2) NodeAppend(FoundWins, n2->data);
+  }
+  cf_execute(args->NameWindow.functions, FoundWins);
+  NodeListDelete(&FoundWins);
 }
 
 cf_function(cf_PrevWindow)
 {
+  NodeList *FoundWins;
+  Node *current;
+
+  FoundWins = NodeListCreate();
+  current = NULL;
+  while(current = NodeNext(wins, current)) {
+    Node *n, *n2;
+    n = n2 = InNodeList(TheScreen.UltimateList, current->data);
+    do {
+      if(n2 = NodePrev(TheScreen.UltimateList, n2)) break;
+    } while(n != n2);
+    if(n2) NodeAppend(FoundWins, n2->data);
+  }
+  cf_execute(args->NameWindow.functions, FoundWins);
+  NodeListDelete(&FoundWins);
+}
+
+cf_function(cf_NextVisibleWindow)
+{
+  NodeList *FoundWins;
+  Node *current;
+
+  FoundWins = NodeListCreate();
+  current = NULL;
+  while(current = NodeNext(wins, current)) {
+    Node *n, *n2;
+    n = n2 = InNodeList(TheScreen.UltimateList, current->data);
+    do {
+      if((n2 = NodeNext(TheScreen.UltimateList, n2))
+	 && (WinVisible(n2->data))) break;
+    } while(n != n2);
+    if(n2) NodeAppend(FoundWins, n2->data);
+  }
+  cf_execute(args->NameWindow.functions, FoundWins);
+  NodeListDelete(&FoundWins);
+}
+
+cf_function(cf_PrevVisibleWindow)
+{
+  NodeList *FoundWins;
+  Node *current;
+
+  FoundWins = NodeListCreate();
+  current = NULL;
+  while(current = NodeNext(wins, current)) {
+    Node *n, *n2;
+    n = n2 = InNodeList(TheScreen.UltimateList, current->data);
+    do {
+      if((n2 = NodePrev(TheScreen.UltimateList, n2))
+	 && (WinVisible(n2->data))) break;
+    } while(n != n2);
+    if(n2) NodeAppend(FoundWins, n2->data);
+  }
+  cf_execute(args->NameWindow.functions, FoundWins);
+  NodeListDelete(&FoundWins);
+}
+
+cf_function(cf_NextWSWindow)
+{
+  NodeList *FoundWins;
+  Node *current;
+
+  FoundWins = NodeListCreate();
+  current = NULL;
+  while(current = NodeNext(wins, current)) {
+    Node *n, *n2;
+    n = n2 = InNodeList(TheScreen.UltimateList, current->data);
+    do {
+      if((n2 = NodeNext(TheScreen.UltimateList, n2))
+	 && (OnActiveWS(((UltimateContext*)n2->data)->WorkSpace))) break;
+    } while(n != n2);
+    if(n2) NodeAppend(FoundWins, n2->data);
+  }
+  cf_execute(args->NameWindow.functions, FoundWins);
+  NodeListDelete(&FoundWins);
+}
+
+cf_function(cf_PrevWSWindow)
+{
+  NodeList *FoundWins;
+  Node *current;
+
+  FoundWins = NodeListCreate();
+  current = NULL;
+  while(current = NodeNext(wins, current)) {
+    Node *n, *n2;
+    n = n2 = InNodeList(TheScreen.UltimateList, current->data);
+    do {
+      if((n2 = NodePrev(TheScreen.UltimateList, n2))
+	 && (OnActiveWS(((UltimateContext*)n2->data)->WorkSpace))) break;
+    } while(n != n2);
+    if(n2) NodeAppend(FoundWins, n2->data);
+  }
+  cf_execute(args->NameWindow.functions, FoundWins);
+  NodeListDelete(&FoundWins);
 }
 
 cf_function(cf_VisibleWindow)

@@ -1,3 +1,9 @@
+2004-12-04  Christian Ruppert <arc@users.sf.net>
+	* uwm/conf_func.c, uwm/conf_func.h, uwm/confparse.tab.y: implemented
+	  and extended WINDOW NEXT in new config file/event processor.
+	* uwm/confparse.tab.y: added first function recording code for quit
+	  and shell commands in config parser.
+
 2004-11-24  Christian Ruppert <arc@users.sf.net>
 	* uwm/windows.c(MoveResizeWindow): fixed bug that windows with static
 	  gravity aren't properly moved/resized.
