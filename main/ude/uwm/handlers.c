@@ -569,8 +569,8 @@ void HandleFocusOut(XEvent *event)
 {
   UltimateContext *uc;
 
+  FocusWin = NULL;
   if(!XFindContext(disp, event->xfocus.window, UWMContext, (XPointer *)&uc)){
-    FocusWin = NULL;
     DrawWinBorder(uc);
     if(uc->flags & ACTIVE_BORDER) DrawWinBorder(uc);
     XInstallColormap(disp, TheScreen.colormap);

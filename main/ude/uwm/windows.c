@@ -156,14 +156,16 @@ void MoveResizeWin(UltimateContext *uc,int x,int y,int width,int height)
 
   if(!(width||height)){
     if(uc->frame != None) XMoveWindow(disp, uc->frame, x, y);
-    else XMoveWindow(disp, uc->win, x, y);
+    else XMoveResizeWindow(disp, uc->win, x, y, width, height);
   } else {
     if(uc->frame != None) XMoveResizeWindow(disp,uc->frame,x,y,width,height);
     else XMoveWindow(disp, uc->win, x, y);
     if(uc->border!= None) XResizeWindow(disp,uc->border,width,height);
-    XResizeWindow(disp, uc->win, width - 2 * uc->BorderWidth,
-                  height - 2 * uc->BorderWidth
-                  - settings.global_settings->TitleHeight);
+    XMoveResizeWindow(disp, uc->win,
+		      uc->BorderWidth, uc->BorderWidth + TheScreen.TitleHeight,
+		      width - 2 * uc->BorderWidth,
+		      height - 2 * uc->BorderWidth
+		      - settings.global_settings->TitleHeight);
     if((uc->title.win != None ) 
        && ((uc->flags & SHAPED)
            || (settings.global_settings->FrameFlags & CENTER_TITLE))) {
