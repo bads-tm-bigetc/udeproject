@@ -1,4 +1,14 @@
 2003-08-29  Christian Ruppert <arc@users.sf.net>
+	* uwm/confparse.l, uwm/confparse.lex.l: renamed file from
+	  uwm/confparse.l to uwm/confparse.lex.l for automake-compatible built.
+	* uwm/confparse.y, uwm/confparse.tab.y: renamed file from
+	  uwm/confparse.y to uwm/confparse.tab.y for automake-compatible built.
+	* uwm/confparse.tab.y: added missing semicolons and empty actions for
+	  typeless rules for bison compatibility.
+	* uwm/Makefile.am: now uses automake's lex/yacc built procedure.
+	* configure.in: added checks for flex and yacc.
+
+2003-08-29  Christian Ruppert <arc@users.sf.net>
 	* uwm/uwm.h, uwm/handlers.c, uwm/init.c, uwm/placement.c,
 	  uwm/properties.c, uwm/resize.c, uwm/special.c, uwm/widgets.c,
 	  uwm/windows.c: started stitching in new configuration system and made

@@ -22,7 +22,7 @@ AC_DEFINE_UNQUOTED(CPP_CALL, "$CPP", [command line for preprocessor])
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
-AC_PROG_LEX
+AC_PROG_FLEX
 AC_PROG_YACC
 dnl ******* LIB ********
 dnl The next line must be activated when we need to compile the library
