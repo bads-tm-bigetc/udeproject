@@ -2,7 +2,7 @@
 ### remove the line after them:
 # lib_LTLIBRARIES= libude.la
 # libude_la_SOURCES=\
-EXTRA_DIST=\
+nodist_SOURCES=\
                         ude-box.c \
                         ude-bevels.c \
 			ude-desktop.c \
@@ -18,7 +18,8 @@ EXTRA_DIST=\
 ### if you want to compile the library uncomment the following line:
 # libude_la_LDFLAGS= -version-info 0:0:0
 
-pkginclude_HEADERS= ude-i18n.h \
+# pkginclude_HEADERS= ude-i18n.h \
+nodist_HEADERS= ude-i18n.h \
                         ude-bevels.h \
 			ude-box.h \
 			ude-desktop.h \
@@ -33,3 +34,6 @@ pkginclude_HEADERS= ude-i18n.h \
                         ude-raster.xbm \
 			ude.h \
 			ude-menu.h
+
+dist-hook:
+	cp ude-desktop.h ude-internals.h ude-i18n.h $(distdir)

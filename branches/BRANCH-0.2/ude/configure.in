@@ -10,7 +10,7 @@ export CFLAGS
 
 dnl change this to the right version name before to make a distribution
 dnl VERSION='SNAP$(shell date +%d%m%Y)'
-VERSION="0.2.9"
+VERSION="0.2.9a"
 AM_INIT_AUTOMAKE(ude, $VERSION)
 AM_CONFIG_HEADER(config.h)
 ALL_LINGUAS="es de pt_BR tr sk sv"

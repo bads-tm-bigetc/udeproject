@@ -1,3 +1,8 @@
+2003-12-01  Christian Ruppert <arc@users.sf.net>
+	* RELEASE: ude-0.2.9a
+	* lib/Makefile.am: fixed rpm built. obsolete library headers are no
+	  longer installed.
+
 2003-11-30  Christian Ruppert <arc@users.sf.net>
 	* RELEASE: ude-0.2.9
 	* uwm/Makefile.am: removed tree.c and tree.h from built and
