@@ -44,7 +44,7 @@ uwm_SOURCES=  \
     uwm.c
 
 noinst_HEADERS= \
-        MwmUtil.h \
+	MwmUtil.h \
 	applications.h \
 	handlers.h \
 	init.h \
@@ -74,7 +74,6 @@ noinst_HEADERS= \
 	ude_config_consts.h \
 	uwm_intl.h \
 	conf_func.h \
-	conf_func_list.h \
 	settings_global_list.h \
 	settings_workspace_list.h \
 	workspaces.h

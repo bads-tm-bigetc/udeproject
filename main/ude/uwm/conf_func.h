@@ -7,44 +7,30 @@
 #ifndef UWM_CONF_FUNC_H
 #define UWM_CONF_FUNC_H
 
+#include "special.h"
+#include "nodes.h"
+
 /* datatypes */
-#define CFD_VOID -1
-#define CFD_INT 0
-#define CFD_STRING 1
-#define CFD_FUNC 2
-typedef struct _cf_data {
-  int type;
-  union _cf_data_data {
-    int i;
+typedef struct _cf_func_call cf_func_call;
+typedef union _cf_args cf_args;
+typedef int (*cf_func)(cf_args *args, NodeList *wins);
+
+union _cf_args {
+  struct {
     char *s;
-    struct _cf_func_def *f;
-  } data;
-} cf_data;
+  } shell;
+  struct {
+    int x, y;
+  } resize, SetSize, reposition, SetPosition;
+};
 
-typedef struct _cf_data_array {
-  int nelem;
-  cf_data *data;
-} cf_data_array;
-
-/* general function type */
-typedef cf_data *(*cf_func)(cf_data_array *args);
-
-/* function definition structure */
-typedef struct _cf_func_def {
-  int type;
+struct _cf_func_call {
   cf_func func;
-  char *name;
-} cf_func_def;
-
-typedef struct _cf_func_call {
-  cf_func func;
-  cf_data_array args;
-} cf_func_call;
+  cf_args args;
+};
 
 /* Prototypes */
-#define CF__PROTOTYPES
-#include "conf_func_list.h"
-
-extern const cf_func_def cf_functions[CONFIG_FUNC_COUNT];
+#define cf_function(A) int *A(cf_args *args, NodeList *wins)
+extern cf_function(cf_Shell);
 
 #endif /* UWM_CONF_FUNC_H */

@@ -39,7 +39,7 @@ extern UDEScreen TheScreen;
 
 void uwm_yydrop(unsigned int n);
 
-#define KEYWORDS 43
+#define KEYWORDS 45
 const struct ude_configfile_keys_struct {
   char *keyword;
   int   token;
@@ -68,6 +68,8 @@ const struct ude_configfile_keys_struct {
 	{"DEICONIFY", DeiconifyAtom},	/* Window Iconic -> Normal */
 /* Top level actions */
 	{"WINDOW", WindowAtom},		/* Specify window */
+	{"FIND", FindAtom},		/* Window command grammar */
+	{"OR", OrAtom},			/* Window command grammar */
 #if 0
    the following atom is used in this context but defined above:
 	{"WORKSPACE", WorkspaceAtom},	/* Go to workspace */

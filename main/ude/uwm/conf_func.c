@@ -26,68 +26,8 @@
 
 #include "conf_func.h"
 
-const cf_func_def cf_functions[CONFIG_FUNC_COUNT] = {
-#define CF__STRUCT
-#include "conf_func_list.h"
-};
-
-cf_data *cf_Add(cf_data_array *args) {
-}
-
-cf_data *cf_GetMouseX(cf_data_array *args) {
-}
-
-cf_data *cf_GetMouseY(cf_data_array *args) {
-}
-
-cf_data *cf_MoveMouse(cf_data_array *args) {
-}
-
-cf_data *cf_GetWS(cf_data_array *args) {
-}
-
-cf_data *cf_SetWS(cf_data_array *args) {
-}
-
-cf_data *cf_NextWS(cf_data_array *args) {
-}
-
-cf_data *cf_PrevWS(cf_data_array *args) {
-}
-
-cf_data *cf_NextWin(cf_data_array *args) {
-}
-
-cf_data *cf_PrevWin(cf_data_array *args) {
-}
-
-cf_data *cf_GetWinX(cf_data_array *args) {
-}
-
-cf_data *cf_GetWinY(cf_data_array *args) {
-}
-
-cf_data *cf_GetWinWidth(cf_data_array *args) {
-}
-
-cf_data *cf_GetWinHeight(cf_data_array *args) {
-}
-
-cf_data *cf_MoveWin(cf_data_array *args) {
-}
-
-cf_data *cf_ResizeWin(cf_data_array *args) {
-}
-
-cf_data *cf_RaiseWin(cf_data_array *args) {
-}
-
-cf_data *cf_LowerWin(cf_data_array *args) {
-}
-
-cf_data *cf_WinToWS(cf_data_array *args) {
-}
-
-cf_data *cf_StickyWin(cf_data_array *args) {
+cf_function(cf_Shell)
+{
+  MySystem(args->shell.s);
 }
 

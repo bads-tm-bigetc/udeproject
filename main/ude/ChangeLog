@@ -1,3 +1,15 @@
+2004-10-21  Christian Ruppert <arc@users.sf.net>
+	* uwm/confparse.lex.l, uwm/confparse.tab.y: added FIND and OR keywords
+	  to config file syntax.
+	* uwm/confparse.tab.y: added FIND and OR keywords to window command
+	  syntax.
+	* uwm/confparse.tab.y: fixed syntax for WINDOW command.
+	* uwm/confparse.tab.y: fixed syntax for TopFunction.
+	* uwm/conf_func_list.h: deleted file.
+	* uwm/Makefile.am: removed conf_func_list.h from header file list.
+	* uwm/conf_func.c, uwm/conf_func.h: started implementation of new
+	  configurable functionality system.
+
 2004-10-20  Christian Ruppert <arc@users.sf.net>
 	* uwm/uwm.c(ParseCommandLine): code to print help and version
 	  information slightly rewritten.

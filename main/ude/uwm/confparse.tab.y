@@ -41,7 +41,7 @@
 %token EventAtom KeystrokeAtom ButtonAtom OpenAtom
 %token CloseAtom IconifyAtom DeiconifyAtom
 %token WindowAtom /* MessageAtom AskAtom */ QuitAtom
-%token AnyAtom NextAtom PrevAtom NewAtom AppAtom
+%token FindAtom OrAtom AnyAtom NextAtom PrevAtom NewAtom AppAtom
 %token StateAtom /* PropertyAtom */ NoneAtom
 %token DragPosAtom DragSizeAtom HexMenuAtom
 %token SetFocusAtom ShowAtom RaiseAtom LowerAtom
@@ -105,6 +105,7 @@ const ConverterFunction uwm_yy_to_setting_table[UWM_S_TYPENO][UWM_YY_TYPENO] = {
 /* UWM_S_COLOR 	*/ {	NULL,		NULL,		uopt_str_col	},
 /* UWM_S_PIXMAP	*/ {	NULL,		NULL,		uopt_str_pix	}
 };
+#define YYERROR_VERBOSE
 %}
 
 %%
@@ -226,11 +227,12 @@ WorkspaceSpecifier : NextAtom { }
 		   | NewAtom { }
 		   | CloseAtom { } ;
 
-WorkspaceFunction : WorkspaceAtom WorkspaceSpecifier ';' { } ;
+WorkspaceFunction : WorkspaceAtom WorkspaceSpecifier { } ;
 
-TopFunction : WorkspaceFunction { }
+TopFunction : WorkspaceFunction ';' { }
 	    | String ';' { }      /* shell command */
-	    | MenuAtom Integer { }
+	    | MenuAtom Integer ';' { }
+	    | QuitAtom ';' { }
 /*	    | MessageAtom { }
 	    | AskAtom { } */ ;
 
@@ -238,40 +240,51 @@ AnyWinSpecifier : AnyAtom | { } ; /* No specifier is the same as ANY */
 
 WinSpecifier : AnyWinSpecifier { }
 	     | String { }
-	     | AppAtom { }
+	     | AppAtom String { }
 	     | NextAtom { }
 	     | PrevAtom { }
 	     | StateAtom { }
 	     | NoneAtom { } ;
 
-WinAction : DragPosAtom ';' { } 
-	  | DragSizeAtom ';' { }
-	  | HexMenuAtom ';' { }
-	  | SetFocusAtom ';' { }
-	  | ShowAtom ';' { }
-	  | RaiseAtom ';' { }
-	  | LowerAtom ';' { }
-	  | MaxAtom ';' { }
-	  | VMaxAtom ';' { }
-	  | HMaxAtom ';' { }
-	  | DemaxAtom ';' { }
-	  | ResizeAtom '(' Integer ',' Integer ')' ';' { }
-	  | SetSizeAtom '(' Integer ',' Integer ')' ';' { }
-	  | ReposAtom '(' Integer ',' Integer ')' ';' { }
-	  | SetPosAtom '(' Integer ',' Integer ')' ';' { } 
+WinAction : DragPosAtom { }
+	  | DragSizeAtom { }
+	  | HexMenuAtom { }
+	  | SetFocusAtom { }
+	  | ShowAtom { }
+	  | RaiseAtom { }
+	  | LowerAtom { }
+	  | MaxAtom { }
+	  | VMaxAtom { }
+	  | HMaxAtom { }
+	  | DemaxAtom { }
+	  | ResizeAtom '(' Integer ',' Integer ')' { }
+	  | SetSizeAtom '(' Integer ',' Integer ')' { }
+	  | ReposAtom '(' Integer ',' Integer ')' { }
+	  | SetPosAtom '(' Integer ',' Integer ')' { } 
 	  | WorkspaceFunction { } 
-	  | CloseAtom ';' { }
-	  | IconifyAtom ';' { }
-	  | KillAtom ';' { } ;
+	  | CloseAtom { }
+	  | IconifyAtom { }
+	  | KillAtom { } ;
 
-WinActionBlock  : WinAction
-		| '{' WinActions '}' ;
+OrWinAction : OrAtom WinAction ';' { }
+	    | OrAtom '{' WinActions '}' { } ;
 
-WinActions : WinAction
-	   | WinActions WinAction
+AltWinActionBlocks : WinAction ';'
+		   | WinAction OrWinAction
+		   | '{' WinActions '}'
+		   | '{' WinActions '}' OrWinAction ;
+
+WinActionOrFuncBlocks : WinAction ';'
+		      | WinAction OrAtom FunctionBlock
+		      | '{' WinActions '}'
+		      | '{' WinActions '}' OrAtom FunctionBlock ;
+
+WinActions : WinAction ';'
+	   | WinActions WinAction ';'
 	   | RecoverFromERR ;
 
-WinFunction : WindowAtom WinSpecifier WinActionBlock { } ;
+WinFunction : WindowAtom WinSpecifier AltWinActionBlocks { }
+	    | WindowAtom FindAtom WinSpecifier WinActionOrFuncBlocks { } ;
 
 Function : AnyLine { }
 	 | TopFunction { }
@@ -362,7 +375,8 @@ int yyerror(char *s)
 {
   uwm_yy_LEX_FLAG_Newline_Requested = 1;
   fprintf(stderr, "UWM: error on line %d of file %s: %s\n",
-          uwm_yyParseLineStack->linenumber, uwm_yyParseLineStack->filename, s);
+	  uwm_yyParseLineStack->linenumber,
+	  uwm_yyParseLineStack->filename, s);
 }
 
 extern void *YY_CURRENT_BUFFER;
@@ -410,7 +424,7 @@ void uwm_yy_PushContext(int type, void *data)
     case UWM_YY_FUNCTION_CONTEXT:
 	 s->context_data = NULL; /* from event context */
 	 s->data_index = NULL;
-	 s->data_index_size = CONFIG_FUNC_COUNT;
+	 s->data_index_size = 0;
     case UWM_YY_EVENT_CONTEXT:
     case UWM_YY_MENU_CONTEXT:
          s->context_data = NULL;
