@@ -1,3 +1,18 @@
+2003-11-11  Christian Ruppert <arc@users.sf.net>
+	* uwm/windows.c: added FocusWin global.
+	* uwm/widgets.h, uwm/widgets.c, uwm/windows.c, uwm/properties.c,
+	  uwm/handlers.c: removed 'Active' parameter from DrawFrameBevel and
+	  DrawTitle functions.
+	* uwm/handlers.c: no longer reacting on KeyRelease events that are not
+	  on our screen.
+	* uwm/handlers.c: added handlers for FocusIn and FocusOut events.
+	* uwm/uwm.h: added FocusChangeMask to FRAME_EVENTS.
+	* uwm/uwm.h, uwm/windows.c: added flag ACTIVE_BORDER to ultimate
+	  context which is set by DrawWinBorder.
+	* uwm/windows.c (DrawWinBorder): changed criteria for border color
+	  from ActiveWin to FocusWin.
+
+
 2003-06-30  Christian Ruppert <arc@users.sf.net>
         * uwm/properties.c: uwm no longer updates window's borders in case
           motif hints changes when a window is mapped. fixes problems with

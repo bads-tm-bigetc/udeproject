@@ -36,6 +36,7 @@
 extern Display *disp;
 extern UDEScreen TheScreen;
 extern InitStruct InitS;
+extern UltimateContext *FocusWin;
 
 
 void DrawBevel(Drawable win,int x1,int y1,int x2,int y2,int width,GC NW,GC SE)
@@ -54,11 +55,12 @@ void DrawBevel(Drawable win,int x1,int y1,int x2,int y2,int width,GC NW,GC SE)
    than the widgets.c DrawBevel function because I want to draw a
    shadowed border too, and this way I can have other effects.
    Partially by Adam Sampson. */
-void DrawFrameBevel(UltimateContext *uc,char Active)
+void DrawFrameBevel(UltimateContext *uc)
 {
   XGCValues xgcv;
   int xa, ya, xb, yb, xc, yc, xd, yd, i;
   GC LightGC, ShadowGC;
+  int Active = uc->flags & ACTIVE_BORDER;
 
   if(!TheScreen.FrameBevelWidth) return;
 
@@ -129,11 +131,12 @@ void DrawFrameBevel(UltimateContext *uc,char Active)
   XFreeGC(disp, ShadowGC);
 }
 
-void DrawTitle(UltimateContext *uc,char Active)
+void DrawTitle(UltimateContext *uc)
 {
   XGCValues xgcv;
   GC LightGC, ShadowGC, TextGC;
   int i;
+  int Active = uc->flags & ACTIVE_BORDER;
 
   xgcv.function=GXcopy;
   xgcv.foreground=Active

@@ -61,6 +61,7 @@ extern Atom WM_TAKE_FOCUS;
 extern Atom WM_DELETE_WINDOW;
 
 UltimateContext *ActiveWin=NULL;
+UltimateContext *FocusWin=NULL;
 
 char WinVisible(UltimateContext *uc)
 {
@@ -74,7 +75,13 @@ void DrawWinBorder(UltimateContext *uc)
   unsigned long winbg;
 
   if(uc->frame == None) return;
-  active = (uc == ActiveWin);
+
+  if(active = (uc == FocusWin)) {
+    uc->flags |= ACTIVE_BORDER;
+  } else {
+    uc->flags &= ~ACTIVE_BORDER;
+  }
+
   winbg = active ? TheScreen.ActiveBorder[TheScreen.desktop.ActiveWorkSpace]
           : TheScreen.InactiveBorder[TheScreen.desktop.ActiveWorkSpace];
   XSetWindowBackground(disp, uc->border, winbg);
@@ -84,20 +91,17 @@ void DrawWinBorder(UltimateContext *uc)
     if(uc->title.name && (InitS.BorderTitleFlags
        & (active ? BT_ACTIVE_TITLE : BT_INACTIVE_TITLE))){
       XRaiseWindow(disp,uc->title.win);
-      DrawTitle(uc, active);
+      DrawTitle(uc);
     } else {
       XLowerWindow(disp, uc->title.win);
-      if(uc->flags & SHAPED) DrawTitle(uc, active);
+      if(uc->flags & SHAPED) DrawTitle(uc);
     }
   }
-  DrawFrameBevel(uc,uc==ActiveWin);
+  DrawFrameBevel(uc);
 }
 
 void ShapeFrame(UltimateContext *uc)
 {
-/***************************************************************************/
-/***************************************************************************/
-/***************************************************************************/
   int a, shaped, wbs, hbs;
 
   XShapeQueryExtents(disp,uc->win,&shaped,&a,&a,&wbs,&hbs,&a,&a,&a,&a,&a);
@@ -123,9 +127,6 @@ void ShapeFrame(UltimateContext *uc)
       UpdateName(uc);
     }
   }
-/***************************************************************************/
-/***************************************************************************/
-/***************************************************************************/
 }
 
 void ReparentWin(UltimateContext *uc, Window parent, int x, int y)
@@ -170,8 +171,6 @@ void MoveResizeWin(UltimateContext *uc,int x,int y,int width,int height)
   if(((x!=ox)||(y!=oy))&&(((width==0)||(width==ow))&&\
                          ((height==0)||(height==oh))))
     SendConfigureEvent(uc);
-/***************************************************************************/
-/***************************************************************************/
 }
 
 void GravitizeWin(UltimateContext *uc,int *x, int *y, int mode)
@@ -389,23 +388,30 @@ void ActivateWin(UltimateContext *uc)
 
   OldActive=ActiveWin;
   ActiveWin=uc;
-  
-  if(OldActive){
-    XSetInputFocus(disp, PointerRoot, RevertToPointerRoot, TimeStamp);
-    if(uc != OldActive) DrawWinBorder(OldActive);
+
+  if(ActiveWin != FocusWin) {
+    if(OldActive){
+      XSetInputFocus(disp, PointerRoot, RevertToPointerRoot, TimeStamp);
+    }
   }
   if(uc){
+    int focus_set;
+
+    focus_set = 0;
     UpdateUWMContext(uc);
     if(!((uc->WMHints) && (uc->WMHints->flags & InputHint)
-                       && (uc->WMHints->input == False)))
+                       && (uc->WMHints->input == False))) {
       XSetInputFocus(disp, ActiveWin->win, RevertToPointerRoot, TimeStamp);
-
-    if(ActiveWin->ProtocolFlags & TAKE_FOCUS)
-      SendWMProtocols(ActiveWin, WM_TAKE_FOCUS);
-    if(uc != OldActive) {
-      XInstallColormap(disp,uc->Attributes.colormap);
-      DrawWinBorder(ActiveWin);
+      focus_set = 1;
     }
+
+    if(ActiveWin->ProtocolFlags & TAKE_FOCUS) {
+      SendWMProtocols(ActiveWin, WM_TAKE_FOCUS);
+      focus_set = 1;
+    }
+
+    if((!focus_set) && (ActiveWin->frame != None))
+      XSetInputFocus(disp, ActiveWin->frame, RevertToPointerRoot, TimeStamp);
   }
 }
 

@@ -52,7 +52,7 @@
 
 #define TITLE_EVENTS (ExposureMask|ButtonPressMask|ButtonReleaseMask|EnterWindowMask)
 
-#define FRAME_EVENTS (EnterWindowMask|LeaveWindowMask|SubstructureRedirectMask|SubstructureNotifyMask)
+#define FRAME_EVENTS (EnterWindowMask|LeaveWindowMask|SubstructureRedirectMask|SubstructureNotifyMask|FocusChangeMask)
 
 #define UWM_MODIFIERS (ControlMask | Mod1Mask)
 
@@ -151,9 +151,10 @@ typedef struct
 typedef struct _WinGroup *WinGroupPtr;
 
 /* flags */
-#define RISEN        (1<<0)    /* window autorisen? */
-#define PLACEIT      (1<<1)    /* Autoplace window before mapping? */
-#define SHAPED       (1<<2)  /* window shaped? */
+#define RISEN         (1<<0)    /* window autorisen? */
+#define PLACEIT       (1<<1)    /* Autoplace window before mapping? */
+#define SHAPED        (1<<2)    /* window shaped? */
+#define ACTIVE_BORDER (1<<3)    /* window border drawn as active? */
 
 /* wm-protocol-flags */
 #define TAKE_FOCUS    (1<<0)
