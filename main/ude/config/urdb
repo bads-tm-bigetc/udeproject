@@ -250,6 +250,11 @@
 *Canvas.selectbackground: @HIGHLIGHTEDBGR@
 *Canvas.selectforeground: @HIGHLIGHTEDTEXT@
 
+! Gvim
+
+Vim*menuBar*font: @STANDARDFONT@
+Vim*font: @TEXTFONT@
+
 ! Emacs
 
 Emacs.default.attributeForeground:	@TEXTCOLOR@
