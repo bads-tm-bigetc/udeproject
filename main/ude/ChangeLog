@@ -1,3 +1,7 @@
+2002-06-21  Christian Ruppert <arc@gmx.li>
+	* uwm/uwm.c (main), uwm/init.c (InitUWM): moved CheckCPP from InitUWM
+	  to main so that it is called before we install SIGCHILD handler.
+
 2002-04-21  Christian Ruppert <arc@gmx.li>
 	* uwm/handlers.c: replaced forgotten (ControlMask|Mod1Mask) by
 	  UWM_MODIFIERS in HandleKeyRelease.
