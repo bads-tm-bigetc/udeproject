@@ -1,6 +1,9 @@
 2004-09-09  Christian Ruppert <arc@users.sf.net>
 	* uwm/handlers.c(InitHandlers): uwm now stops at initialisation in
 	  case no shapes extension is found.
+	* uwm/uwm.h: changed type of TheScreen.cppcall to char*
+	* uwm/special.c(MyOpen and CheckCPP): now using uwm-0.3 versions of
+	  these functions.
 
 2003-12-01  Christian Ruppert <arc@users.sf.net>
 	* RELEASE: ude-0.2.9a

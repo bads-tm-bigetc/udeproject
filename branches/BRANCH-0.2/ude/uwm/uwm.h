@@ -126,8 +126,7 @@ typedef struct
   UDEColors *Colors;
   UDEDesktop desktop;
   char udedir[256];
-  char cppcall[256];
-  char *cppincpaths, *urdbcppopts;
+  char *cppcall, *cppincpaths, *urdbcppopts;
   char *Home;
 
   Atom UDE_WORKSPACES_PROPERTY, UDE_SETTINGS_PROPERTY, UDE_WINDOW_PROPERTY;
