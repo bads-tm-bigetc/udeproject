@@ -279,7 +279,6 @@ int CheckCPP()
 
   recheck:  /* ugly but undangerous in this case. */
 
-  
   if(pipe(files)) return(0);
   if(pipe(ofiles)) return(0);
 
