@@ -161,8 +161,8 @@ void MoveResizeWin(UltimateContext *uc,int x,int y,int width,int height)
     if(uc->frame != None) XMoveResizeWindow(disp,uc->frame,x,y,width,height);
     else XMoveWindow(disp, uc->win, x, y);
     if(uc->border!= None) XResizeWindow(disp,uc->border,width,height);
-    XMoveResizeWindow(disp, uc->win,
-		      uc->BorderWidth, uc->BorderWidth + TheScreen.TitleHeight,
+    XMoveResizeWindow(disp, uc->win, uc->BorderWidth,
+		      uc->BorderWidth + settings.global_settings->TitleHeight,
 		      width - 2 * uc->BorderWidth,
 		      height - 2 * uc->BorderWidth
 		      - settings.global_settings->TitleHeight);
