@@ -8,7 +8,7 @@ dnl	CFLAGS="-DDEBUG -g -Wall -O2"
 fi
 export CFLAGS
 
-dnl change this to the rigth version name before to make a distribution
+dnl change this to the right version name before to make a distribution
 dnl VERSION='SNAP$(shell date +%d%m%Y)'
 VERSION="0.2.8"
 AM_INIT_AUTOMAKE(ude, $VERSION)
