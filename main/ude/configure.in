@@ -87,4 +87,6 @@ dnl AC_SUBST(LTLIBOBJS)
 dnl LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
 dnl AC_SUBST(LTALLOCA)
 dnl ******* LIB ********
+
+dnl ATTENTION: AC_OUTPUT(...) must remain a single line for autogen.sh to work!
 AC_OUTPUT(lib/Makefile uwm/Makefile config/Makefile doc/Makefile doc/html/Makefile extras/Makefile extras/tools/Makefile gfx/Makefile Makefile ude.spec config/StartScript)
