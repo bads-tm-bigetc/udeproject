@@ -1,0 +1,15 @@
+#ifndef UWM_WINGROUPS_H
+#define UWM_WINGROUPS_H
+
+#include <X11/Xlib.h>
+#include "nodes.h"
+#include "uwm.h"
+
+typedef struct _WinGroup {
+  UltimateContext *leader;
+  NodeList *members; /* Data is *UltimateContext */
+} WinGroup;
+
+void UpdateWinGroup(UltimateContext *uc);
+
+#endif /* UWM_WINGROUPS_H */

@@ -26,6 +26,7 @@ uwm_SOURCES=  \
     workspaces.c \
     pix.c \
     selection.c \
+    wingroups.c \
     uwm.c
 
 noinst_HEADERS= \
@@ -50,6 +51,7 @@ noinst_HEADERS= \
 	winmenumenu.h \
 	pix.h \
 	selection.h \
+	wingroups.h \
 	workspaces.h
 
 EXTRA_DIST= shape.bitmap

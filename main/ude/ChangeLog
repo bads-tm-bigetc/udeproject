@@ -1,3 +1,19 @@
+2001-04-14  Christian Ruppert <arc@gmx.li>
+
+	* uwm/windows.c: fixed static gravity (must be TitleHight instead of
+	  TitleHeight/2)
+	* uwm/nodes.h: added some comments for documentation, fixed
+	  #define False
+	* uwm/uwm.h: added member group to UltimateContext
+	* uwm/properties.c: added UpdateWinGroup-call to UpdateWMHints
+	* uwm/windows.c: added init for uc->group in UltimizeWin
+	* uwm/properties.c: changed SetWinMapState to disenborder window in case
+	  it is withdrawn.
+	* uwm/handlers.c: existing withdrawn windows are no longer deultimized.
+	* uwm/wingroups.h: new file
+	* uwm/wingroups.c: new file
+	* uwm/Makefile.am: added files wingroups.h and wingroups.c
+
 2001-04-13  Christian Ruppert <arc@gmx.li>
 
 	* uwm/uwm.h: removed UltimateContext.parent

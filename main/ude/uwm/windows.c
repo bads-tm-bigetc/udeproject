@@ -167,7 +167,6 @@ void MoveResizeWin(UltimateContext *uc,int x,int y,int width,int height)
 
 void GravitizeWin(UltimateContext *uc,int *x, int *y, int mode)
 {
-  /*** pay respect to gravity ***/
   switch(uc->ra.gravity){        /*** Y ***/
     case SouthGravity:
     case SouthEastGravity:
@@ -183,7 +182,7 @@ void GravitizeWin(UltimateContext *uc,int *x, int *y, int mode)
       break;
     case StaticGravity:
       *y -= mode * (uc->BorderWidth - uc->OldBorderWidth
-                                  + TheScreen.TitleHeight / 2);
+                                  + TheScreen.TitleHeight);
       break;
     default: break;
   }
@@ -476,7 +475,8 @@ DBG(fprintf(TheScreen.errout,"ULTIMIZING WIN #%d: no override redirect.\n",win);
   Updatera(uc);
   
   uc->WMHints=NULL;
-  UpdateWMHints(uc); /* dummy time, cannot be active */
+  uc->group=NULL;
+  UpdateWMHints(uc);
 
   uc->MotifWMHints=NULL;
   UpdateMotifHints(uc);

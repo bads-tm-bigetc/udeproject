@@ -139,6 +139,7 @@ typedef struct
 #define TimeStamp TheScreen.now
 
 /*** Window-Context structure ***/
+typedef struct _WinGroup *WinGroupPtr;
 
 /* flags */
 #define RISEN        (1<<0)    /* window autorisen? */
@@ -174,6 +175,7 @@ typedef struct _UltimateContext
   XWMHints *WMHints;              /* some information... */
   PropMotifWmHints *MotifWMHints; /* even more information... */
   Window TransientFor;            /* who are we transient for or None */
+  WinGroupPtr group;                /* group of window or NULL */
   unsigned char ProtocolFlags;    /* WM_PROTOCOLS */
 
   unsigned long wmstate;
@@ -184,7 +186,7 @@ typedef struct _UltimateContext
 } UltimateContext;
 
 
-/*** Structure describeing an application programm that can be called by uwm ***/
+/*** Structure describing an application programm that can be called by uwm ***/
 typedef struct {
   char *command;
 } AppStruct;
