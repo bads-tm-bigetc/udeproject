@@ -1,5 +1,6 @@
 uwm-team:
 
+* Brian Roberts (programming)
 * Jaime Alberto Silva Colorado 'el mono' (programming, lib programming,
   GNU-compliance, automake stuff, lib concepts)
 * Stephan Helma (debian, rpm and other packages, best and most detailed
@@ -13,5 +14,4 @@ free programmers and supporters:
 * Adam Sampson (several patches and new features)
 * J. S. Havard (BSD-testing and FTP-space)
 * for further ude-supporters and officials please take a look at
-  http://www.ude.org
-
+  http://udeproject.sf.net

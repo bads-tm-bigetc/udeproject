@@ -1,5 +1,6 @@
 2002-03-05  Christian Ruppert <arc@gmx.li>
 	* doc/manual.tex: added documentation for SubMenuTitles option.
+	* AUTHORS: added Brian Roberts and corrected obsolete www adress
 
 2002-03-04  Brian Roberts <flicken@wpi.edu>
 	* config/uwmrc-behaviour.hook: added SubMenuTitles configuration
@@ -11,7 +12,6 @@
 	  uwm/windows.c,
 	  uwm/winmenumenu.c: changed to set submenu title to "" if user
 			     preference is no SubMenuTitles. 
-
 
 2002-02-11  Christian Ruppert <arc@gmx.li>
 
