@@ -29,7 +29,8 @@
 #include "confparse.h"
 #include "uwm.h"
 
-#define deref(TYPE) (*((TYPE *)((base) + ((unsigned long)out->offset))))
+#define derefptr(TYPE) ((TYPE *)((base) + ((unsigned long)out->offset)))
+#define deref(TYPE) (*(derefptr(TYPE)))
 
 extern Display *disp;
 
@@ -60,7 +61,7 @@ void uopt_str_fnt(YYSTYPE *in, uwm_init_index *out, void *base)
   XFontStruct *nxfs;
   if(nxfs = XLoadQueryFont(disp, in->string)) {
     FontStruct *fs;
-    fs = deref(FontStruct *);
+    fs = derefptr(FontStruct);
     if(fs->xfs) XFreeFont(disp, fs->xfs);
     if(fs->name) free(fs->name);
     fs->xfs = nxfs;

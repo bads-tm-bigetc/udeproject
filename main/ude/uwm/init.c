@@ -24,13 +24,16 @@
 
    ######################################################################## */
 
+/*
+#define NEW_CONFIG
+*/
 
 #define __USE_GNU
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #else
-#warning This will probably not compile with out the config.h
+#warning This will probably not compile without config.h
 #endif
 
 #include <stdlib.h>
@@ -73,6 +76,7 @@
 #include "urm.h"
 #include "pix.h"
 #include "MwmUtil.h"
+#include "settings.h"
 
 extern char **environ;
 
@@ -99,6 +103,7 @@ extern Atom MOTIF_WM_HINTS;
 
 extern InitStruct InitS;
 
+#ifndef NEW_CONFIG
 char *RLSpace(char *s)  /*** will remove leading space from string ***/
 {
   while(isspace(*s)&&(*s!='\0')) s++;
@@ -128,6 +133,7 @@ void DereferenceENV(char *s)
     if(!u) t++;
   }
 }
+#endif /* NEW_CONFIG */
 
 void SetupCursors(void)
 {
@@ -222,6 +228,7 @@ void PrepareIcons()
   XMapSubwindows(disp,TheScreen.icons.IconParent);
 }
 
+#ifndef NEW_CONFIG
 char *ReadQuoted(FILE *f) /* allocs mem and writes string to it*/
 {
   char c, text[256], *p;
@@ -459,7 +466,7 @@ void CreateAppsMenu(char *filename)
   NodeListDelete(&Stack);
   fclose(mf);
 }
-
+#endif /* NEW_CONFIG */
 
 void AllocXColor(unsigned short R, unsigned short G, unsigned short B,\
                                                           XColor *xcol)
@@ -555,6 +562,7 @@ AllocColors(R,G,B,c,l,s)
   *s=AllocColor(r,g,b);
 }
 
+#ifndef NEW_CONFIG
 int ParseColor(char *p,int *r,int *g,int *b)
 {
   if(GetTriple(p,r,g,b)) {
@@ -1368,6 +1376,7 @@ void InitDefaults()
   fclose(uwmrc);
   CreateAppsMenu(MenuFileName);
 }
+#endif /* NEW_CONFIG */
 
 void InitUWM()
 {
@@ -1526,7 +1535,11 @@ UWM ");
   } else {
       char *e;
       
-      e= RLSpace(env);
+#ifndef NEW_CONFIG
+      e = RLSpace(env);
+#else
+      e = env;
+#endif /* NEW_CONFIG */
       if('/' != (*(strchr (e, '\0') - sizeof (char))))
 	sprintf(TheScreen.udedir,"%s/",e);
       else
@@ -1569,11 +1582,13 @@ UWM ");
 
   /*** read configuration files ***/
 
+#ifndef NEW_CONFIG
   InitDefaults();   
+#endif /* NEW_CONFIG */
  
   PrepareIcons();
 
-  /*** prepare menues ***/;
+  /*** prepare menus ***/
 
   CreateUWMMenu();
   InitWSProcs();
@@ -1661,3 +1676,39 @@ UWM ");
   /* Set the background for the current desktop. */
   SetWSBackground();
 }
+
+uwm_global_settings global_settings = {
+	  10,			/* BorderWidth */
+	  3,			/* TransientWidth */
+	  0,			/* TitleHeight */
+	  2,			/* FrameBevelWidth */
+	  2,			/* BevelWidth */
+	  2,			/* MenuXOffset */
+	  2,			/* MenuYOffset */
+	  39,			/* FrameFlags */
+	  { NULL, NULL },	/* TitleFont */
+	  { NULL, NULL },	/* Font */
+	  { NULL, NULL },	/* MonoFont */
+	  { NULL, NULL },	/* HighlightFont */
+	  { NULL, NULL },	/* InactiveFont */
+	  NULL,			/* StartScript */
+	  NULL,			/* StopScript */
+	  NULL,			/* ResourceFile */
+	  NULL,			/* HexPath */
+	  5,			/* PlacementStrategy */
+	  0,			/* PlacementThreshold */
+	  0,			/* OpaqueMoveSize */
+	  0,			/* MaxWinWidth */
+	  0,			/* MaxWinHeight */
+	  -1,			/* WarpPointerToNewWinH */
+	  -1,			/* WarpPointerToNewWinV */
+	  10,			/* SnapDistance */
+	  0			/* BehaviourFlags */
+	};
+
+#ifdef NEW_CONFIG
+int ReadConfigFile()
+{
+  uwm_yyparse_wrapper("uwmrc.new");
+}
+#endif /* NEW_CONFIG */

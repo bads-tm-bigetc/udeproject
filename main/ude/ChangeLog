@@ -1,3 +1,27 @@
+2003-04-04  Christian Ruppert <arc@users.sf.net>
+	* uwm/configconvertors.c: added derefptr macro and fixed uopt_str_fnt.
+	* uwm/confparse.y: added prototype for workspace configuration
+	  structure and index. parts of workspace configuration structure
+	  need to be redefined, however (Wallpaper and ScreenCommand).
+	* uwm/confparse.y (uwm_yy_PushContext): added initialisation of
+	  uwm_workspace_settings (UWM_YY_WORKSPACE_CONTEXT).
+	* uwm/confparse.y, uwm/init.c: moved definition of
+	  uwm_global_settings global_settings to init.c.
+	* uwm/init.c: added preprocessor ifndef/ifdef directives around
+	  some stuff that is no longer needed as soon as we switch to the
+	  new config parser.
+	* uwm/init.c: fixed a typo in a preprocessor warning about missing
+	  config.h.
+	* uwm/init.c: defined global_settings with default values.
+	* uwm/init.c: added new ReadConfigFile function for new configuration
+	  parsing.
+	* uwm/settings.h (uwm_global_settings): commented out ButtonsOnRoot
+	  and ButtonsOnWin elements in global settings structure to decrease
+	  confusion. These elements are only there to show that there is some
+	  functionality to be implemented.
+	* uwm/settings.h (uwm_workspace_settings): changed element name to
+	  Name in workspace settings.
+
 2003-03-02  Christian Ruppert <arc@users.sf.net>
 	* uwm/configconvertors.c: added convertor for font datatype.
 	* uwm/confparse.h: added prototype of convertor for font datatype.

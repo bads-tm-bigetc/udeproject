@@ -98,9 +98,16 @@ const uwm_init_index uwm_global_index[UWM_GLOBAL_OPTION_NR] = {
   GLOBAL_OPTION_STRUCT_LINE(SnapDistance, UWM_S_INT),
   GLOBAL_OPTION_STRUCT_LINE(BehaviourFlags, UWM_S_INT)
 };
+#undef GLOBAL_OPTION_STRUCT_LINE(NAME, TYPE) \
+
+#define UWM_WORKSPACE_OPTION_NR 1
+#define WORKSPACE_OPTION_STRUCT_LINE(NAME, TYPE) \
+        {#NAME,    OFFSET_OF(_uwm_workspace_settings, NAME),    TYPE}
+const uwm_init_index uwm_workspace_index[UWM_GLOBAL_OPTION_NR] = {
+  WORKSPACE_OPTION_STRUCT_LINE(Name, UWM_S_STRING),
+};
 
 struct uwm_yy_ContextStackStruct *uwm_yy_ContextStack = NULL;
-uwm_global_settings global_settings;
 
 typedef void (*ConverterFunction)(YYSTYPE *in, uwm_init_index *out, void *base);
 /* conversion table to convert parser datatypes to uwm datatypes
@@ -328,8 +335,13 @@ void uwm_yy_PushContext(int type)
 	 s->data_index = uwm_global_index;
 	 s->data_index_size = UWM_GLOBAL_OPTION_NR;
          break;
-    case UWM_YY_MENU_CONTEXT:
     case UWM_YY_WORKSPACE_CONTEXT:
+	 s->context_data = MyCalloc(1, sizeof(uwm_workspace_settings));
+	 memset(s->context_data, 0, sizeof(uwm_workspace_settings));
+	 s->data_index = uwm_workspace_index;
+	 s->data_index_size = UWM_WORKSPACE_OPTION_NR;
+	 break;
+    case UWM_YY_MENU_CONTEXT:
     case UWM_YY_EVENT_CONTEXT:
     case UWM_YY_FUNCTION_CONTEXT:
          s->context_data = NULL;

@@ -63,8 +63,8 @@ typedef struct _uwm_global_settings {
   int SnapDistance;
   int BehaviourFlags;
 
-  void *ButtonsOnRoot;  /* to be implemented/changed */
-  void *ButtonsOnWin;   /* to be implemented/changed */
+/*  void *ButtonsOnRoot;  /* to be implemented/changed */
+/*  void *ButtonsOnWin;   /* to be implemented/changed */
 } uwm_global_settings;
 
 extern uwm_global_settings global_settings;
@@ -72,7 +72,7 @@ extern uwm_global_settings global_settings;
 /* workspace specific settings */
 typedef struct _uwm_workspace_settings {
 /*** general workspace options */
-  char *name;
+  char *Name;
   char *ScreenCommand;
   struct {
     Pixmap *image;
