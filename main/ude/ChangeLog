@@ -1,3 +1,12 @@
+2001-04-19  Christian Ruppert <arc@gmx.li>
+
+	* uwm/windows.c: cleaned up UltimizeWin
+	* uwm/wingroups.c: added support for OverrideRedirect group leaders
+	  (although OverrideRedir. group leaders don't really make sense imho)
+	* uwm/wingroups.h: some changes for compatibility with OverrideRedirect
+	  group leaders.
+        * uwm/workspaces.c: some corrections for new wingroups.h
+
 2001-04-16  Christian Ruppert <arc@gmx.li>
 
 	* uwm/windows.c: iconified windows in winmenu are now listed using their

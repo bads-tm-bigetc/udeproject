@@ -421,13 +421,10 @@ Node* PlainDeUltimizeWin(UltimateContext *uc,Bool alive)
   Node *n;
   WinGroup *group;
 
-  if(uc->group) {
-    if(uc->group->leader == uc) DeleteWinGroup(uc->group);
-    else RemoveWinFromGroup(uc);
-  }
-
   if(!XFindContext(disp, uc->win, UWMGroupContext, (XPointer *)&group))
     DeleteWinGroup(group);
+
+  if(uc->group) RemoveWinFromGroup(uc);
 
   n = NodeDelete(TheScreen.UltimateList, InNodeList(TheScreen.UltimateList,uc));
   XDeleteContext(disp,uc->win,UWMContext);
@@ -469,52 +466,50 @@ DBG(fprintf(TheScreen.errout,"ULTIMIZING WIN #%d: no override redirect.\n",win);
   uc->frame=None;
   uc->border=None;
 
-/* we need this already here to tell fuctions called from UltimizeWin that
-   window is already being ultimized */
-  if(XSaveContext(disp,uc->win,UWMContext,(XPointer)uc))
-    fprintf(TheScreen.errout,"UWM FATAL: Couldn't save Context\n");
-
   uc->BorderWidth=0;
   uc->OldBorderWidth=Attr.border_width;
   XSetWindowBorderWidth(disp,uc->win,0);
 
-  UpdateUWMContext(uc);
-
   uc->title.win = None;
-  
   uc->title.name=NULL;
-  UpdateName(uc);
-
   uc->title.iconname=NULL;
-  UpdateIconName(uc);
 
-  Updatera(uc);
-  
   uc->WorkSpace = TheScreen.desktop.ActiveWorkSpace;
 
   uc->WMHints=NULL;
   uc->group=NULL;
-  UpdateWMHints(uc);
-
   uc->MotifWMHints=NULL;
-  UpdateMotifHints(uc);
-
-  UpdateTransientForHint(uc);
-
-  UpdateWMProtocols(uc);
-
-  SetWinMapState(uc,WithdrawnState);
 
   uc->flags=PLACEIT;
 
   uc->expected_unmap_events = 0;
   uc->own_unmap_events = 0;
   
-  XSelectInput(disp, uc->win, WINDOW_EVENTS);
-  XShapeSelectInput(disp,uc->win,ShapeNotifyMask);
+  SetWinMapState(uc,WithdrawnState);
 
   if(!NodeAppend(TheScreen.UltimateList,uc))
     SeeYa(1,"FATAL: out of memory!");
+
+/* we need this already here to tell some of the fuctions below that
+   window is already being ultimized */
+  if(XSaveContext(disp,uc->win,UWMContext,(XPointer)uc))
+    fprintf(TheScreen.errout,"UWM FATAL: Couldn't save Context\n");
+
+  UpdateUWMContext(uc);
+
+  UpdateName(uc);
+  UpdateIconName(uc);
+
+  Updatera(uc);
+
+  UpdateWMHints(uc);
+  UpdateMotifHints(uc);
+  UpdateTransientForHint(uc);
+  UpdateWMProtocols(uc);
+
+  XSelectInput(disp, uc->win, WINDOW_EVENTS);
+  XShapeSelectInput(disp,uc->win,ShapeNotifyMask);
+
   return(uc);
 }
 

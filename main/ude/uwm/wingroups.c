@@ -43,24 +43,26 @@
 extern Display *disp;
 extern XContext UWMContext;
 extern XContext UWMGroupContext;
+extern UDEScreen TheScreen;
 
 WinGroup *CreateWinGroup(Window leader)
 {
   WinGroup *group;
+  UltimateContext *uc;
 
   group = MyCalloc(1,sizeof(*group));
   XSaveContext(disp, leader, UWMGroupContext, (XPointer) group);
 
+  group->leader = leader;
   if(!(group->members = NodeListCreate()))
     SeeYa(1, "FATAL: out of memory!");
 
-  if(XFindContext(disp, leader, UWMContext, (XPointer *)&(group->leader)))
-    if(!(group->leader = UltimizeWin(leader)))
-      SeeYa(1, "FATAL: out of memory!");
-
-  RemoveWinFromGroup(group->leader);
-  AddWinToGroup(group->leader);
-
+  group->WorkSpace = TheScreen.desktop.ActiveWorkSpace;
+  if(!XFindContext(disp, leader, UWMContext, (XPointer *)&uc)) {
+    RemoveWinFromGroup(uc);
+    AddWinToGroup(uc);
+    group->WorkSpace = uc->WorkSpace;
+  } else uc = UltimizeWin(leader);
   return group;
 }
 
@@ -77,42 +79,43 @@ void AddWinToGroup(UltimateContext *uc)
     if(!NodeAppend(group->members, uc)) SeeYa(1, "FATAL: out of memory");
     uc->group = group;
   }
-  Win2WS(uc,uc->group->leader->WorkSpace);
+  Win2WS(uc, uc->group->WorkSpace);
 }
 
 /* returns -1 if whole group has been deleted, else 0 */
 int RemoveWinFromGroup(UltimateContext *uc)
 {
   if(!uc->group) return(0);
-  if(uc == uc->group->leader) {
-    if(NodeCount(uc->group->members) == 1) {
-      NodeListDelete(&(uc->group->members));
-      XDeleteContext(disp, uc->group->leader->win, UWMGroupContext);
-      free(uc->group);
+  if(NodeCount(uc->group->members) == 1) {
+    NodeListDelete(&(uc->group->members));
+    XDeleteContext(disp, uc->group->leader, UWMGroupContext);
+    free(uc->group);
 
+    uc->group = NULL;
+    return(-1);
+  
+  } else {
+    
+    if(uc->win != uc->group->leader) {
+      NodeDelete(uc->group->members, InNodeList(uc->group->members, uc));
       uc->group = NULL;
-      return(-1);
     } else {
       Node2End(uc->group->members, InNodeList(uc->group->members, uc));
     }
-  } else {
-    NodeDelete(uc->group->members, InNodeList(uc->group->members, uc));
-    uc->group = NULL;
+    return(0);
   }
-  return(0);
 }
 
 void DeleteWinGroup(WinGroup *group)
 {
   Node *n;
-   
   while(-1 != RemoveWinFromGroup(NodeNext(group->members, NULL)->data));
 }
 
 void UpdateWinGroup(UltimateContext *uc)
 {
   if(uc->WMHints && (uc->WMHints->flags & WindowGroupHint)) {
-    if(uc->group && (uc->group->leader->win == uc->WMHints->window_group))
+    if(uc->group && (uc->group->leader == uc->WMHints->window_group))
       return;
     RemoveWinFromGroup(uc);
     AddWinToGroup(uc);

@@ -6,7 +6,8 @@
 #include "uwm.h"
 
 typedef struct _WinGroup {
-  UltimateContext *leader;
+  Window leader;
+  short WorkSpace;
   NodeList *members; /* Data is *UltimateContext */
 } WinGroup;
 
