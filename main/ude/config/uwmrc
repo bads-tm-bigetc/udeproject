@@ -3,29 +3,29 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% this file sources three files which can be individually replaced by      %%%
-%%% users in case they want to e.g. use the system's default behaviour       %%%
-%%% but don't like the default layout.                                       %%%
-%%% another file is sourced (if it is found in the user's home configdir)    %%%
+%%% users in case they want to e.g. use the system´s default behaviour       %%%
+%%% but don´t like the default layout.                                       %%%
+%%% another file is sourced (if it is found in the user´s home configdir)    %%%
 %%% which can be used by users to individually override system settings in   %%%
-%%% case they want to use them in general but don't like particular settings.%%%
+%%% case they want to use them in general but don´t like particular settings.%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Here's a description of all "uwmrc" data types:
+% Here´s a description of all "uwmrc" data types:
 %
 %       <nr>            is an integer number with the range specified
-%                       in the option's description.
+%                       in the option´s description.
 %       <string>        represents a usual text line. it may contain
 %                       any desired characters, whitespace etc. and is
 %                       terminated by a linebreak. 
 %       <font>          is an X11 font definition string. The most
 %                       easy way to get such a string is to paste it
-%                       directly from 'xfontsel' into the file. 
+%                       directly from ´xfontsel´ into the file. 
 %       <filename>      is the name of a file. The file is searched in
 %                       the way described above and in most cases
 %                       passed through the c preprocessor. 
 %       <col>           represents an X11 color definition string. For
 %                       the exact format of these strings please take
-%                       a look at the man page of 'XQueryColor'. All
+%                       a look at the man page of ´XQueryColor´. All
 %                       colors can be set for any workspace
 %                       seperately.
 %       <triple>        represents a set of three semicolon seperated
@@ -34,8 +34,8 @@
 %                       note that the decimal expected seperation
 %                       character may differ with the
 %                       internationalized version of (g)libc with
-%                       different "LANG"-environments set (e.g. '.' as
-%                       default but ',' for "LANG=de"). Admins of
+%                       different "LANG"-environments set (e.g. ´.´ as
+%                       default but ´,´ for "LANG=de"). Admins of
 %                       multilingual systems say thanx to the big
 %                       internationalisationers of libc for this
 %                       feature.

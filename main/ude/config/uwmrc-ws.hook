@@ -15,7 +15,7 @@ WorkSpaces=3
 %       Default: 0
 %
 %       Sets the current workspace. Any options that take effect on
-%       the 'current workspace' apply to the workspace set to be the
+%       the ´current workspace´ apply to the workspace set to be the
 %       current workspace most recently.
 WorkSpaceNr=0
 
@@ -28,7 +28,7 @@ WorkSpaceName=Dionysus
 % ScreenColor = <col>
 %       Default: (subject to changes)
 %
-%       Sets the current workspace's screen background color.
+%       Sets the current workspace´s screen background color.
 ScreenColor=64;40;64
 
 % BevelFactor = <float>
@@ -47,7 +47,7 @@ BevelFactor=1.5
 % InactiveWin = <col>
 %       Default: (subject to changes)
 %
-%       Sets the color of inactive windows' borders on the current
+%       Sets the color of inactive windows´ borders on the current
 %       workspace.
 InactiveWin=120;96;88
 
@@ -60,7 +60,7 @@ InactiveTitle=32;20;32
 % ActiveWin = <col>
 %       Default: (subject to changes)
 %
-%       Sets the color of the active window's border on the current
+%       Sets the color of the active window´s border on the current
 %       workspace.
 ActiveWin=190;140;126
 
@@ -73,13 +73,13 @@ ActiveTitle=black
 % FontColor = <col>
 %       Default: (subject to changes)
 %
-%       Sets the current workspace's default color for standard text.
+%       Sets the current workspace´s default color for standard text.
 FontColor=32;20;32
 
 % BackColor = <col>
 %       Default: (subject to changes)
 %
-%       Sets the current workspace's background color.
+%       Sets the current workspace´s background color.
 BackColor=142;136;120
 
 % TextColor = <col>

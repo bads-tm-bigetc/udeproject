@@ -13,31 +13,31 @@
 ! macros are:
 !
 !	@BACKGROUND@
-!		represents the workspace's background color set with
+!		represents the workspace´s background color set with
 !		"BackColor" in uwmrc.
 !	@LIGHTCOLOR@
-!		represents the workspace's light bevel color for
+!		represents the workspace´s light bevel color for
 !		"BackColor".
 !	@SHADOWCOLOR@
-!		represents the workspace's shadow bevel color for
+!		represents the workspace´s shadow bevel color for
 !		"BackColor".
 !	@STANDARDTEXT@
-!		represents the workspace's standard text color
+!		represents the workspace´s standard text color
 !		("TextColor").
 !	@INACTIVETEXT@
-!		represents the workspace's color for inactive text
+!		represents the workspace´s color for inactive text
 !		("InactiveText").
 !	@HIGHLIGHTEDTEXT@
-!		represents the workspace's color for highlighted text
+!		represents the workspace´s color for highlighted text
 !		("HighlightedText").
 !	@HIGHLIGHTEDBGR@
-!		represents the workspace's background color for
+!		represents the workspace´s background color for
 !		highlighted text ("HighlightedBgr").
 !	@TEXTCOLOR@
-!		represents the workspace's text color for text windows
+!		represents the workspace´s text color for text windows
 !		("TextColor").
 !	@TEXTBGR@
-!		represents the workspace's background color for text
+!		represents the workspace´s background color for text
 !		windows ("TextBgr").
 !	@BEVELWIDTH@
 !		the standard bevel width ("BevelWidth").
@@ -52,7 +52,7 @@
 !	@TEXTFONT@
 !		the font used for text windows ("TextFont").
 !
-! for comments use hash ('#'), '!' or '%' as first (!) character of
+! for comments use hash (´#´), ´!´ or ´%´ as first (!) character of
 ! the line.
 
 ! general resources
