@@ -227,9 +227,7 @@ FILE *MyOpen(char *name, char *ppopts)
   }
 #undef str3
 
-  if(!TheScreen.cppcall) return(fopen(temp, "r"));
-
-  pipe(files);
+  if((!TheScreen.cppcall) || pipe(files)) return(fopen(temp, "r"));
 
   if(!(pid = fork())) {     /* Child Process */
     char *temp2;
