@@ -10,6 +10,8 @@
 	* uwm/properties.c: split SetWinMapState in SetWinSeemsState and
 	  SetWinIsState.
 	* uwm/properties.h: corrected prototypes for SetWinXXXState.
+	* uwm/placement.c: PlaceWin now removes the PLACEIT flag from placed
+	  windows UltimateContext.
 
 2001-05-28  Christian Ruppert <arc@gmx.li>
 
