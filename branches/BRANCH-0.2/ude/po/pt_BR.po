@@ -2,12 +2,11 @@
 # Copyright (C) 1999 Free Software Foundation, Inc.
 # Isaías V. Prestes <rmc@logic.com.br>, 1999.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-12-09 22:12+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: unknown\n"
+"POT-Creation-Date: 2003-05-17 19:08+0200\n"
+"PO-Revision-Date: unknown\n"
 "Last-Translator: Isaias V. Prestes <rmc@logic.com.br>\n"
 "Language-Team: pt_BR <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +52,6 @@ msgstr "Realmente?!"
 msgid "UWM Menu"
 msgstr "UWM Menu"
 
-#. quit ude
 #: uwm/uwmmenu.c:142
 msgid "No!"
 msgstr "Não!"
@@ -66,7 +64,6 @@ msgstr "Sim!"
 msgid "Quit UDE"
 msgstr "Sair do UDE"
 
-#. restart
 #: uwm/uwmmenu.c:148 uwm/uwmmenu.c:154
 msgid "Restart UDE"
 msgstr "Reiniciar UDE"

@@ -12,6 +12,7 @@
           of gnu autoconf/automake
         * configure.in: changed AC_DEFINEs and AC_DEFINE_UNQUOTEDs to
           compensate for now missing acconfig.h
+        * po/*.po: completed headers so that new msgfmt won't complain anymore.
 
 2003-04-17  Christian Ruppert <arc@users.sf.net>
         * uwm/handlers.c (HandleButtonPress): replaced XQueryPointer by
