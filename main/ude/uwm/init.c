@@ -1271,26 +1271,30 @@ void InitDefaults()
 
   AllocWSS(1);
 
-  if(!(TheScreen.TitleFont=XLoadQueryFont(disp,"lucidasans-12"))){
+  if(!(TheScreen.TitleFont=XLoadQueryFont(disp,
+                           "-*-lucida-medium-r-*-sans-12-*-*-*-*-*-*-*"))){
     TheScreen.TitleFont=XLoadQueryFont(disp,"fixed");
     fprintf(TheScreen.errout,"UWM: Standard Title-font does not exist,");
     fprintf(TheScreen.errout," loading fixed.\n");
   }
-  sprintf(TheScreen.desktop.StandardFont,"lucidasans-12");
+  sprintf(TheScreen.desktop.StandardFont,
+          "-*-lucida-medium-r-*-sans-12-*-*-*-*-*-*-*");
   if(!(TheScreen.MenuFont=XLoadQueryFont(disp,TheScreen.desktop.StandardFont))){
     sprintf(TheScreen.desktop.StandardFont,"fixed");
     TheScreen.MenuFont=XLoadQueryFont(disp,TheScreen.desktop.StandardFont);
     fprintf(TheScreen.errout,"UWM: Standard Font does not exist,");
     fprintf(TheScreen.errout," loading fixed.\n");
   }
-  sprintf(TheScreen.desktop.InactiveFont,"lucidasans-12");
+  sprintf(TheScreen.desktop.InactiveFont,
+          "-*-lucida-medium-r-*-sans-12-*-*-*-*-*-*-*");
   if(!(TheScreen.MenuFont=XLoadQueryFont(disp,TheScreen.desktop.InactiveFont))){
     sprintf(TheScreen.desktop.InactiveFont,"fixed");
     TheScreen.MenuFont=XLoadQueryFont(disp,TheScreen.desktop.InactiveFont);
     fprintf(TheScreen.errout,"UWM: Standard Inactive Font does not exist,");
     fprintf(TheScreen.errout," loading fixed.\n");
   }
-  sprintf(TheScreen.desktop.HighlightFont,"lucidasans-12");
+  sprintf(TheScreen.desktop.HighlightFont,
+          "-*-lucida-medium-r-*-sans-12-*-*-*-*-*-*-*");
   if(!(TheScreen.MenuFont=XLoadQueryFont(disp,TheScreen.desktop.HighlightFont)))
   {
     sprintf(TheScreen.desktop.HighlightFont,"fixed");
@@ -1298,7 +1302,8 @@ void InitDefaults()
     fprintf(TheScreen.errout,"UWM: Standard Highlight Font does not exist,");
     fprintf(TheScreen.errout," loading fixed.\n");
   }
-  sprintf(TheScreen.desktop.TextFont,"lucidasans-12");
+  sprintf(TheScreen.desktop.TextFont,
+          "-*-lucida-medium-r-*-sans-12-*-*-*-*-*-*-*");
   if(!(TheScreen.MenuFont=XLoadQueryFont(disp,TheScreen.desktop.TextFont))){
     sprintf(TheScreen.desktop.TextFont,"fixed");
     TheScreen.MenuFont=XLoadQueryFont(disp,TheScreen.desktop.TextFont);
