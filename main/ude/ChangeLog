@@ -1,3 +1,8 @@
+2002-09-03  Christian Ruppert <arc@gmx.li>
+	* uwm/Makefile.am: added define UDE_BIN_PATH for more reliable.
+	  restart.
+	* uwm/uwmmenu.c: added call for UDE_BIN_PATH/uwm in restart procedure.
+
 2002-06-21  Christian Ruppert <arc@gmx.li>
 	* uwm/uwm.c (main), uwm/init.c (InitUWM): moved CheckCPP from InitUWM
 	  to main so that it is called before we install SIGCHILD handler.

@@ -4,7 +4,8 @@ bin_PROGRAMS= uwm
 uwm_LDFLAGS= ${X_LIBS} ${X_EXTRA_LIBS} ${X_PRE_LIBS}
 # I think this should be diferent from the ude version.
 INCLUDES= ${X_CFLAGS} -I../lib -DUWMVERSION=\"@VERSION@\" \
-	-DLOCALEDIR=\"${datadir}/locale\" -DUDE_DIR=\"${pkgdatadir}\"
+	-DLOCALEDIR=\"${datadir}/locale\" -DUDE_DIR=\"${pkgdatadir}\" \
+	-DUDE_BIN_PATH=\"${bindir}\"
 uwm_SOURCES=  \
     widgets.c \
     special.c\

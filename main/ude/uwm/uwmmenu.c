@@ -54,8 +54,6 @@ void RestartUWM(Bool ClUp, Bool StartStopScript)
   char *argv[5];
   int a = 0;
   
-  sprintf(name,"%suwm",TheScreen.udedir);
-
   argv[a] = "uwm"; a++;
   if(False == StartStopScript) {
     argv[a] = "--NoStartScript"; a++; }
@@ -71,6 +69,9 @@ void RestartUWM(Bool ClUp, Bool StartStopScript)
   }
 
   printf("                * restarting\n");
+  sprintf(name,"%suwm",TheScreen.udedir);
+  execv(name,argv);
+  sprintf(name,"%s/uwm",UDE_BIN_PATH);
   execv(name,argv);
   execvp("uwm",argv);
 
