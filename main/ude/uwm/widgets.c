@@ -123,18 +123,6 @@ void DrawFrameBevel(UltimateContext *uc,char Active)
                           TitleHeight-1,uc->Attr.width-uc->BorderWidth,\
                                      uc->Attr.height-uc->BorderWidth,1,\
                          TheScreen.blackcontext,TheScreen.blackcontext);
-  } else {
-    XShapeQueryExtents(disp,uc->win,&i,&xa,&xa,&xb,&yb,&xa,&xa,&xa,&xa,&xa);
-    DrawBevel(uc->border,0,0,uc->BorderWidth-1,uc->BorderWidth-1+
-              TheScreen.TitleHeight,1,ShadowGC,TheScreen.blackcontext);
-    DrawBevel(uc->border,xb+uc->BorderWidth,0,xb+2*uc->BorderWidth-1,\
-                  uc->BorderWidth-1+TheScreen.TitleHeight,1,ShadowGC,\
-                                              TheScreen.blackcontext);
-    DrawBevel(uc->border,0,yb+uc->BorderWidth+TheScreen.TitleHeight,uc->BorderWidth-1,2*uc->BorderWidth-1+
-              yb+TheScreen.TitleHeight,1,ShadowGC,TheScreen.blackcontext);
-    DrawBevel(uc->border,xb+uc->BorderWidth,yb+uc->BorderWidth+TheScreen.TitleHeight,xb+2*uc->BorderWidth-1,\
-                  yb+2*uc->BorderWidth-1+TheScreen.TitleHeight,1,ShadowGC,\
-                                              TheScreen.blackcontext);
   }
 
   XFreeGC(disp, LightGC);
@@ -177,39 +165,50 @@ void DrawTitle(UltimateContext *uc,char Active)
  
   XClearWindow(disp,uc->title.win);
 
-  if((i=(uc->BorderWidth-TheScreen.FrameBevelWidth-1)) <= 3) i=2;
-  i=i/2+TheScreen.FrameBevelWidth;
-  if(InitS.BorderTitleFlags&BT_GROOVE){
-    XDrawLine(disp, uc->title.win, LightGC,
-              (InitS.BorderTitleFlags&BT_CENTER_TITLE) ? 2 : 0,
-	      uc->title.height-2, uc->title.width-2, uc->title.height-2);
-    XDrawLine(disp, uc->title.win, LightGC, uc->title.width-2, 0,
-              uc->title.width-2, uc->title.height-2);
-    XDrawPoint(disp, uc->title.win, LightGC, uc->title.width-1, 0);
-    if(InitS.BorderTitleFlags &  BT_CENTER_TITLE) {
-      XDrawLine(disp, uc->title.win, ShadowGC,1,0,1, uc->title.height-2);
-      XDrawPoint(disp, uc->title.win, LightGC, 0, 0);
-    } else {
-      XDrawPoint(disp, uc->title.win, LightGC, 0, uc->title.height-1);
+  if(uc->flags & SHAPED) {
+    DrawBevel(uc->title.win, 0, 0, uc->title.width - 1, uc->title.height - 1,
+              1, TheScreen.blackcontext, TheScreen.blackcontext);
+    DrawBevel(uc->title.win, 1, 1, uc->title.width - 2, uc->title.height - 2,
+              1, LightGC, ShadowGC);
+  } else {
+    if((i=(uc->BorderWidth-TheScreen.FrameBevelWidth-1)) <= 3) i=2;
+    i=i/2+TheScreen.FrameBevelWidth;
+    if(InitS.BorderTitleFlags & BT_GROOVE){
+      XDrawLine(disp, uc->title.win, LightGC,
+                (InitS.BorderTitleFlags & BT_CENTER_TITLE) ? 2 : 0,
+	        uc->title.height-2, uc->title.width-2, uc->title.height-2);
+      XDrawLine(disp, uc->title.win, LightGC, uc->title.width-2, 0,
+                uc->title.width-2, uc->title.height-2);
+      XDrawPoint(disp, uc->title.win, LightGC, uc->title.width-1, 0);
+      if(InitS.BorderTitleFlags &  BT_CENTER_TITLE) {
+        XDrawLine(disp, uc->title.win, ShadowGC,1,0,1, uc->title.height-2);
+        XDrawPoint(disp, uc->title.win, LightGC, 0, 0);
+      } else {
+        XDrawPoint(disp, uc->title.win, LightGC, 0, uc->title.height-1);
+      }
+    }
+    if(((TheScreen.TitleHeight + uc->BorderWidth - i) <= uc->title.height) &&
+       (InitS.BorderTitleFlags & BT_LINE)) {
+      XDrawLine(disp, uc->title.win, TheScreen.blackcontext,
+                (InitS.BorderTitleFlags & BT_CENTER_TITLE) 
+	        ? 0 : (uc->BorderWidth - i - 1),
+                uc->title.height - 1, uc->title.width - 1,
+		uc->title.height - 1);
+      XDrawLine(disp, uc->title.win, TheScreen.blackcontext,
+                uc->title.width - 1,
+                uc->BorderWidth - i - 1 + TheScreen.TitleHeight,
+                uc->title.width - 1, uc->title.height-1);
+      if(InitS.BorderTitleFlags &  BT_CENTER_TITLE)
+        XDrawLine(disp,uc->title.win, TheScreen.blackcontext, 0,
+                  uc->BorderWidth - i - 1 + TheScreen.TitleHeight, 0,
+                  uc->title.height - 1);
     }
   }
-  if(((TheScreen.TitleHeight + uc->BorderWidth - i) <= uc->title.height) &&
-     (InitS.BorderTitleFlags & BT_LINE)) {
-    XDrawLine(disp, uc->title.win, TheScreen.blackcontext,
-              (InitS.BorderTitleFlags & BT_CENTER_TITLE) 
-	      ? 0 : (uc->BorderWidth - i - 1),
-              uc->title.height - 1, uc->title.width - 1, uc->title.height - 1);
-    XDrawLine(disp, uc->title.win, TheScreen.blackcontext, uc->title.width - 1,
-              uc->BorderWidth - i - 1 + TheScreen.TitleHeight,
-              uc->title.width - 1, uc->title.height-1);
-    if(InitS.BorderTitleFlags &  BT_CENTER_TITLE)
-      XDrawLine(disp,uc->title.win, TheScreen.blackcontext, 0,
-                uc->BorderWidth - i - 1 + TheScreen.TitleHeight, 0,
-                uc->title.height - 1);
-  }
   if(uc->title.name) XDrawString(disp, uc->title.win, TextGC,
-		           (InitS.BorderTitleFlags & BT_CENTER_TITLE) ? 5 : 2,
-			   TheScreen.TitleFont->ascent, uc->title.name,
+		           ((uc->flags & SHAPED)
+			    || (InitS.BorderTitleFlags & BT_CENTER_TITLE))
+			   ? 5 : 2, ((uc->flags & SHAPED) ? 3 : 0)
+			   + TheScreen.TitleFont->ascent, uc->title.name,
 			   strlen(uc->title.name));
                                                
   XFreeGC(disp, LightGC);

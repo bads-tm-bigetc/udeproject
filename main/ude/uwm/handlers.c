@@ -172,8 +172,9 @@ void HandleExpose(XEvent *event)
   if(!XFindContext(disp, event->xexpose.window, UWMContext, (XPointer *)&uc)) {
     if(event->xexpose.window == uc->title.win)
       DrawTitle(uc, uc == ActiveWin);
-    else if(event->xexpose.window == uc->border)
-      DrawFrameBevel(uc, uc == ActiveWin);
+    else if(event->xexpose.window == uc->border) {
+      if(!(uc->flags & SHAPED)) DrawFrameBevel(uc, uc == ActiveWin);
+    }
   }
 }
 
@@ -263,7 +264,7 @@ void HandleUnmapNotify(XEvent *event)
       } else {
         UpdateUWMContext(uc);
         if(uc->own_unmap_events) uc->own_unmap_events--;
-        else SetWinMapState(uc, WithdrawnState);/*DeUltimizeWin(uc, True);*/
+        else SetWinMapState(uc, WithdrawnState);
       }
       UngrabServer();
     } else UpdateUWMContext(uc);
@@ -367,10 +368,11 @@ void HandleConfigureRequest(XEvent *event)
 		          | CWWidth | CWHeight), &xwc);
       if((event->xconfigurerequest.value_mask & CWWidth)
          && (uc->title.win != None)
-	 && (InitS.BorderTitleFlags & BT_CENTER_TITLE)) {
-        XMoveWindow(disp, uc->title.win, (xwc.width - uc->title.width) / 2,
-	            (uc->BorderWidth - TheScreen.FrameBevelWidth - 1) / 2
-		    + TheScreen.FrameBevelWidth);
+	 && ((InitS.BorderTitleFlags & BT_CENTER_TITLE) 
+	     || (uc->flags & SHAPED))) {
+        XMoveWindow(disp, uc->title.win,
+	            uc->title.x = (xwc.width - uc->title.width) / 2,
+	            uc->title.y);
       }
       if((event->xconfigurerequest.value_mask & CWStackMode)
          || ((event->xconfigurerequest.value_mask & (CWX|CWY))

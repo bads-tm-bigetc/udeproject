@@ -184,7 +184,7 @@ void CatchWindows()
                IconifyWin(uc);
 	       break;
 	    case WithdrawnState:
-	       DeUltimizeWin(uc, True);
+	       SetWinMapState(uc, WithdrawnState);
 	       break;
 	    case NormalState:
                DisplayWin(uc);

@@ -124,16 +124,28 @@ void UpdateName(UltimateContext *uc)
   uc->title.name = name;
   if(uc->title.win != None){
     if(uc->title.name) {
+      int x, y, width, height;
+      x = uc->title.x;
+      y = uc->title.y;
+      width = uc->title.width;
+      height = uc->title.height;
       XResizeWindow(disp, uc->title.win,
 		    uc->title.width = (XTextWidth(TheScreen.TitleFont,
                     uc->title.name, strlen(uc->title.name))
-		    + ((InitS.BorderTitleFlags & BT_CENTER_TITLE) ? 9 : 6)),
+		    + (((InitS.BorderTitleFlags & BT_CENTER_TITLE) 
+		        || (uc->flags & SHAPED)) ? 9 : 6)),
                     uc->title.height = (TheScreen.TitleFont->ascent
-                    + TheScreen.TitleFont->descent + 3));
-      if(InitS.BorderTitleFlags & BT_CENTER_TITLE)
-        XMoveWindow(disp, uc->title.win, (uc->Attr.width - uc->title.width) / 2,
-                   (uc->BorderWidth - TheScreen.FrameBevelWidth - 1) / 2
-                    + TheScreen.FrameBevelWidth);
+                    + TheScreen.TitleFont->descent 
+		    + ((uc->flags & SHAPED) ? 6 : 3)));
+      if((InitS.BorderTitleFlags & BT_CENTER_TITLE) || (uc->flags & SHAPED))
+        XMoveWindow(disp, uc->title.win,
+	            uc->title.x = ((uc->Attr.width - uc->title.width) / 2),
+                    uc->title.y = ((uc->flags & SHAPED) ? 0
+		    : (uc->BorderWidth - TheScreen.FrameBevelWidth - 1) / 2
+                    + TheScreen.FrameBevelWidth));
+      if((!((uc->title.width == width) && (uc->title.height == height)
+          && (uc->title.x == x) && (uc->title.y == y))) && (uc->flags & SHAPED))
+	 ShapeFrame(uc);
       DrawTitle(uc, uc == ActiveWin);
     } else XResizeWindow(disp,uc->title.win,0,0);
   }
@@ -217,7 +229,6 @@ void UpdateWMProtocols(UltimateContext *uc)
 void SetWinMapState(UltimateContext *uc,int state)
 {
   unsigned long data[2];
-
   uc->wmstate = data[0] = (unsigned long) state;
   data[1] = None;
 /*  if(uc->WMHints) data[1] = (unsigned long) uc->WMHints->icon_window; */

@@ -1,3 +1,16 @@
+2001-04-22  Christian Ruppert <arc@gmx.li>
+
+	* uwm/handlers.c: shaped window titles are now also refreshed.
+	* uwm/handlers.c: shaped window's titles are always centered.
+	* uwm/properties.c: changed window name refreshing to work with new
+	  shaped windows
+	* uwm/uwm.c: changed CatchWindows not to deultimize withdrawn windows.
+	* uwm/uwm.h added uc->title.x and uc->title.y
+	* uwm/widgets.c: changed title and border drawing functions to work
+	  with new shapes support.
+	* uwm/windows.c: changed DrawWinBorder, MoveResizeWin, EnborderWin and
+	  ShapeFrame to work with new shapes support
+
 2001-04-20  Christian Ruppert <arc@gmx.li>
 
 	* uwm/windows.c: a small bugfix so that windowgravity is now only taken

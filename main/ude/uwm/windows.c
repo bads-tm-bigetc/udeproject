@@ -81,14 +81,14 @@ void DrawWinBorder(UltimateContext *uc)
   XSetWindowBackground(disp, uc->border, winbg);
   XClearWindow(disp, uc->border);
   if(uc->title.win != None) {
-    if(uc->title.name && (!(uc->flags & SHAPED)) && (InitS.BorderTitleFlags 
-      & (active ? BT_ACTIVE_TITLE : BT_INACTIVE_TITLE))){
-      XSetWindowBackground(disp, uc->title.win, winbg);
-      XClearWindow(disp,uc->title.win);
+    XSetWindowBackground(disp, uc->title.win, winbg);
+    if(uc->title.name && (InitS.BorderTitleFlags
+       & (active ? BT_ACTIVE_TITLE : BT_INACTIVE_TITLE))){
       XRaiseWindow(disp,uc->title.win);
       DrawTitle(uc, active);
     } else {
-      XLowerWindow(disp,uc->title.win);
+      XLowerWindow(disp, uc->title.win);
+      if(uc->flags & SHAPED) DrawTitle(uc, active);
     }
   }
   DrawFrameBevel(uc,uc==ActiveWin);
@@ -100,23 +100,23 @@ void ShapeFrame(UltimateContext *uc)
 /***************************************************************************/
 /***************************************************************************/
   int a, shaped, wbs, hbs;
-  XRectangle rects[4];
 
   XShapeQueryExtents(disp,uc->win,&shaped,&a,&a,&wbs,&hbs,&a,&a,&a,&a,&a);
   if(uc->frame != None) {
     if(shaped){
       uc->flags |= SHAPED;
-      for(a=0;a<4;a++) rects[a].width=rects[a].height = uc->BorderWidth;
-      rects[0].x = rects[0].y = rects[1].x = rects[2].y = 0;
-      rects[1].y = rects[3].y = hbs + uc->BorderWidth + TheScreen.TitleHeight;
-      rects[2].x = rects[3].x = wbs + uc->BorderWidth;
       XShapeCombineShape(disp, uc->frame, ShapeBounding, uc->BorderWidth,
                          uc->BorderWidth + TheScreen.TitleHeight, uc->win,
                          ShapeBounding, ShapeSet);
-      XShapeCombineRectangles(disp, uc->frame, ShapeBounding, 0, 0, rects, 4,
-                              ShapeUnion,0);
+      if(uc->title.win != None)
+        XShapeCombineShape(disp, uc->frame, ShapeBounding, uc->title.x,
+                           uc->title.y , uc->title.win,
+                           ShapeBounding, ShapeUnion);
+      XUnmapWindow(disp, uc->border);
+      UpdateName(uc);
     } else {
-      uc->flags&=~SHAPED;
+      uc->flags &= ~SHAPED;
+      XMapWindow(disp, uc->border);
     }
   }
 /***************************************************************************/
@@ -153,10 +153,11 @@ void MoveResizeWin(UltimateContext *uc,int x,int y,int width,int height)
     if(uc->border!= None) XResizeWindow(disp,uc->border,width,height);
     XResizeWindow(disp,uc->win,width-2*uc->BorderWidth,\
         height-2*uc->BorderWidth-TheScreen.TitleHeight);
-    if((uc->title.win != None ) && (InitS.BorderTitleFlags & BT_CENTER_TITLE)) {
-      XMoveWindow(disp, uc->title.win, (width - uc->title.width)/2,
-                  (uc->BorderWidth - TheScreen.FrameBevelWidth - 1) / 2
-                  + TheScreen.FrameBevelWidth);
+    if((uc->title.win != None ) 
+       && ((uc->flags & SHAPED)
+           || (InitS.BorderTitleFlags & BT_CENTER_TITLE))) {
+      XMoveWindow(disp, uc->title.win,
+                  uc->title.x = ((width - uc->title.width)/2), uc->title.y);
     }
   }
   UpdateUWMContext(uc);
@@ -265,8 +266,6 @@ DBG(fprintf(TheScreen.errout,"reparenting: %d\n",uc->win);)
     fprintf(TheScreen.errout,"UWM FATAL: Couldn't save Context\n");
   XSelectInput(disp,uc->frame,FRAME_EVENTS);
 
-  ShapeFrame(uc);                  /* adjust frame to shaped window */
-
   /*** create an independent border-window ***/
   SAttr.override_redirect=True;
   SAttr.background_pixel=TheScreen.InactiveBorder
@@ -291,14 +290,16 @@ DBG(fprintf(TheScreen.errout,"reparenting: %d\n",uc->win);)
     SAttr.cursor=TheScreen.Mice[C_BORDER];
     a = (uc->BorderWidth-TheScreen.FrameBevelWidth-1) / 2
         + TheScreen.FrameBevelWidth;
-    uc->title.win = XCreateWindow(disp, uc->frame, a, a, 1, 1, 0,
-                 CopyFromParent, InputOutput, CopyFromParent,
+    uc->title.y = uc->title.x = a;
+    uc->title.win = XCreateWindow(disp, uc->frame, uc->title.x, uc->title.y,
+                 1, 1, 0, CopyFromParent, InputOutput, CopyFromParent,
 		 CWCursor | CWOverrideRedirect | CWBackPixel, &SAttr);
     if(XSaveContext(disp, uc->title.win, UWMContext, (XPointer)uc))
       fprintf(TheScreen.errout, "UWM FATAL: Couldn't save Context\n");
     XSelectInput(disp, uc->title.win, TITLE_EVENTS);
     XMapRaised(disp, uc->title.win);
   }
+  ShapeFrame(uc);                  /* adjust frame to shaped window */
 
   XAddToSaveSet(disp,uc->win);
   
@@ -453,6 +454,7 @@ UltimateContext *UltimizeWin(Window win)
   UltimateContext *uc;
   XWindowAttributes Attr;
 
+  if(!XFindContext(disp, win, UWMContext, (XPointer *)&uc)) return(uc);
   XGetWindowAttributes(disp,win,&Attr);
   if(Attr.override_redirect) return(NULL);
 
@@ -486,7 +488,8 @@ DBG(fprintf(TheScreen.errout,"ULTIMIZING WIN #%d: no override redirect.\n",win);
   uc->expected_unmap_events = 0;
   uc->own_unmap_events = 0;
   
-  SetWinMapState(uc,WithdrawnState);
+/*  SetWinMapState(uc,WithdrawnState); */
+  uc->wmstate = WithdrawnState;
 
   if(!NodeAppend(TheScreen.UltimateList,uc))
     SeeYa(1,"FATAL: out of memory!");

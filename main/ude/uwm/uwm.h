@@ -159,7 +159,7 @@ typedef struct _UltimateContext
   XWindowAttributes Attributes,Attr;  /* Attributes: window; Attr: Frame */
 
   struct {
-    int width,height;
+    int x, y, width, height;
     char *name, *iconname;
     Window win;  /* a child of the frame containing the window's title string */
   } title;
