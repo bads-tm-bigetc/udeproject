@@ -4,6 +4,22 @@
 %%% scripts executed at startup and stop
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% BehaviourFlags = <nr>
+%       Default: 0
+%
+%       Specifies parts of uwm's behaviour. Expects a sum of the
+%       following values:
+%
+%       1    AllMouse      do not ignore mouse events passed on to uwm by
+%                          some client windows (e.g. xosview can be moved
+%                          easily clicking somewhere in the window using
+%                          this option)
+BehaviourFlags=0
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% scripts executed at startup and stop
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % StartScript = <filename>
 %       Default: ""
 %

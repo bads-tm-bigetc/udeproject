@@ -91,7 +91,20 @@ Currently uwm supports the following command line options:
 \section{Windows}
 \begin{center} --- will be added later --- \end{center}
 \section{The Keyboard}
-\begin{center} --- will be added later --- \end{center}
+Currently the following keyboard shortcuts are implemented. This is not configurable yet (but will hopefully be in future releases):
+
+\begin{tabular}{p{4cm}p{8cm}}
+\texttt{CTRL+ALT+LEFT\_ARROW} & go to previous workspace\\
+\texttt{CTRL+ALT+RIGHT\_ARROW} & go to next workspace\\
+\texttt{CTRL+ALT+UP\_ARROW} & activate next window\\
+\texttt{CTRL+ALT+DOWN\_ARROW} & activate previous window\\
+\texttt{CTRL+ALT+DOWN\_ARROW} & activate previous window\\
+\texttt{CTRL+ALT+PG\_UP} & raise active window\\
+\texttt{CTRL+ALT+PG\_DOWN} & lower active window\\
+\texttt{CTRL+ALT+}mouse button inside any window & act as if mouse button was pressed on the corresponding window's border
+\end{tabular}
+
+\begin{center} --- will be extended later --- \end{center}
 
 \part{Configuration}\label{Configuration}
 When \uwm starts it first searches and reads its central configuration file, \textsf{uwmrc}. Any further configuration files to be read by \uwm have to be defined in this file. If no \textsf{uwmrc} is found, \uwm will start using default values. However the values assumed might not be correct in all cases which sometimes is a reason for uwm to quit (e.g. in case no hex icons were found).
@@ -200,6 +213,11 @@ $16$ & Dodgy Title & hide active window's title when hit by the mouse pointer.\\
 $32$ & Center Title & display titles in the center of the top border instead of the northeastern corner.\\
 \end{tabular}\\
 E.g. use a value of $1+2+4+32=39$ if you want titles in the center position disappearing when the window is activated and grooves drawn on your window borders. 
+
+\item[BehaviourFlags = <nr>] specifies parts of uwm's behaviour. Expects a sum of the following values:\\
+\begin{tabular}{rlp{7cm}l}
+$1$  & AllMouse & do not ignore mouse events passed on to uwm by some client windows (e.g. xosview can be moved easily clicking somewhere in the window using this option).\\
+\end{tabular}\\
 
 \item[OtherWMs = <string>] expects a comma seperated list of shell command lines used to start other window managers out of uwm.
 

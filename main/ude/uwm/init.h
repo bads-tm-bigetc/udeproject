@@ -12,6 +12,9 @@
 #define ICF_STAY_ALIVE    (1<<0)  /* don't let yourself replace by another wm */
 #define ICF_TRY_HARD      (1<<1)  /* try to replace other icccm wms */
 #define ICF_HOSTILE       (1<<2)  /* try to replace other icccm wms violently */
+/* BehaviourFlags */
+#define BF_IN_WIN_CTRL    (1<<0)  /* process clicks we get from inside a
+                                     client window */
 
 typedef struct {
   char StartScript[256];
@@ -31,6 +34,7 @@ typedef struct {
   unsigned long PlacementThreshold;
   unsigned char BorderTitleFlags;
   unsigned char icccmFlags;
+  unsigned char BehaviourFlags;
   int WarpPointerToNewWinH;
   int WarpPointerToNewWinV;
   short SnapDistance;

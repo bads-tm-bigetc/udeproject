@@ -643,7 +643,7 @@ void AllocWSS(short wss)
   TheScreen.desktop.WorkSpaces=wss;
 }
 
-#define KEYWORDS 53
+#define KEYWORDS 54
 
 const char *Keywords[KEYWORDS]={
   "BorderWidth",
@@ -698,7 +698,8 @@ const char *Keywords[KEYWORDS]={
   "HexPath",
   "TextFont",
   "HighlightFont",
-  "InactiveFont"};
+  "InactiveFont",
+  "BehaviourFlags"};
 
 enum KeyNames {
   BorderWidth,
@@ -753,7 +754,8 @@ enum KeyNames {
   HexPath,
   TextFont,
   HighlightFont,
-  InactiveFont
+  InactiveFont,
+  BehaviourFlags
 };
 
 /*** read config file ***/
@@ -1232,6 +1234,9 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
 			}
 			}
 			break;
+		      case BehaviourFlags:
+			InitS.BehaviourFlags=atoi(p);
+			break;
 		      }
 		}
 	    }
@@ -1341,6 +1346,7 @@ void InitDefaults()
   InitS.WarpPointerToNewWinV=-1;
   InitS.SnapDistance=10;
   InitS.HexPath[0]='\0';
+  InitS.BehaviourFlags=0;
 
   InitS.BorderTitleFlags = BT_GROOVE|BT_LINE|BT_INACTIVE_TITLE|BT_ACTIVE_TITLE|\
                                                                  BT_DODGY_TITLE;
@@ -1580,19 +1586,19 @@ UWM ");
   TheScreen.blackcontext=XCreateGC(disp,TheScreen.root,GCFunction|\
             GCCapStyle|GCLineStyle|GCLineWidth|GCForeground,&xgcv);
 
-  XGrabKey(disp, XKeysymToKeycode(disp,XK_Right), ControlMask | Mod1Mask,
+  XGrabKey(disp, XKeysymToKeycode(disp,XK_Right), UWM_MODIFIERS,
            TheScreen.root, True, GrabModeAsync, GrabModeAsync);
-  XGrabKey(disp, XKeysymToKeycode(disp,XK_Left), ControlMask | Mod1Mask,
+  XGrabKey(disp, XKeysymToKeycode(disp,XK_Left), UWM_MODIFIERS,
            TheScreen.root, True, GrabModeAsync, GrabModeAsync);
-  XGrabKey(disp, XKeysymToKeycode(disp,XK_Up), ControlMask | Mod1Mask,
+  XGrabKey(disp, XKeysymToKeycode(disp,XK_Up), UWM_MODIFIERS,
            TheScreen.root, True, GrabModeAsync, GrabModeAsync);
-  XGrabKey(disp, XKeysymToKeycode(disp,XK_Down), ControlMask | Mod1Mask,
+  XGrabKey(disp, XKeysymToKeycode(disp,XK_Down), UWM_MODIFIERS,
            TheScreen.root, True, GrabModeAsync, GrabModeAsync);
-  XGrabKey(disp, XKeysymToKeycode(disp,XK_Page_Down), ControlMask | Mod1Mask,
+  XGrabKey(disp, XKeysymToKeycode(disp,XK_Page_Down), UWM_MODIFIERS,
            TheScreen.root, True, GrabModeAsync, GrabModeAsync);
-  XGrabKey(disp, XKeysymToKeycode(disp,XK_Page_Up), ControlMask | Mod1Mask,
+  XGrabKey(disp, XKeysymToKeycode(disp,XK_Page_Up), UWM_MODIFIERS,
            TheScreen.root, True, GrabModeAsync, GrabModeAsync);
-  XGrabButton(disp, AnyButton, ControlMask | Mod1Mask, TheScreen.root,
+  XGrabButton(disp, AnyButton, UWM_MODIFIERS, TheScreen.root,
               True, ButtonPressMask | ButtonReleaseMask, GrabModeAsync,
 	      GrabModeAsync, None, None);
 

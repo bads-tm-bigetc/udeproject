@@ -42,17 +42,19 @@
 
 /*** some predefinitions... ***/
 
-#define HANDLED_EVENTS KeyPressMask|KeyReleaseMask|ButtonPressMask|ButtonReleaseMask|EnterWindowMask|LeaveWindowMask|PropertyChangeMask|SubstructureNotifyMask|SubstructureRedirectMask
+#define HANDLED_EVENTS (KeyPressMask|KeyReleaseMask|ButtonPressMask|ButtonReleaseMask|EnterWindowMask|LeaveWindowMask|PropertyChangeMask|SubstructureNotifyMask|SubstructureRedirectMask)
 
-#define INPUTWIN_EVENTS KeyPressMask|StructureNotifyMask
+#define INPUTWIN_EVENTS (KeyPressMask|StructureNotifyMask)
 
-#define WINDOW_EVENTS PropertyChangeMask /*PropertyChangeMask*/
+#define WINDOW_EVENTS (PropertyChangeMask) /*PropertyChangeMask*/
 
-#define BORDER_EVENTS ButtonPressMask|ButtonReleaseMask|ExposureMask
+#define BORDER_EVENTS (ButtonPressMask|ButtonReleaseMask|ExposureMask)
 
-#define TITLE_EVENTS ExposureMask|ButtonPressMask|ButtonReleaseMask|EnterWindowMask
+#define TITLE_EVENTS (ExposureMask|ButtonPressMask|ButtonReleaseMask|EnterWindowMask)
 
-#define FRAME_EVENTS EnterWindowMask|LeaveWindowMask|SubstructureRedirectMask|SubstructureNotifyMask
+#define FRAME_EVENTS (EnterWindowMask|LeaveWindowMask|SubstructureRedirectMask|SubstructureNotifyMask)
+
+#define UWM_MODIFIERS (ControlMask | Mod1Mask)
 
 /*** used structures ***/ 
 

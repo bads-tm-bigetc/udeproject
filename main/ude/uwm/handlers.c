@@ -295,7 +295,9 @@ void HandleButtonPress(XEvent *event)
       case Button4: break;
       case Button5: break;
     }
-  } else {
+  } else if((InitS.BehaviourFlags & BF_IN_WIN_CTRL)
+            || (event->xbutton.window != TheScreen.root)
+            || (event->xbutton.state == UWM_MODIFIERS)) {
     Window win;
 
     win = (event->xbutton.subwindow == None) ? event->xbutton.window 
