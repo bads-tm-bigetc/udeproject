@@ -68,7 +68,7 @@ ActiveWin=190;140;126
 %       Default: (subject to changes)
 %
 %       Specifies the color the name of active windows is drawn with.
-ActiveTitle=120;96;88
+ActiveTitle=black
 
 % FontColor = <col>
 %       Default: (subject to changes)
@@ -100,7 +100,7 @@ TextBgr=120;96;88
 %       Default: (according to availability)
 %
 %       Sets the font used for highlighted text.
-HighlightedText=120;96;88
+HighlightedText=black
 
 % HighlightedBgr = <col>
 %       Default: (subject to changes)
@@ -120,7 +120,7 @@ InactiveWin=89;151;100
 InactiveTitle=white
 
 ActiveWin=162;200;169
-ActiveTitle=208;227;211
+ActiveTitle=black
 
 FontColor=black
 BackColor=113;140;118

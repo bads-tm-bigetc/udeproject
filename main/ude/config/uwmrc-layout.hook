@@ -111,7 +111,7 @@ OtherWMs=xterm
 %       Default: (according to availability)
 %
 %       Sets the font used in menus.
-MenuFont=-*-lucida-medium-i-*-*-*-120-*-*-*-*-*-*
+MenuFont=-*-lucida-medium-u-*-*-*-120-*-*-*-*-*-*
 
 % TextFont = <font>
 %       Default: (according to availability)

@@ -111,7 +111,7 @@ SnapDistance=10
 %
 %       Only takes effect if "WarpPointerToNewWinV" is set between 0
 %       and 100.
-WarpPointerToNewWinH=-2
+WarpPointerToNewWinH=-1
 
 % WarpPointerToNewWinV = <nr>
 %       Default: -1
@@ -127,7 +127,7 @@ WarpPointerToNewWinH=-2
 %
 %       Only takes effect if "WarpPointerToNewWinH" is set between 0
 %       and 100.
-WarpPointerToNewWinV=-2
+WarpPointerToNewWinV=-1
 
 % MaxWinWidth = <nr>
 %       Default: 0
