@@ -1,9 +1,12 @@
 SNAP07052001
 
+* fixed built and installation procedures
+* added html-documentation
 * overworked support for shaped windows which should now be fully functional.
 * iconified windows are now listed in the windows menu using their icon names
 * window groups are now treated as a whole in workspace management.
-* support for xservers not supporting saveunder and backingstore (xf4.0)
+* support for xservers not supporting saveunder and backingstore (xf4.0 with
+  these options switched off)
 * further icccm-code
 
 SNAPSHOT JUN 26 2000:
