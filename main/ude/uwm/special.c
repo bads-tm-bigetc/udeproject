@@ -28,7 +28,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #else
-  #define CPP_CALL cpp
+  #define CPP_CALL "cpp"
 #endif
 
 #include <X11/Xlib.h>
@@ -42,13 +42,13 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#ifdef HAVE_TIME_H
+  #include <time.h>
+#endif
+
 
 #include "uwm.h"
 #include "special.h"
-#ifdef HAVE_TIME_H
-  #include "time.h"
-#endif
-
 #include "init.h"
 #include "uwmmenu.h"
 #include "windows.h"
