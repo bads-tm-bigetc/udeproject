@@ -1,0 +1,7 @@
+0.0.3:
+No changes except that a patch for uwm0.2.8a and prior has been added to make
+urdb2gtkd --dump work correctly.
+
+0.0.2:
+No news, GTK's configuration mechanisms are still the most crappy ones I have
+ever seen.
