@@ -1,0 +1,85 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(uwm/uwm.c)
+
+dnl Use another default flags.
+if [test -z "$CFLAGS" ]; then
+dnl	CFLAGS="-DDEBUG -g -Wall -O2"
+	CFLAGS="-O2"
+fi
+export CFLAGS
+
+dnl change this to the rigth version name before to make a distribution
+VERSION=SNAP`date +%d%m%Y`
+dnl VERSION="0.3.0pre1"
+AM_INIT_AUTOMAKE(ude, $VERSION)
+AM_CONFIG_HEADER(config.h)
+ALL_LINGUAS="es de pt_BR tr"
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CPP
+AC_DEFINE_UNQUOTED(CPP_CALL, "$CPP")
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+dnl ******* LIB ********
+dnl The next line must be activated when we need to compile the library
+dnl AM_PROG_LIBTOOL
+dnl ******* LIB ********
+
+dnl Must check X11-paths first...
+AC_PATH_XTRA
+
+dnl Checks for libraries.
+AM_GNU_GETTEXT
+AC_ARG_WITH(libjpeg,    --without-libjpeg       disable jpeg background images support,
+if test "$withval" = "yes" ; then AC_CHECK_LIB(jpeg, main) fi 
+,AC_CHECK_LIB(jpeg, main))
+AC_CHECK_LIB(ICE, main,,,$X_CFLAGS $X_PRE_LIBS $X_EXTRA_LIBS $X_LIBS)
+AC_CHECK_LIB(SM, main,,,$X_CFLAGS $X_PRE_LIBS $X_EXTRA_LIBS $X_LIBS)
+AC_CHECK_LIB(X11, main,, 
+AC_MSG_ERROR(No Xlib found. Please check if your X11 is installed correctly.),
+$X_CFLAGS $X_PRE_LIBS $X_EXTRA_LIBS $X_LIBS)
+AC_CHECK_LIB(Xext, main,,
+AC_MSG_ERROR(uwm requires X11 shape extension, sorry!),
+$X_CFLAGS $X_PRE_LIBS $X_EXTRA_LIBS $X_LIBS)
+AC_CHECK_LIB(Xpm, main,,
+AC_MSG_ERROR(uwm requires libXpm.), 
+$X_CFLAGS $X_PRE_LIBS $X_EXTRA_LIBS $X_LIBS)
+AC_CHECK_LIB(Xmu, XmuGetHostname,,
+AC_MSG_ERROR(uwm requires libXmu.), 
+$X_CFLAGS $X_PRE_LIBS $X_EXTRA_LIBS $X_LIBS)
+
+dnl Checks for header files.
+AC_PATH_X
+AC_HEADER_STDC
+AC_HEADER_SYS_WAIT
+AC_CHECK_HEADERS(fcntl.h strings.h unistd.h time.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_C_INLINE
+AC_TYPE_PID_T
+AC_TYPE_SIZE_T
+AC_C_BIGENDIAN
+
+dnl We need that the next tests compile so the CFLAGS must be set properly
+CFLAGS="$CFLAGS $X_CFLAGS"
+LDFLAGS="$LDFLAGS $X_LIBS $X_EXTRA_LIBS $X_PRE_LIBS"
+
+dnl Checks for library functions.
+AC_FUNC_ALLOCA
+AC_FUNC_MMAP
+AC_TYPE_SIGNAL
+AC_CHECK_FUNCS(putenv uname popen nanosleep)
+AC_CHECK_FUNCS(XShapeQueryExtension ,,
+AC_MSG_ERROR(uwm requires X11 shape extension, sorry!))
+
+dnl ******* LIB ********
+dnl other libtool stuff needed
+dnl LTLIBOBJS=`echo "$LIBOBJS" | sed 's/\.o/.lo/g'`
+dnl AC_SUBST(LTLIBOBJS)
+dnl LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
+dnl AC_SUBST(LTALLOCA)
+dnl ******* LIB ********
+AC_OUTPUT(intl/Makefile lib/Makefile uwm/Makefile po/Makefile.in config/Makefile doc/Makefile doc/html/Makefile doc/html/uwm/Makefile extras/Makefile extras/tools/Makefile gfx/Makefile Makefile ude.spec)

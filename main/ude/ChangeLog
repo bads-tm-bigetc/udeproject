@@ -1,0 +1,539 @@
+2000-06-26  Christian Ruppert <arc@gmx.li>
+
+	* config/urdb: added some resource definitions (taken from the gnome
+	  resource manager, thx to the guys who set this up!)
+	* doc/manual.tex: small changes
+
+2000-06-26  Christian Ruppert <arc@gmx.li>
+
+	* uwm/winmenu.c: renamed global selected to selectedHex
+	* uwm/menu.c: renamed global selected to selectedMenuItem
+	* configure.in: changed version
+	* README: changed for snapshot
+	*** FINISHED AND RELEASED SNAPSHOT ***
+
+2000-06-23  Christian Ruppert <arc@gmx.li>
+
+	* uwm/move.c(MoveButtons): changed routine to move window to
+	  coordinates returned by StopRubber.
+
+2000-06-01  Christian Ruppert <arc@gmx.li>
+
+	* uwm/properties.c (Updatera): changed final default values for window
+	  base size from actual size to be 1x1
+
+2000-05-28  Christian Ruppert <arc@gmx.li>
+
+	* uwm/uwm.c (CatchWindows): added reading WM_STATE_PROPERTY to overtake
+	  a window's state from an eventually previous runnung wm.
+	* uwm/handlers.c (HandleMap): changed properties data type from ulong
+	  to CARD32 which should be safer for machines with different word
+	  lengths
+	* uwm/windows.c (IconifyWin/DeiconifyWin): removed changing WMHints
+	  which is forbidden by icccm 2.0.
+	* uwm/windows.c (SetWinMapState): corrected icon window element to 
+	  be None.
+	* uwm/windows.c (EnborderWin): now using UltimateContext.gravity.
+	* uwm/properties.c (Updatera): screen area check to EnborderWin
+	  for optimisation reasons.
+	* uwm/windows.c (EnborderWin): moved in screen area check from Updatera
+	  for optimisation reasons.
+	* uwm/properties.c (Updatera): added init for UltimateContext.gravity.
+	* uwm/uwm.h: added UltimateContext.gravity.
+	* uwm/properties.c (Updatera): corrected replacement of invalid min
+	  sizes by base sizes and vice versa as requested by icccm.
+	  Attention: bw and bh now >0!
+
+2000-05-10  Christian Ruppert <arc@gmx.li>
+
+	* tested icccm selection stuff and uploaded it to cvs
+
+2000-04-29  Christian Ruppert <arc@gmx.li>
+
+	* uwm/uwm.h: added ATOM_PAIR, TARGETS, MULTIPLE and TIMESTAMP elements
+	  to TheScreen.
+	* uwm/init.c(InitUWM): added ATOM_PAIR, TARGETS, MULTIPLE and TIMESTAMP
+	  initialisation.
+	* moved selection request processing from handlers.c to selection.c
+	* moved ChangeProperty and SendSelectionNotify from special.c to newly
+	  created file selection.c
+	* created selection.h
+	* uwm/Makefile.am: added new files selection.h and selection.c.
+
+
+2000-04-28  Christian Ruppert <arc@gmx.li>
+
+	* config/urdb: made unreadable xt buttons readable
+        * uwm/special.c: added ChangeProperty function.
+	* uwm/special.h: added ChangeProperty prototype
+
+2000-04-27  Christian Ruppert <arc@gmx.li>
+
+	* uwm/uwm.h: added TheScreen.VERSION_ATOM and TheScreen.start_tstamp
+	* uwm/init.c(InitUWM): added initialisatin for TheScreen.VERSION_ATOM
+	  and TheScreen.start_tstamp
+	* uwm/handlers.c(InitHandlers): added handler for SelectionRequest to
+	  table
+	* uwm/handlers.c: added HandleSelectionRequest function.
+	* uwm/special.c: added SendSelectionNotify function.
+	* uwm/special.h: added prototype for SendSelectionNotify function.
+
+2000-04-26  Christian Ruppert <arc@gmx.li>
+
+	* doc/manual.tex: added command line options section.
+	* uwm/uwmmenu.c: RestartUDE procedure added
+	* uwm/uwmmenu.c(RestartProcX): changed them to use unique
+	  RestartUDE procedure
+	* uwm/uwm.c(PromptCommandLine): added --TryHard --Hostile and
+	  --StayAlive command line options
+	* uwm/init.h: added InitStruct.icccmFlags
+	* uwm/handlers.c: added HandleSelectionClear handler routine
+	* uwm/handlers.c(InitHandlers): added HandleSelectionClear entry to
+	  handler tables
+	* uwm/init.c(InitUWM): WM_Sx selection support added as requested
+	  by icccm
+	* uwm/uwm.h: added "Atom WM_sx" element to TheScreen structure
+	* uwm/init.c (InitUWM): removed unnecessary if(TheScreen.Home)-code.
+	* uwm/special.c (MyOpen): removed unnecessary if(TheScreen.Home)-code.
+	* uwm/uwm.c (main): removed unnecessary if(TheScreen.Home)-code.
+	* uwm/uwm.c (CleanUp): removed unnecessary if(TheScreen.Home)-code.
+
+2000-04-23  Christian Ruppert <arc@gmx.li>
+
+	* uwm/menu.c (StartMenu): added coordinate checking so that menus are
+	  always completely visible.
+	* uwm/uwmmenu.c (WMMenu): removed coordinate checking.
+	* uwm/winmenumenu.c (WinMenuMenu): removed coordinate checking.
+	* uwm/windows.c (DeiconifyMenu): removed coordinate checking.
+	* uwm/applications.c (ApplicationMenu): removed coordinate checking.
+	
+2000-04-21  Christian Ruppert <arc@gmx.li>
+
+	* uwm/move.c (StartDragging): added PointerMotionHintMask flag to
+	  GrabPointerMask to avoid window sneeking behind pointer while dragging
+	* uwm/move.c (MoveMotion): assimilated mouse coordinate querying for
+	  PointerMotionHintMask being set.
+
+2000-04-20  Christian Ruppert <arc@gmx.li>
+
+	* lib/ude-desktop.c: changed atom name from UDE_UDEContext to
+	  _UDE_UDEContext
+	* lib/ude-settings.c: changed atom names from UDE_WORKSPACES_PROPERTY to
+	  _UDE_WORKSPACES_PROPERTY, UDE_SETTINGS_PROPERTY to
+	  _UDE_SETTINGS_PROPERTY and UDE_WINDOW_PROPERTY to _UDE_WINDOW_PROPERTY
+	* uwm/init.c: changed atom names from UDE_WORKSPACES_PROPERTY to
+	  _UDE_WORKSPACES_PROPERTY, UDE_SETTINGS_PROPERTY to
+	  _UDE_SETTINGS_PROPERTY and UDE_WINDOW_PROPERTY to _UDE_WINDOW_PROPERTY
+
+2000-04-18  Christian Ruppert <arc@gmx.li>
+
+	* uwm/pix.c: added module for background loading (jpeg/xpm).
+	* uwm/init.c: bugfix: added XFreePixmaps for shape pixmaps allocated
+	  by XpmFileToPixmap (Hex buttons)
+	* uwm/init.c: changed XpmFileToPixmap to LoadPic for background pic
+	  loading (which will also load jpeg backgrounds if libjpeg is
+	  installed)
+
+2000-04-17  Christian Ruppert <arc@gmx.li>
+
+	* configure.in: added check for libjpeg
+	* configure.in: debugged checks for libICE and libSM
+	* configure.in: added AC_C_BIGENDIAN
+
+2000-03-18  Christian Ruppert <arc@gmx.li>
+
+        * config/appmenu: added stephan helmas introduction.
+	* config/uwmrc: changed it to stephan helmas uwmrc.hook.
+	* config/uwmrc-ws.hook: stephan helmas file added.
+	* config/urdb: replaced with stephans debian file.
+	* config/ws2: file removed.
+	* config/Makefile.am: changed distributed files.
+        *** FINISHED AND BUILT RELEASE 0.2.7b-BETA ***
+
+2000-03-17  Christian Ruppert <arc@gmx.li>
+
+        * configure.in: changed version to 0.2.7b-BETA
+        * uwm/init.c: added new comment character '%' for uwmrc and appmenu
+	  files.
+
+2000-03-08  Christian Ruppert <arc@gmx.li>
+
+        * configure.in: added checking for nanosleep function.
+	* uwm/special.c (GrapPointer): optimized pointer grab waiting by
+	  inserting wait/nanowait calls instead of blocking machines and network
+	  connections by sending requests without delay.
+
+2000-03-07  Christian Ruppert <arc@gmx.li>
+
+        * config/Makefile.am: added urdb file to distribution files.
+
+2000-03-05  Christian Ruppert <arc@gmx.li>
+
+        * configure.in: commented out library building and installing stuff.
+        * lib/Makefile.am: disabled library building.
+        * configure.in: changed version string.
+        * README: rewritten for 0.2.7
+        *** FINISHED AND BUILT RELEASE 0.2.7-BETA ***
+
+2000-03-04  Christian Ruppert <arc@gmx.li>
+
+        * uwm/init.c (ReadConfigFile): added initioalisation for HighlightFont,
+          TextFont and InactiveFont.
+
+2000-03-03  Christian Ruppert <arc@gmx.li>
+
+        * uwm/handlers.c(HandleMapNotify): changed if-condition to display/hide
+          title window so that titles are no longer displayed incorrectly if a
+          window is activated from a different workspace.
+
+
+2000-02-21  Stephan Helma <s.p.helma@gmx.net>
+
+        * uwm/init.h: changed InitStruct to contain WarpPointerToNewWin V and H
+          instead of simple WarpPointerToNewWin.
+        * uwm/init.c: changed initialisation and config file reading for new
+          WarpPointerToNewWinV/H-option
+        * uwm/windows.c: changed Pointer Warping for new PointerToNewWin.
+
+
+2000-02-10  Christian Ruppert <arc@gmx.li>
+
+        * uwm/resize.c: changed global buttoncount to Buttoncount
+        * uwm/menu.c: changed global MenuButtoncount to Buttoncount
+        * uwm/placement.c: changed manual placement algorithm to react on button
+          releases instead of button presses and modify global Buttoncount
+          correspondingly if necessary.
+
+2000-02-10  Christian Ruppert <arc@gmx.li>
+
+        * uwm/placement.c (ScanScreen): changed window conditions (IsViewable
+          and InputOutput) to keep out InputOnly and unviewable windows.
+
+2000-02-05  Christian Ruppert <arc@ude.org>
+
+        * uwm/uwm.h: added elements cppincpaths and urdbcppopts to UDEScreen.
+        * uwm/init.c (InitUWM): added initialisation for TheScreen.cppincpaths.
+        * uwm/init.c: changed all MyOpen calls to use TheScreen.cppincpaths.
+        * uwm/urm.c: added initurdbcppopts function and helper functions.
+        * uwm/urm.h: added prototype for initurdbcppopts.
+        * configure.in: added Xmu library which is needed for initurdbcppopts.
+        * uwm/init.c: added initurdbcppopts call to initialize TheScreen element
+        * uwm/urm.c: added urdbcppopts to MyOpen cpp options
+
+2000-01-26  Christian Ruppert <arc@ude.org>
+
+        * uwm/urm.c: rewrote internal resource representation and resource file
+          reading and interpretation. we should support full functionality now
+          including merging several data bases together properly and support
+          for multiline resources.
+        * uwm/urm.h: changed internal resource representation.
+
+2000-01-20  Christian Ruppert <arc@ude.org>
+
+        * configure.in(bugfix): added missing test in if-expression
+        * configure.in(bugfix): changed -o2 to -O2 in if-expression
+        * configure.in: changed -o2 to -O2 in CFLAGS initialisation.
+        * removed debugging stuff from CFLAGS initialisation.
+        * uwm/special.c (bugfix): removed lines reassigning stdin and stdout
+          since they are not needed at all (how stupid i was to put them in...)
+
+2000-01-20  Christian Ruppert <arc@ude.org>
+
+        * uwm/urm.c: added another comment cahracter: %
+        * config/urdb added
+        * config/uwmrc: added entry for urdb
+
+2000-01-18  Christian Ruppert <arc@ude.org>
+
+        * uwm/move.c: changed ScanScreen()-call to keep the window's own coords
+          out of the list...
+
+2000-01-13  Christian Ruppert <arc@ude.org>
+
+        * uwm/init.h: added InitS.HexPath
+        * uwm/init.c (InitDefaults): added initialisation for InitS.HexPath
+        * uwm/init.c (ReadConfigFile): added initialisation for InitS.HexPath
+          and new uwmrc option HexPath
+        * uwm/init.c (PrepareIcons): uwm now first searches for hexes in HexPath
+          if given.
+        * uwm/init.c (InitUWM): placed PrepareIcons()-call after InitDefaults.
+        
+
+2000-01-08  Christian Ruppert <arc@ude.org>
+
+        * uwm/init.c / uwm/uwm.c: moved signal(..,ShellQuit)-call to the
+          right place in init.c
+        * uwm/special.c / uwm/special.h: added functions MyOpen and CheckCPP
+          which will automatically check for config files in the uwm search
+          path and pass them through the C preprocessor if one is found.
+        * acconfig.h: added #undef CPP_CALL for default cpp command line from
+          configure
+        * configure.in: added line to define CPP_CALL and removed some comments
+          in front of some libtool stuff still commented out.
+        * uwm/init.c: changed fopens with path search to MyOpens.
+        * uwm/urm.c: changed fopen with pach search to MyOpen.
+        * uwm/uwm.h: added TheScreen.cppcall.
+        * uwm/special.c (MySystem): changed execlp to execl.
+
+1999-12-23  Ricardo Lipas Augsuto <lipas@email.com>
+
+	* added ude-menu.c and ude-menu.h for menu creation
+	* added menutst.c and Makefile in the tests directory
+	* lib/Makefile.am: added lines so ude-menu.c gets compiled
+
+1999-12-12  Christian Ruppert <arc@ude.org>
+
+        * init.c/init.h: added initialisation for and element
+          InitStruce.SnapDistance
+        * placement.c, placement.h: added procedure SnapWin
+        * placement.c: added snapping to ManualPlace()
+        * move.c: added window snapping routines to MoveMotion, StartDragging
+          and MoveButtons
+
+1999-11-22  Christian Ruppert <arc@ude.org>
+
+        * workspaces.c(SetWSBackground): changed XGrabServer and XUngrabServer
+          to our private wraparounds GrabServer and UngrabServer;
+        * rubber.c: the server is now grabbed while a rubberband is on the
+          screen so that noone will disturb our drawing.
+
+1999-11-15  Christian Ruppert <arc@ude.org>
+
+        * added files uwm/urm.c and uwm/urm.h for resource management.
+        * uwm/all files: added TheScreen.desktop.BevelWidth and moved
+          TheScreen.desktop.FrameBevelWidth to TheScreen.FrameBevelWidth.
+        * uwm/init.c: added initialisation for TheScreen.desktop.BevelWidth.
+        * uwm/init.c: added initialisation for ude resource management.
+        * uwm/workspaces.c: added support for ude resource management.
+
+1999-11-08  Christian Ruppert <arc@ude.org>
+
+        * acconfig.h: #undefed VERSION and PACKAGE which seems to be necessary
+        on some systems.
+
+1999-10-27  Christian Ruppert <arc@ude.org>
+
+        * lib/ude-button.c(handler routines): added support for inactive
+        buttons.
+        * lib/ude-button.c(_UDE_refresh_button): added support for drawing
+        inactive buttons.
+        * lib/ude-desktop.h: added UDEDesktop.internal.raster_pixmap.
+        * lib/ude-desktop.c: added init for UDEDesktop.internal.raster_pixmap.
+        * added lib/ude-raster.xbm
+
+1999-10-21  Christian Ruppert <arc@ude.org>
+
+        * lib/ude-button.c and lib/ude-button.h added which contain almost
+          complete button support.
+        * lib/Makefile.am: added ude-button.h and ude-button.c
+        * lib/todo: added this file as a todo list to coordinate work. feel
+          free to add things to that list or implement things from it. 
+
+1999-10-16  Christian Ruppert <arc@ude.org>
+
+        * lib/ude-hex.c and lib/ude-hex.h added which handle with hexes.
+        * lib/ude.h: added #include "ude-hex.h"
+        * lib/Makefile.am: added ude-hex.h and ude-hex.c
+
+1999-10-12  Christian Ruppert <arc@ude.org>
+
+        * ude-desktop.h: added characteristics of shapes extension to desktop
+          structure.
+        * ude-desktop.c (ude_initialize): added init for shapes extension.
+        * configure.in: corrected check for shapeextension (check for
+          XShapeQueryExtension instead of main in libXext since libXext
+          theoretically can exist and contain a main function without supporting
+          shapes in case there are only other extensions supported.
+
+1999-10-12  Christian Ruppert <arc@ude.org>
+
+        * lib/ude-vector.c (ude_vector_organize_last): positioning
+          algorithm rewritten and should now converge in all cases while not
+          being much slower in case the vector isn't bigger than about 10
+          elements or so. can be changed back to a (then working) interval
+          search if needed.
+
+1999-10-06  Christian Ruppert <arc@ude.org>
+
+        * tests/commstest: added directory with library/communication mechanism
+          testing program and Makefile (don't forget to insert your libude
+          somewhere into your library path in case you want to try.)
+        * lib/ude-desktop.c (ude_initialize): selected input for root window of
+          desktop to get PropertyNotify Events.
+        * lib/ude-box.c (ude_handle_event_loop): now updating desktop structures
+          automatically by evaluating PropertyNotify events.
+        * uwm/workspaces.c (BroadcastWorkSpacesInfo): added color querying for
+          to update rgb values of broadcasted colors.
+        * lib/ude-settigs.h added
+        * lib/desktop.c: completed initialisation routine.
+        * lib/settings.c: renamed functions (ude_ added) and removed a bug.
+        * lib/desktop.h: removed fonts for menus and buttons (standard font
+          should be used instead.)
+        * lib/settings.c: removed support for menu and button fonts  (standard
+          font should be used instead.)
+        * uwm/init.c: added initialisation for all fonts.
+
+1999-10-05  Christian Ruppert <arc@ude.org>
+
+        * lib/ude-box.h: fixed typo UDEbox to UDEBox.
+        * lib/ude-desktop.h: added prototype for ude_initialize.
+        * lib/ude-desktop.h: added color UDE_HighlightedBgr.
+        * uwm/init.c: initialisation for all (new) colors added.
+        * uwm/init.c: removed some ugly linebreaks.
+
+1999-09-27  Christian Ruppert <arc@ude.org>
+
+        * autogen.sh: commented out library compilation line.
+        * configure.in: commented out library compilation line.
+
+1999-09-27  Christian Ruppert <arc@ude.org>
+
+        * lib/desktop.h: removed file since no symlinks allowed in cvs. please
+        refer to lib/ude-desktop.h from now on.
+        * uwm/uwm.h: changed #include "desktop.h" to #include "ude-desktop.h"
+        * uwm/special.c: changed #include "desktop.h" to
+        #include "ude-desktop.h"
+        * uwm/init.c #include "desktop.h" to #include "ude-desktop.h"
+
+1999-09-27  Christian Ruppert <arc@ude.org>
+
+        * lib/ude-types.h: debugged definitions of FALSE and TRUE.
+        * lib/ude-desktop.h: updated and added everything important.
+        * lib/desktop.h: symlinked to ude-desktop.h to keep all structures in
+        in the project synchroneous. the old desktop.h file can be found under
+        the name desktop.h.old.
+        * lib/ude-settings.c: made it compile
+        * lib/Makefile.am: added ude-settings.c to the sources list.
+
+1999-09-21  Christian Ruppert <arc@ude.org>
+
+        * lib/desktop.h (struct): added WorkSpacesData and font structures.
+        (DEFINES): added UDE_STICKYWIN definition. 
+
+1999-09-17  Christian Ruppert <arc@ude.org>
+
+        * lib/desktop.h (struct): added some broadcasted fonts and colors (still
+        no initialisation for it, will be added next week or so).
+
+1999-09-13  Christian Ruppert <arc@ude.org>
+
+        * uwm/init.c (InitDefaults): added an xterm to the applications menu in
+        case uwmrc and appmenu don't exist and set 'appmenu' to be the default
+        name for menu files if no uwmrc exists.
+        * uwm/init.c (ReadConfigFile): added XpmReturnAllocPixels flag to
+        XpmAttributes so that uwm won't segfault any longer trying to free not
+        returned colors.
+
+1999-09-06  Christian Ruppert  <arc@ude.org>
+
+        * README: updated for release 0.2.6
+        * INSTALL.UDE: some additional info about installation of ude/uwm.
+        * po/de.po: german language support added
+        * Makefile.am: german language support added
+        * configure.in: prepared for release 0.2.6
+        * AUTHORS: updated for release 0.2.6
+        * NEWS: updated for release 0.2.6
+
+1999-09-01  Christian Ruppert  <arc@ude.org>
+
+        * uwm/init.h (struct): added InitS.WarpPointerToNewWin.
+        * uwm/init.c (InitDefaults): added initialisation for
+        InitS.WarpPointerToNewWin.
+        * uwm/init.c (ReadConfigFile):  added initialisation for
+        InitS.WarpPointerToNewWin.
+        * uwm/windows.c (MapWin): added pointer warping option.
+        * config/uwmrc: added entry for pointer warping option
+        (WarpPointerToNewWin)
+        * uwm/init.c (InitUWM): initialisation for MOTIF_WM_HINTS
+        * uwm/uwm.c (global): added Atom MOTIF_WM_HINTS
+        * uwm/windows.h: removed DrawWinBorder predefinition
+        * uwm/handlers.c (HandlePropertyChange): added Handling for changing
+        MwmHints.
+        * uwm/uwm.h (struct): added UltimateContext.MotifWMHints.
+        * uwm/MwmUtil.h: added file for MOTIF hints predefinitions.
+        * uwm/uwm.h: added argument StopScript to CleanUp prototype decl.
+        * uwm/uwm.c (CleanUp): added choice for StopScript to be execd.
+        * uwm/uwmmenu.c (RestartProc1-3): assimilated to CleanUp changes.
+
+1999-08-31  Christian Ruppert  <arc@ude.org>
+
+	* uwm/uwm.h (struct): added Window TheScreen.inputwin.
+	* uwm/placement.c (ManualPlacement): placement by hitting return
+	enabled.
+	* uwm/init.c (InitUWM): added initialisation for TheScreen.inputwin.
+
+1999-08-25  Christian Ruppert  <arc@ude.org>
+
+    Modified Files:
+       uwm/init.c uwm/uwm.h uwm/init.h uwm/widgets.c uwm/workspaces.c
+       uwm/properties.c uwm/handlers.c uwm/windows.c uwm/winmenu.c
+       uwm/winmenumenu.c uwm/menu.c uwm/special.c uwm/special.h
+       uwm/uwmmenu.c lib/desktop.h uwm/workspaces.h
+
+    massive changes: moved several entries from TheScreen to TheScreen.desktop.
+    => uwm now broadcasts information for udelib programs (e.g. color info etc.)
+    more changes will follow on this (minor ones!)
+
+1999-08-20  Jaime Alberto Silva Colorado  <mono@andromeda.utp.edu.co>
+
+	* uwm/Makefile.am (INCLUDES): added definition of the UDE_DIR macro
+	it is replaced for the contents of pkgdatadir.
+
+	* uwm/init.c (InitUWM): TheScreen.udedir now is the macro UDE_DIR
+	instead of the current directory if the UDEdir environment variable
+	is not defined.
+
+1999-08-17  Christian A. Ruppert  <arc@ude.org>
+
+        * uwm/widgets.c (DrawFrameBevel): added support for drawing bevels
+        around shape window frames.
+
+        * uwm/windows.c (ShapeFrame): cleaned up the code a bit.
+
+1999-08-08  Jaime Alberto Silva Colorado  <mono@andromeda.utp.edu.co>
+
+	* uwm/uwmmenu.c (CreateUWMMenu):changed calls to Texts for gettext
+ 	marked strings. 
+
+	* uwm/init.c (SetLanguage): The function becomes obsolete so it 
+	was removed.
+	(ReadConfigFile): the variable 'a' is now an enum whit the same
+	names of the keywords so the add and remove of keywords is easy.
+	(InitUWM): Romoved Texts initialization, this member does not
+	exists anymore.
+
+	* uwm/init.c (CreateAppsMenu): changed calls to Texts for gettext
+ 	marked strings.
+
+	* uwm/winmenumenu.c (WinMenuMenu): changed calls to Texts for gettext
+ 	marked strings.
+
+	* uwm/windows.c (DeiconifyMenu): changed calls to Texts for gettext
+ 	marked strings.
+
+1999-07-30  Jaime Alberto Silva Colorado  <mono@andromeda.utp.edu.co>
+
+	* src/workspaces.c (SetWSBackground): When the root window's pixmap
+	is changed the server is grabbed to avoid memory leaks and some
+	properties are changed to let the applications know that the pixmap
+	has been changed. see the FIXME note!
+
+	* src/uwm.h (struct): added new SetBackground entry, this array
+	will determine if the background color must be changed.
+
+	* src/init.c (AllocWSS): added support for new SetBackground 
+	structure member.
+	(AllocWSS): changed multiple "for" statements with the same limits
+	for one "for" only.
+	(InitDefaults): TheScreen.SetBackground is set to 0 (FALSE) so the
+	default bahaviour is to not touch the background when the WS is 
+	changed.
+	(ReadConfigFile): if the ScreenColor key word is founded
+	then TheScreen.SetBackground[TheScreen.ActiveWorkSpace] is set to 1
+	in order to let SetWSBackground know that the background color must
+ 	be changed.
+
+	* src/workspaces.c (SetWSBackground): The background color is
+	changed only if 'TheScreen.SetBackground [TheScreen.ActiveWorkSpace]'
+	is not zero (0).
+

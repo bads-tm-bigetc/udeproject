@@ -1,0 +1,80 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2000-11-24 13:33-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+
+#: uwm/windows.c:563
+msgid "Windows Menu"
+msgstr "Fenster Menü"
+
+#: uwm/windows.c:574 uwm/windows.c:575
+msgid "Sticky Windows"
+msgstr "Angepinnte Fenster"
+
+#: uwm/winmenumenu.c:76
+msgid "Sticky window"
+msgstr "Fenster angepinnt"
+
+#: uwm/winmenumenu.c:86
+msgid "Move to WorkSpace"
+msgstr "Auf Workspace"
+
+#: uwm/init.c:438
+msgid "Application Menu"
+msgstr "Anwendungsmenü"
+
+#: uwm/init.c:791 uwm/init.c:818 uwm/init.c:838 uwm/init.c:869 uwm/init.c:889
+#: uwm/init.c:915 uwm/init.c:955 uwm/init.c:969 uwm/init.c:977 uwm/init.c:990
+#: uwm/init.c:998 uwm/init.c:1071 uwm/init.c:1082 uwm/init.c:1136
+#: uwm/init.c:1147 uwm/init.c:1158 uwm/init.c:1169 uwm/init.c:1180
+msgid "UWM: error in config-file. Ignored.\n"
+msgstr "UWM: Fehler in Konfigurationsdatei. Ignoriert.\n"
+
+#: uwm/uwmmenu.c:131
+msgid "Really?!"
+msgstr "Wirklich?!"
+
+#: uwm/uwmmenu.c:134
+msgid "UWM Menu"
+msgstr "UWM Menü"
+
+#. quit ude
+#: uwm/uwmmenu.c:139
+msgid "No!"
+msgstr "Nein!"
+
+#: uwm/uwmmenu.c:140
+msgid "Yes!"
+msgstr "Ja!"
+
+#: uwm/uwmmenu.c:142
+msgid "Quit UDE"
+msgstr "UDE verlassen"
+
+#. restart
+#: uwm/uwmmenu.c:145 uwm/uwmmenu.c:151
+msgid "Restart UDE"
+msgstr "UDE neu starten"
+
+#: uwm/uwmmenu.c:148
+msgid "Reexecute StartScript"
+msgstr "mit StartScript"
+
+#: uwm/uwmmenu.c:149
+msgid "No execute StartScript"
+msgstr "ohne StartScript"
+
+#: uwm/uwmmenu.c:156 uwm/uwmmenu.c:163
+msgid "Launch another WM"
+msgstr "anderen WM starten"
