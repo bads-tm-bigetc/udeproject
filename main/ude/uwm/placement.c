@@ -395,7 +395,6 @@ void PlaceWin(UltimateContext *uc)
   Window win;
   int x,y,width,height;
 
-  uc->flags &= ~PLACEIT;
 
   if(InitS.PlacementStrategy && (uc->flags & PLACEIT)) {
     if(uc->frame!=None) {
@@ -423,4 +422,5 @@ void PlaceWin(UltimateContext *uc)
 
     MoveResizeWin(uc,x,y,0,0);
   }
+  uc->flags &= ~PLACEIT;
 }

@@ -1,3 +1,9 @@
+2001-06-18  Christian Ruppert <arc@gmx.li>
+
+	* uwm/placement.c: moved removal of PLACEIT flag to the end of PlaceWin
+	  to avoid some confusion in PlaceWin
+
+
 2001-06-17  Christian Ruppert <arc@gmx.li>
 
 	* uwm/properties.c, uwm/handlers.c, uwm/uwm.c, uwm/windows.c,
