@@ -59,9 +59,9 @@ WinGroup *CreateWinGroup(Window leader)
 
   group->WorkSpace = TheScreen.desktop.ActiveWorkSpace;
   if(!XFindContext(disp, leader, UWMContext, (XPointer *)&uc)) {
+    group->WorkSpace = uc->WorkSpace;
     RemoveWinFromGroup(uc);
     AddWinToGroup(uc);
-    group->WorkSpace = uc->WorkSpace;
   } else uc = UltimizeWin(leader);
   return group;
 }
