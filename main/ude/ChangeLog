@@ -1,3 +1,25 @@
+2004-03-28  Christian Ruppert <arc@users.sf.net>
+	* uwm/Makefile.am: added conf_func.c to sources and conf_func.h,
+	  conf_func_list.h, settings_global_list.h and
+	  settings_workspace_list.h to headers.
+	* uwm/conf_func.c: added file for functions to be used in
+	  configuration files.
+	* uwm/confparse.tab.y: added partial initialisation function context.
+
+2004-03-26  Christian Ruppert <arc@users.sf.net>
+	* uwm/*.h: added a short copyright notice to the header just to make
+	  sure.
+	* uwm/settings_workspace_list.h, uwm/settings_global_list.h: added
+	  files to guarantee consistency between settings.h and
+	  confparse.tab.y.
+	* uwm/settings.h, uwm/confparse.tab.y: now including
+	  uwm/settings_*_list.h for settings definition which guarantees
+	  consistency.
+	* uwm/workspaces.c, uwm/uwm.c: disabled ScreenCommand which will be
+	  replaced by the new configuration language.
+	* uwm/conf_func.h, uwm/conf_func_list.h: added files for configuration
+	  language runtime function definitions.
+
 2004-03-07  Christian Ruppert <arc@users.sf.net>
 	* uwm/confparse.tab.y, uwm/settings.h, uwm/confparse.h: added
 	  HexCenterX and HexCenterY config options.

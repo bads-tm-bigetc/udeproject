@@ -40,6 +40,7 @@ uwm_SOURCES=  \
     wingroups.c \
     tree.c \
     configconvertors.c \
+    conf_func.c \
     uwm.c
 
 noinst_HEADERS= \
@@ -72,6 +73,10 @@ noinst_HEADERS= \
 	confparse.tab.h \
 	ude_config_consts.h \
 	uwm_intl.h \
+	conf_func.h \
+	conf_func_list.h \
+	settings_global_list.h \
+	settings_workspace_list.h \
 	workspaces.h
 
 EXTRA_DIST= shape.bitmap

@@ -59,6 +59,8 @@
 %{
 #include <stdio.h>
 #include "special.h"
+#include "settings.h"
+#include "conf_func.h"
 
 #define UWM_CONFPARSE_TAB_H
 #include "confparse.h"
@@ -71,73 +73,15 @@ void uwm_init_set_option(char *name, int type, YYSTYPE *value);
 
 #define OFFSET_OF(STRUCTURE, NAME) ((long)(&(((struct STRUCTURE *)(0L))->NAME)))
 /* offsets for global settings */
-#define GLOBAL_OPTION_STRUCT_LINE(NAME, TYPE, DEFAULT) \
-        {#NAME,    OFFSET_OF(_uwm_global_settings, NAME),    TYPE,   DEFAULT}
 const uwm_init_index uwm_global_index[UWM_GLOBAL_OPTION_NR] = {
-  GLOBAL_OPTION_STRUCT_LINE(BorderWidth, UWM_S_INT, "10"),
-  GLOBAL_OPTION_STRUCT_LINE(TransientBorderWidth, UWM_S_INT, "3"),
-  GLOBAL_OPTION_STRUCT_LINE(TitleHeight, UWM_S_INT, "0"),
-  GLOBAL_OPTION_STRUCT_LINE(FrameBevelWidth, UWM_S_INT, "2"),
-  GLOBAL_OPTION_STRUCT_LINE(FrameFlags, UWM_S_INT, "39"),
-  GLOBAL_OPTION_STRUCT_LINE(HexPath, UWM_S_STRING, NULL),
-  GLOBAL_OPTION_STRUCT_LINE(HexCenterX, UWM_S_INT, "40"),
-  GLOBAL_OPTION_STRUCT_LINE(HexCenterY, UWM_S_INT, "42"),
-
-  GLOBAL_OPTION_STRUCT_LINE(LayoutFlags, UWM_S_INT, "0"),
-  GLOBAL_OPTION_STRUCT_LINE(BevelWidth, UWM_S_INT, "2"),
-  GLOBAL_OPTION_STRUCT_LINE(MenuXOffset, UWM_S_INT, "2"),
-  GLOBAL_OPTION_STRUCT_LINE(MenuYOffset, UWM_S_INT, "2"),
-
-  GLOBAL_OPTION_STRUCT_LINE(TitleFont, UWM_S_FONT, "fixed"),
-  GLOBAL_OPTION_STRUCT_LINE(Font, UWM_S_FONT, "fixed"),
-  GLOBAL_OPTION_STRUCT_LINE(MonoFont, UWM_S_FONT, "fixed"),
-  GLOBAL_OPTION_STRUCT_LINE(HighlightFont, UWM_S_FONT, "fixed"),
-  GLOBAL_OPTION_STRUCT_LINE(InactiveFont, UWM_S_FONT, "fixed"),
-
-  GLOBAL_OPTION_STRUCT_LINE(StartScript, UWM_S_STRING, NULL),
-  GLOBAL_OPTION_STRUCT_LINE(StopScript, UWM_S_STRING, NULL),
-  GLOBAL_OPTION_STRUCT_LINE(ResourceFile, UWM_S_STRING, NULL),
-
-  GLOBAL_OPTION_STRUCT_LINE(PlacementStrategy, UWM_S_INT, "5"),
-  GLOBAL_OPTION_STRUCT_LINE(PlacementThreshold, UWM_S_INT, "0"),
-  GLOBAL_OPTION_STRUCT_LINE(OpaqueMoveSize, UWM_S_INT, "0"),
-
-  GLOBAL_OPTION_STRUCT_LINE(MaxWinWidth, UWM_S_INT, "0"),
-  GLOBAL_OPTION_STRUCT_LINE(MaxWinHeight, UWM_S_INT, "0"),
-
-  GLOBAL_OPTION_STRUCT_LINE(WarpPointerToNewWinH, UWM_S_FLOAT, "-1"),
-  GLOBAL_OPTION_STRUCT_LINE(WarpPointerToNewWinV, UWM_S_FLOAT, "-1"),
-
-  GLOBAL_OPTION_STRUCT_LINE(SnapDistance, UWM_S_INT, "10"),
-  GLOBAL_OPTION_STRUCT_LINE(BehaviourFlags, UWM_S_INT, "0")
+#define GO__DEFINITIONS
+#include "settings_global_list.h"
 };
-#undef GLOBAL_OPTION_STRUCT_LINE
 
 char uwm_default_ws_name[UWM_DEFAULT_NAME_LENGTH];
-#define WORKSPACE_OPTION_STRUCT_LINE(NAME, TYPE, DEFAULT) \
-        {#NAME,    OFFSET_OF(_uwm_workspace_settings, NAME),    TYPE,   DEFAULT}
 uwm_init_index uwm_workspace_index[UWM_WORKSPACE_OPTION_NR] = {
-  WORKSPACE_OPTION_STRUCT_LINE(Name, UWM_S_STRING, uwm_default_ws_name),
-  WORKSPACE_OPTION_STRUCT_LINE(Wallpaper, UWM_S_PIXMAP, NULL),
-  WORKSPACE_OPTION_STRUCT_LINE(ScreenColor, UWM_S_COLOR, "grey30"),
-  WORKSPACE_OPTION_STRUCT_LINE(InactiveColor, UWM_S_COLOR, "grey30"),
-  WORKSPACE_OPTION_STRUCT_LINE(InactiveShadow, UWM_S_COLOR, "grey10"),
-  WORKSPACE_OPTION_STRUCT_LINE(InactiveLight, UWM_S_COLOR, "grey50"),
-  WORKSPACE_OPTION_STRUCT_LINE(InactiveTitle, UWM_S_COLOR, "white"),
-  WORKSPACE_OPTION_STRUCT_LINE(ActiveColor, UWM_S_COLOR, "grey70"),
-  WORKSPACE_OPTION_STRUCT_LINE(ActiveShadow, UWM_S_COLOR, "grey50"),
-  WORKSPACE_OPTION_STRUCT_LINE(ActiveLight, UWM_S_COLOR, "grey90"),
-  WORKSPACE_OPTION_STRUCT_LINE(ActiveTitle, UWM_S_COLOR, "black"),
-  WORKSPACE_OPTION_STRUCT_LINE(BackgroundColor, UWM_S_COLOR, "grey30"),
-  WORKSPACE_OPTION_STRUCT_LINE(BackgroundShadow, UWM_S_COLOR, "grey10"),
-  WORKSPACE_OPTION_STRUCT_LINE(BackgroundLight, UWM_S_COLOR, "grey50"),
-  WORKSPACE_OPTION_STRUCT_LINE(ForegroundColor, UWM_S_COLOR, "white"),
-  WORKSPACE_OPTION_STRUCT_LINE(InactiveForeground, UWM_S_COLOR, "grey70"),
-  WORKSPACE_OPTION_STRUCT_LINE(InactiveBackground, UWM_S_COLOR, "grey20"),
-  WORKSPACE_OPTION_STRUCT_LINE(HighlightedForeground, UWM_S_COLOR, "white"),
-  WORKSPACE_OPTION_STRUCT_LINE(HighlightedBackground, UWM_S_COLOR, "grey50"),
-  WORKSPACE_OPTION_STRUCT_LINE(TextForeground, UWM_S_COLOR, "white"),
-  WORKSPACE_OPTION_STRUCT_LINE(TextBackground, UWM_S_COLOR, "black"),
+#define WO__DEFINITIONS
+#include "settings_workspace_list.h"
 };
 #undef WORKSPACE_OPTION_STRUCT_LINE
 
@@ -407,9 +351,12 @@ void uwm_yy_PushContext(int type, void *data)
 	 s->data_index = uwm_workspace_index;
 	 s->data_index_size = UWM_WORKSPACE_OPTION_NR;
 	 break;
-    case UWM_YY_MENU_CONTEXT:
-    case UWM_YY_EVENT_CONTEXT:
     case UWM_YY_FUNCTION_CONTEXT:
+         s->context_data = NULL; /* from event context */
+	 s->data_index = cf_functions;
+	 s->data_index_size = CONFIG_FUNC_COUNT;
+    case UWM_YY_EVENT_CONTEXT:
+    case UWM_YY_MENU_CONTEXT:
          s->context_data = NULL;
 	 s->data_index = NULL;
 	 s->data_index_size = 0;

@@ -88,7 +88,7 @@ void CleanUp(Bool StopScript)
   struct stat stats;
   char rmstr[256],*p;
 
-  if(ScreenCommandPID>0) if(!kill(ScreenCommandPID,SIGTERM)) sleep(1);
+/*  if(ScreenCommandPID>0) if(!kill(ScreenCommandPID,SIGTERM)) sleep(1); */
                      /* terminate running ScreenCommand and not leave a zombie*/
   if(TheScreen.UltimateList) if(n=TheScreen.UltimateList->first)
     while(n) {

@@ -53,7 +53,7 @@ extern HandlerTable MoveHandle[LASTEvent];
 extern HandlerTable ResizeHandle[LASTEvent];
 
 
-pid_t ScreenCommandPID=0;
+/* pid_t ScreenCommandPID=0; */
 
 /*  needs to be called after a workspace is added or removed or after
     application colors changed etc.  */
@@ -121,13 +121,13 @@ void SetWSBackground()
   if (back_changed)
     XClearWindow(disp,TheScreen.root);
 
-  if(ScreenCommandPID>0){              /* terminate previous ScreenCommand */
-    kill(ScreenCommandPID,SIGTERM);
+/*  if(ScreenCommandPID>0){  */         /* terminate previous ScreenCommand */
+/*    kill(ScreenCommandPID,SIGTERM);
     ScreenCommandPID=0;
   }
   if(ActiveWSSettings->ScreenCommand)
     ScreenCommandPID = MySystem(ActiveWSSettings->ScreenCommand);
-  else ScreenCommandPID=0;
+  else ScreenCommandPID=0; */
 }
 
 void ChangeWS(short WS)

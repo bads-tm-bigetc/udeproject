@@ -1,3 +1,9 @@
+/* Copyright (c) : Christian Ruppert */
+
+/* Distributed as part of uwm, the ude window manager under the terms of
+   the GNU General Public License Version 2 or later. See the file COPYING
+   distributed with this file for details. */
+
 #ifndef UWM_SETTINGS_H
 #define UWM_SETTINGS_H
 
@@ -11,49 +17,8 @@ typedef struct _FontStruct {
 
 /* global settings */
 typedef struct _uwm_global_settings {
-/*** geometry */
-  int BorderWidth;
-  int TransientBorderWidth;
-  int TitleHeight;
-  int FrameBevelWidth;
-  int FrameFlags;
-  char *HexPath;
-  int HexCenterX;
-  int HexCenterY;
-
-/*** general layout */
-  int LayoutFlags;
-  int BevelWidth;
-  int MenuXOffset, MenuYOffset;
-
-/*** fonts */
-  FontStruct TitleFont;
-  FontStruct Font;
-  FontStruct MonoFont;
-  FontStruct HighlightFont;
-  FontStruct InactiveFont;
-
-/*** batch */
-  char *StartScript;
-  char *StopScript;
-  char *ResourceFile;
-
-/*** behaviour */
-  int PlacementStrategy;
-  int PlacementThreshold;
-  int OpaqueMoveSize;
-
-  int MaxWinWidth;
-  int MaxWinHeight;
-
-  double WarpPointerToNewWinH;
-  double WarpPointerToNewWinV;
-
-  int SnapDistance;
-  int BehaviourFlags;
-
-/*  void *ButtonsOnRoot;  /* to be implemented/changed */
-/*  void *ButtonsOnWin;   /* to be implemented/changed */
+#define GO__STRUCT
+#include "settings_global_list.h"
 } uwm_global_settings;
 
 typedef struct _uwm_image {
@@ -63,26 +28,8 @@ typedef struct _uwm_image {
 
 /* workspace specific settings */
 typedef struct _uwm_workspace_settings {
-/*** general workspace options */
-  char *Name;
-  char *ScreenCommand;
-  uwm_image Wallpaper;
-
-/*** colors */
-  XColor *ScreenColor;
-  XColor *InactiveColor, *InactiveLight, *InactiveShadow;
-  XColor *InactiveTitle;
-  XColor *ActiveColor, *ActiveLight, *ActiveShadow;
-  XColor *ActiveTitle;
-
-  XColor *BackgroundColor, *BackgroundLight, *BackgroundShadow;
-  XColor *ForegroundColor;
-  XColor *InactiveForeground;
-  XColor *InactiveBackground;
-  XColor *HighlightedForeground;
-  XColor *HighlightedBackground;
-  XColor *TextForeground;
-  XColor *TextBackground;
+#define WO__STRUCT
+#include "settings_workspace_list.h"
 } uwm_workspace_settings;
 
 typedef struct _uwm_settings {
