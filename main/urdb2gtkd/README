@@ -15,6 +15,12 @@ for not interrupting urdb2gtkd while writing to .gtkrc NEVER STOP THE PROGRAM
 WITH ANYTHING BUT SIGHUP!
 When --dump is used, urdb2gtkrc will exit immediately after dumping .gtkrc.
 
+Please note that the supplied patch (uwm.patch) needs to be applied to all
+versions to uwm prior to and including 0.2.8a and to all cvs versions prior
+to 9.2.2003 so that the --dump-option can work properly. To do this type
+"patch -p1 <uwm.patch" in the ude-<version> directory before running
+configure when building uwm.
+
 This program leaks memory at least with my XFree 4.2.0 Xlib. This seems to
 be due to a bug in Xlib which does not free all of a resource database when
 XrmDestroyDatabase is called. If the leak also exists on your system you may

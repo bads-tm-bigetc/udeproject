@@ -5,7 +5,7 @@ if [test -z "$CFLAGS" ]; then
 fi
 export CFLAGS
 
-VERSION=0.0.2
+VERSION=0.0.3
 AM_INIT_AUTOMAKE(urdb2gtkd, $VERSION)
 AC_PROG_CC
 AC_PROG_INSTALL
