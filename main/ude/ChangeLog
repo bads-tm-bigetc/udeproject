@@ -1,4 +1,10 @@
 2002-09-12  Christian Ruppert <arc@gmx.li>
+	* uwm/Makefile.am: added uwm/tree.c to the list .c-files and uwm/tree.h
+	  to the list of non installed headers.
+	* uwm/tree.c, uwm/tree.h: added a simple module to create and search in
+	  binary balanced trees for use with keyboard configurability.
+
+2002-09-12  Christian Ruppert <arc@gmx.li>
 	* uwm/nodes.c, uwm/nodes.h: added SortList(NodeList *list, melfunc mel)
 	  function.
 	* uwm/nodes.c, uwm/nodes.h: removed actual pointer from node lists which
