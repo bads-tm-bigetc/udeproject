@@ -293,15 +293,11 @@ void HandleReparentNotify(XEvent *event)
 void HandleButtonPress(XEvent *event)
 {
   UltimateContext *uc;
-  int dummy;
-  Window rootret, childret, win;
 
   DBG(fprintf(TheScreen.errout,"HandleButtonPress\n");)
 
   StampTime(event->xbutton.time);
 
-/*  XQueryPointer(disp,TheScreen.root,&rootret,&childret,&dummy,&dummy,\
-                                                &dummy,&dummy,&dummy); */
   if((event->xbutton.window == TheScreen.root)
      && (event->xbutton.subwindow == None)){
     switch(event->xbutton.button){
@@ -325,8 +321,10 @@ void HandleButtonPress(XEvent *event)
     if(!XFindContext(disp, win, UWMContext, (XPointer *)&uc)){
       int x,y;
 
-      if(uc->frame!=None) XQueryPointer(disp,uc->frame,&rootret,&childret,\
-                                               &dummy,&dummy,&x,&y,&dummy);
+      if(uc->frame != None){
+        x = event->xbutton.x_root - uc->Attr.x;
+	y = event->xbutton.y_root - uc->Attr.y;
+      }
       ActivateWin(uc);
       switch(event->xbutton.button){
         case Button1: BorderButton(0,uc,x,y,event->xbutton.x_root,\

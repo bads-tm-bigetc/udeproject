@@ -1,3 +1,10 @@
+2003-04-17  Christian Ruppert <arc@users.sf.net>
+	* uwm/handlers.c (HandleButtonPress): replaced XQueryPointer by
+	  coordinate calculation from event structure.
+	* uwm/move.c (MoveMotion): replaced XQueryPointer by coordinates
+	  from event structure and XGetMotionEvents() call to get next motion
+	  event.
+
 2003-04-16  Christian Ruppert <arc@users.sf.net>
 	* uwm/special.h: pointer grabs are now confined to the screen's root
 	  window to avoid trouble with crashing xfree when running multiheaded
