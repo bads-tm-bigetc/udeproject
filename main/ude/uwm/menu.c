@@ -312,8 +312,8 @@ void DrawMenu(Menu *menu,int x, int y)
     } else {
       h=item->y;
       for(a=0;a<MENUBORDERW;a++) {
-        XDrawLine(disp,menu->win,menu->ShadowGC,a,h-1-a,menu->width-a,h-1-a);
-        XDrawLine(disp,menu->win,menu->LightGC,a,a+h,menu->width-a,a+h);
+        XDrawLine(disp,menu->win,menu->ShadowGC,a+1,h-1-a,menu->width-a,h-1-a);
+        XDrawLine(disp,menu->win,menu->LightGC,a,a+h,menu->width-a-2,a+h);
       }
     }
   }
