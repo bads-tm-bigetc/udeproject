@@ -269,7 +269,7 @@ AnyWinAction : DragPosAtom { }
 	     | CloseAtom { }
 	     | IconifyAtom { }
 	     | KillAtom { } 
-	     | AnyFunction { } ;
+	     | WorkspaceFunction { } ;
 
 WinAction : GenericLine
 	  | AnyWinAction ;
