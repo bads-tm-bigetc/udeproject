@@ -1,3 +1,8 @@
+2003-06-30  Christian Ruppert <arc@users.sf.net>
+	* uwm/properties.c: uwm no longer updates window's borders in case
+	  motif hints changes when a window is mapped. fixes problems with
+	  mplayer fullscreen mode for example.
+
 2003-06-09  Christian Ruppert <arc@users.sf.net>
 	* uwm/windows.c: added FocusWin global.
 	* uwm/handlers.c: added handlers for FocusIn and FocusOut events.

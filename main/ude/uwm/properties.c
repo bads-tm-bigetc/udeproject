@@ -198,6 +198,10 @@ void UpdateMotifHints(UltimateContext *uc)
                                  &type, &format, &n, &n,
                                  (unsigned char **)&uc->MotifWMHints))
     uc->MotifWMHints=NULL;
+
+/*** From now on we ignore motif hint changes for enbordered windows.
+     they make limited sense anyway and might cause serious trouble with
+     some applications
   if(uc->frame) {
     char visible;
 
@@ -205,7 +209,7 @@ void UpdateMotifHints(UltimateContext *uc)
     DisenborderWin(uc,True);
     EnborderWin(uc);
     if(visible) MapWin(uc, True);
-  }
+  } */
 }
 
 void UpdateTransientForHint(UltimateContext *uc)
