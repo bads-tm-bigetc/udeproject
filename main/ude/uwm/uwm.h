@@ -84,11 +84,30 @@
 
 typedef char WSName[32];
 
-typedef struct
-{ int Screen;
-  unsigned int width,height;
-  Window root, inputwin;
+typedef struct {
+  int Screen;
   Bool DoesSaveUnders, DoesBackingStore;
+  Colormap colormap;
+  unsigned int width, height;
+  Window root, inputwin;
+
+  Cursor Mice[CURSORS];
+  GC rubbercontext, blackcontext;
+  NodeList *UltimateList;        /* contains all ultimized windows,
+                                    data of type UltimateContext * */
+  XContext MenuContext, MenuFrameContext;
+
+  char *udedir;
+  char *cppcall, *cppincpaths, *urdbcppopts;
+  char *Home;
+
+  Atom UDE_WORKSPACES_PROPERTY, UDE_SETTINGS_PROPERTY, UDE_WINDOW_PROPERTY;
+  Atom WM_Sx, VERSION_ATOM, ATOM_PAIR, TARGETS, MULTIPLE, TIMESTAMP;
+  Time start_tstamp;
+  Time now;
+
+  FILE *errout;
+/*******************************************************************/
 
   struct {
     Window IconWins[ICONWINS];
@@ -100,43 +119,22 @@ typedef struct
 
   Menu *AppsMenu;
   Menu *UWMMenu;
-  GC rubbercontext,blackcontext;
   WSName *WorkSpace;
-  NodeList *UltimateList;        /* contains all ultimized windows,
-                                    data of type UltimateContext * */
-  int BorderWidth1,BorderWidth2,TitleHeight, FrameBevelWidth;
-  int MaxWinWidth,MaxWinHeight;
-  Cursor Mice[CURSORS];
-  Colormap colormap;
-  float FrameBevelFactor;
+  int MaxWinWidth, MaxWinHeight;
   /* if SetBackground[ws#] is set to 0 the background of that ws is not
      changed unless BackPixmap[ws#] is not NULL */
   unsigned char *SetBackground;
   unsigned long *Background;
-  unsigned long *InactiveBorder, *InactiveLight, *InactiveShadow;
-  unsigned long *ActiveBorder, *ActiveLight, *ActiveShadow;
-  unsigned long *ActiveTitleFont, *InactiveTitleFont;
-  XFontStruct *TitleFont;
   char **BackCommand;
   Pixmap *BackPixmap;
   XpmAttributes *BackPixmapAttributes;
-  XContext MenuContext, MenuFrameContext;
   XFontStruct *MenuFont;
   GC MenuTextGC, MenuLightGC, MenuShadowGC, MenuBackGC;
   UDEColors *Colors;
   UDEDesktop desktop;
-  char udedir[256];
-  char cppcall[256];
-  char *cppincpaths, *urdbcppopts;
-  char *Home;
-
-  Atom UDE_WORKSPACES_PROPERTY, UDE_SETTINGS_PROPERTY, UDE_WINDOW_PROPERTY;
-  Atom WM_Sx, VERSION_ATOM, ATOM_PAIR, TARGETS, MULTIPLE, TIMESTAMP;
-  Time start_tstamp;
-  Time now;
-
-  FILE *errout;
 } UDEScreen;
+
+extern UDEScreen TheScreen;
 
 #define StampTime(TIME) (TheScreen.now = ((TheScreen.now < TIME) || (TheScreen.now > (TIME + (1<<(sizeof(TheScreen.now)*8-1))))) ? TIME : TheScreen.now)
 #define TimeStamp TheScreen.now

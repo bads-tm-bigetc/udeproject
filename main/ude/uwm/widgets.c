@@ -32,9 +32,9 @@
 
 #include "uwm.h"
 #include "init.h"
+#include "settings.h"
 
 extern Display *disp;
-extern UDEScreen TheScreen;
 extern InitStruct InitS;
 extern UltimateContext *FocusWin;
 
@@ -62,12 +62,14 @@ void DrawFrameBevel(UltimateContext *uc)
   GC LightGC, ShadowGC;
   int Active = uc->flags & ACTIVE_BORDER;
 
-  if(!TheScreen.FrameBevelWidth) return;
+  if(!settings.global_settings->FrameBevelWidth) return;
 
   xgcv.function=GXcopy;
-  xgcv.foreground=Active
-                  ? TheScreen.ActiveLight[TheScreen.desktop.ActiveWorkSpace]\
-                  :TheScreen.InactiveLight[TheScreen.desktop.ActiveWorkSpace];
+  xgcv.foreground = Active
+                    ? settings.workspace_settings
+		      [TheScreen.desktop.ActiveWorkSpace]->ActiveLight->pixel
+                    : settings.workspace_settings
+                      [TheScreen.desktop.ActiveWorkSpace]->InactiveLight->pixel;
   xgcv.line_width=0;
   xgcv.line_style=LineSolid;
   xgcv.cap_style=CapButt;
@@ -76,8 +78,10 @@ void DrawFrameBevel(UltimateContext *uc)
 
   xgcv.function=GXcopy;
   xgcv.foreground=Active
-                  ? TheScreen.ActiveShadow[TheScreen.desktop.ActiveWorkSpace]\
-                  : TheScreen.InactiveShadow[TheScreen.desktop.ActiveWorkSpace];
+                  ? settings.workspace_settings
+		    [TheScreen.desktop.ActiveWorkSpace]->ActiveShadow->pixel
+                  : settings.workspace_settings
+		    [TheScreen.desktop.ActiveWorkSpace]->InactiveShadow->pixel;
   xgcv.line_width=0;
   xgcv.line_style=LineSolid;
   xgcv.cap_style=CapButt;
@@ -90,7 +94,7 @@ void DrawFrameBevel(UltimateContext *uc)
     xd = uc->Attr.width - 1;
     yd = uc->Attr.height - 1;
   
-    for(i=0; i<TheScreen.FrameBevelWidth; i++) {
+    for(i=0; i<settings.global_settings->FrameBevelWidth; i++) {
       xa = xc + i; xb = xd - i;
       ya = yc + i; yb = yd - i;
       XDrawLine(disp,uc->border, i?LightGC:ShadowGC, xa, ya, xb, ya);
@@ -99,9 +103,10 @@ void DrawFrameBevel(UltimateContext *uc)
       XDrawLine(disp,uc->border, i?LightGC:ShadowGC, xa, yb, xa, ya);
     }
 
-    if(((i=(uc->BorderWidth-TheScreen.FrameBevelWidth-1)) > 3) &&\
-                            (InitS.BorderTitleFlags & BT_GROOVE)){
-      i=i/2+TheScreen.FrameBevelWidth;
+    if(((i = (uc->BorderWidth
+              - settings.global_settings->FrameBevelWidth - 1)) > 3) &&
+       (InitS.BorderTitleFlags & BT_GROOVE)){
+      i = i / 2 + settings.global_settings->FrameBevelWidth;
       if(InitS.BorderTitleFlags & BT_CENTER_TITLE) {
         DrawBevel(uc->border,i-1,2*uc->BorderWidth,i,uc->Attr.height-\
                                 2*uc->BorderWidth,1,ShadowGC,LightGC);
@@ -121,10 +126,11 @@ void DrawFrameBevel(UltimateContext *uc)
       }
     }
     if(InitS.BorderTitleFlags&BT_LINE)
-      DrawBevel(uc->border,uc->BorderWidth-1,uc->BorderWidth+TheScreen.\
-                          TitleHeight-1,uc->Attr.width-uc->BorderWidth,\
-                                     uc->Attr.height-uc->BorderWidth,1,\
-                         TheScreen.blackcontext,TheScreen.blackcontext);
+      DrawBevel(uc->border, uc->BorderWidth-1,
+                uc->BorderWidth + settings.global_settings->TitleHeight - 1,
+                uc->Attr.width - uc->BorderWidth,
+                uc->Attr.height - uc->BorderWidth, 1,
+                TheScreen.blackcontext, TheScreen.blackcontext);
   }
 
   XFreeGC(disp, LightGC);
@@ -139,9 +145,11 @@ void DrawTitle(UltimateContext *uc)
   int Active = uc->flags & ACTIVE_BORDER;
 
   xgcv.function=GXcopy;
-  xgcv.foreground=Active
-                  ? TheScreen.ActiveLight[TheScreen.desktop.ActiveWorkSpace]\
-                  : TheScreen.InactiveLight[TheScreen.desktop.ActiveWorkSpace];
+  xgcv.foreground = Active
+                    ? settings.workspace_settings
+		      [TheScreen.desktop.ActiveWorkSpace]->ActiveLight->pixel
+                    : settings.workspace_settings
+                      [TheScreen.desktop.ActiveWorkSpace]->InactiveLight->pixel;
   xgcv.line_width=0;
   xgcv.line_style=LineSolid;
   xgcv.cap_style=CapButt;
@@ -149,9 +157,11 @@ void DrawTitle(UltimateContext *uc)
                   GCCapStyle|GCLineWidth|GCLineStyle,&xgcv);
 
   xgcv.function=GXcopy;
-  xgcv.foreground=Active
-                  ? TheScreen.ActiveShadow[TheScreen.desktop.ActiveWorkSpace]\
-                  : TheScreen.InactiveShadow[TheScreen.desktop.ActiveWorkSpace];
+  xgcv.foreground = Active
+                    ? settings.workspace_settings
+		      [TheScreen.desktop.ActiveWorkSpace]->ActiveShadow->pixel
+                    : settings.workspace_settings
+		     [TheScreen.desktop.ActiveWorkSpace]->InactiveShadow->pixel;
   xgcv.line_width=0;
   xgcv.line_style=LineSolid;
   xgcv.cap_style=CapButt;
@@ -160,10 +170,11 @@ void DrawTitle(UltimateContext *uc)
  
   xgcv.function=GXcopy;
   xgcv.foreground=Active
-                  ? TheScreen.ActiveTitleFont[TheScreen.desktop.ActiveWorkSpace]
-                  : TheScreen.InactiveTitleFont\
-                    [TheScreen.desktop.ActiveWorkSpace];
-  xgcv.font=TheScreen.TitleFont->fid;
+                  ? settings.workspace_settings
+		    [TheScreen.desktop.ActiveWorkSpace]->ActiveTitle->pixel
+                  : settings.workspace_settings
+                    [TheScreen.desktop.ActiveWorkSpace]->InactiveTitle->pixel;
+  xgcv.font = settings.global_settings->TitleFont.xfs->fid;
   TextGC=XCreateGC(disp,uc->frame,GCFunction|GCForeground|GCFont,&xgcv);
  
   XClearWindow(disp,uc->title.win);
@@ -174,8 +185,9 @@ void DrawTitle(UltimateContext *uc)
     DrawBevel(uc->title.win, 1, 1, uc->title.width - 2, uc->title.height - 2,
               1, LightGC, ShadowGC);
   } else {
-    if((i=(uc->BorderWidth-TheScreen.FrameBevelWidth-1)) <= 3) i=2;
-    i=i/2+TheScreen.FrameBevelWidth;
+    if((i = (uc->BorderWidth
+             - settings.global_settings->FrameBevelWidth - 1)) <= 3) i=2;
+    i = i / 2 + settings.global_settings->FrameBevelWidth;
     if(InitS.BorderTitleFlags & BT_GROOVE){
       XDrawLine(disp, uc->title.win, LightGC,
                 (InitS.BorderTitleFlags & BT_CENTER_TITLE) ? 2 : 0,
@@ -190,7 +202,8 @@ void DrawTitle(UltimateContext *uc)
         XDrawPoint(disp, uc->title.win, LightGC, 0, uc->title.height-1);
       }
     }
-    if(((TheScreen.TitleHeight + uc->BorderWidth - i) <= uc->title.height) &&
+    if(((settings.global_settings->TitleHeight
+         + uc->BorderWidth - i) <= uc->title.height) &&
        (InitS.BorderTitleFlags & BT_LINE)) {
       XDrawLine(disp, uc->title.win, TheScreen.blackcontext,
                 (InitS.BorderTitleFlags & BT_CENTER_TITLE) 
@@ -199,20 +212,22 @@ void DrawTitle(UltimateContext *uc)
 		uc->title.height - 1);
       XDrawLine(disp, uc->title.win, TheScreen.blackcontext,
                 uc->title.width - 1,
-                uc->BorderWidth - i - 1 + TheScreen.TitleHeight,
+                uc->BorderWidth - i - 1 + settings.global_settings->TitleHeight,
                 uc->title.width - 1, uc->title.height-1);
       if(InitS.BorderTitleFlags &  BT_CENTER_TITLE)
         XDrawLine(disp,uc->title.win, TheScreen.blackcontext, 0,
-                  uc->BorderWidth - i - 1 + TheScreen.TitleHeight, 0,
+                  uc->BorderWidth - i - 1 
+                  + settings.global_settings->TitleHeight, 0,
                   uc->title.height - 1);
     }
   }
   if(uc->title.name) XDrawString(disp, uc->title.win, TextGC,
 		           ((uc->flags & SHAPED)
 			    || (InitS.BorderTitleFlags & BT_CENTER_TITLE))
-			   ? 5 : 2, ((uc->flags & SHAPED) ? 3 : 0)
-			   + TheScreen.TitleFont->ascent, uc->title.name,
-			   strlen(uc->title.name));
+			   ? 5 : 2,
+			   ((uc->flags & SHAPED) ? 3 : 0)
+			   + settings.global_settings->TitleFont.xfs->ascent,
+                           uc->title.name, strlen(uc->title.name));
                                                
   XFreeGC(disp, LightGC);
   XFreeGC(disp, ShadowGC);

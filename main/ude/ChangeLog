@@ -1,4 +1,10 @@
 2003-08-29  Christian Ruppert <arc@users.sf.net>
+	* uwm/uwm.h, uwm/handlers.c, uwm/init.c, uwm/placement.c,
+	  uwm/properties.c, uwm/resize.c, uwm/special.c, uwm/widgets.c,
+	  uwm/windows.c: started stitching in new configuration system and made
+	  some code cleanups. removed some static buffers.
+
+2003-08-29  Christian Ruppert <arc@users.sf.net>
         * uwm/init.c(ReadConfigFile): corrected default configuration setting.
 	* uwm/confparse.y, uwm/confparse.h: moved definition of
 	  ConverterFunction prototype to header, added external converter table

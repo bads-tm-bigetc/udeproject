@@ -172,7 +172,7 @@ void PrepareIcons()
   int a,b;
 
   a=0;
-  if(InitS.HexPath[0]=='\0') sprintf(dirname,"%sgfx/",TheScreen.udedir);
+  if(InitS.HexPath[0]=='\0') sprintf(dirname, "%sgfx/", TheScreen.udedir);
   else sprintf(dirname,"%s/",InitS.HexPath);
 
   for(b=0;b<7;b++){
@@ -1556,29 +1556,24 @@ UWM ");
   TheScreen.colormap = DefaultColormap(disp,DefaultScreen(disp));
 
   /*** find out where ude is installed. ***/
-  env= getenv("UDEdir");
+  env = getenv("UDEdir");
   if(!env) {
     /* UDE_DIR is a macro that is defined in the Makefile (by automake) and
        it will contain the default ude directory which is the same pkgdatadir
        it will usually be /usr/local/share/ude */
-    char *e;
-    sprintf(TheScreen.udedir, "%s/", UDE_DIR);
-    e = MyCalloc(strlen(TheScreen.udedir) + strlen("UDEdir=") +1, sizeof(char));
-    sprintf(e,"UDEdir=%s", TheScreen.udedir);
-    putenv(e);     /* errors setting UDEdir are not fatal, so we ignore them. */
-  } else {
-      char *e;
-      
-#ifndef NEW_CONFIG
-      e = RLSpace(env);
-#else
-      e = env;
-#endif /* NEW_CONFIG */
-      if('/' != (*(strchr (e, '\0') - sizeof (char))))
-	sprintf(TheScreen.udedir,"%s/",e);
-      else
-	sprintf(TheScreen.udedir,"%s",e);
+    env = UDE_DIR;
   }
+  if('/' != (*(strchr(env, '\0') - 1))) {
+    TheScreen.udedir = MyCalloc(strlen(env) + 2, sizeof(char));
+    sprintf(TheScreen.udedir,"%s/", env);
+  } else {
+    TheScreen.udedir = MyCalloc(strlen(env) + 1, sizeof(char));
+    sprintf(TheScreen.udedir,"%s", env);
+  }
+  env = MyCalloc(strlen(TheScreen.udedir) + strlen("UDEdir=") + 1,
+                 sizeof(char));
+  sprintf(env, "UDEdir=%s", TheScreen.udedir);
+  putenv(env);   /* errors setting UDEdir are not fatal, so we ignore them. */
 
   TheScreen.cppincpaths = malloc(sizeof(char) * (1 + strlen("-I ")
          + strlen(TheScreen.Home) + strlen("/.ude/config/ -I ") 
@@ -1633,7 +1628,7 @@ UWM ");
   /*** set up more UWM-specific stuff ***/
   xgcv.function=GXinvert;
   xgcv.line_style=LineSolid;
-  xgcv.line_width=TheScreen.BorderWidth1;
+  xgcv.line_width = settings.global_settings->BorderWidth;
   xgcv.cap_style=CapButt;
   xgcv.subwindow_mode=IncludeInferiors;
   TheScreen.rubbercontext=XCreateGC(disp,TheScreen.root,GCFunction|\

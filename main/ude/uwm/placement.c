@@ -41,6 +41,7 @@
 #include "rubber.h"
 #include "placement.h"
 #include "special.h"
+#include "settings.h"
 
 #define FIRSTINC InitS.PlacementStrategy
 
@@ -320,7 +321,7 @@ void ManualPlace(NodeList *wins,int w,int h,int *x,int *y)
   XSetInputFocus(disp, TheScreen.inputwin, RevertToPointerRoot,
                  TimeStamp);
   XSync(disp,False);
-  StartRubber(*x,*y,w,h,TheScreen.BorderWidth1);
+  StartRubber(*x, *y, w, h, settings.global_settings->BorderWidth);
   placing=-1;
   while(placing){
     int i;

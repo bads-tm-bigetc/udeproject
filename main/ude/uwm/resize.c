@@ -41,6 +41,7 @@
 #include "rubber.h"
 #include "init.h"
 #include "special.h"
+#include "settings.h"
 
 extern UDEScreen TheScreen;
 extern Display *disp;
@@ -64,116 +65,113 @@ unsigned char borderstat,oldstat;
 void SqueezeIt(int mousex,int mousey)
 {
   if(!(borderstat & TACTIVE)) 
-    if(mousey <= (oy1+ActiveWin->BorderWidth+TheScreen.TitleHeight)){
-      borderstat&=(~(BACTIVE|YACTIVE));
-      borderstat|=TACTIVE;
-      y2=oy2;
+    if(mousey <= (oy1 + ActiveWin->BorderWidth
+                  + settings.global_settings->TitleHeight)) {
+      borderstat &= (~(BACTIVE | YACTIVE));
+      borderstat |= TACTIVE;
+      y2 = oy2;
     }
   if(!(borderstat & BACTIVE)) 
-    if(mousey >= (oy2-ActiveWin->BorderWidth)){
-      borderstat&=(~(TACTIVE|YACTIVE));
-      borderstat|=BACTIVE;
-      y1=oy1;
+    if(mousey >= (oy2 - ActiveWin->BorderWidth)) {
+      borderstat &= (~(TACTIVE | YACTIVE));
+      borderstat |= BACTIVE;
+      y1 = oy1;
     }
   if(!(borderstat & LACTIVE)) 
-    if(mousex <= (ox1+ActiveWin->BorderWidth)){
-      borderstat&=(~(RACTIVE|XACTIVE));
-      borderstat|=LACTIVE;
-      x2=ox2;
+    if(mousex <= (ox1 + ActiveWin->BorderWidth)) {
+      borderstat &= (~(RACTIVE | XACTIVE));
+      borderstat |= LACTIVE;
+      x2 = ox2;
     }
   if(!(borderstat & RACTIVE)) 
-    if(mousex >= (ox2-ActiveWin->BorderWidth)){
-      borderstat&=(~(LACTIVE|XACTIVE));
-      borderstat|=RACTIVE;
-      x1=ox1;
+    if(mousex >= (ox2 - ActiveWin->BorderWidth)) {
+      borderstat &= (~(LACTIVE | XACTIVE));
+      borderstat |= RACTIVE;
+      x1 = ox1;
     }
 
-  if(borderstat & TACTIVE){
-    if((!(borderstat & YACTIVE)) && ((mousey<oy1)||\
-      (mousey>oy1+ActiveWin->BorderWidth+TheScreen.TitleHeight)))
-      borderstat|=YACTIVE;
-    if(borderstat & YACTIVE){
-      y1=mousey;
-      if((y2-y1)<minh) y1=y2-minh;
-      if((y2-y1)>maxh) y1=y2-maxh;
-      y1=y2-((int)((y2-y1-bh)/hi))*hi-bh;
+  if(borderstat & TACTIVE) {
+    if((!(borderstat & YACTIVE)) && ((mousey < oy1)
+       || (mousey > (oy1 + ActiveWin->BorderWidth
+                     + settings.global_settings->TitleHeight))))
+      borderstat |= YACTIVE;
+    if(borderstat & YACTIVE) {
+      y1 = mousey;
+      if((y2 - y1) < minh) y1 = y2 - minh;
+      if((y2 - y1) > maxh) y1 = y2 - maxh;
+      y1 = y2 - ((int)((y2 - y1 - bh) / hi)) * hi - bh;
     }
   }
-  if(borderstat & BACTIVE){
-    if((!(borderstat & YACTIVE)) && ((mousey>oy2)||\
-      (mousey<oy2-ActiveWin->BorderWidth)))
-      borderstat|=YACTIVE;
-    if(borderstat & YACTIVE){
-      y2=mousey;
-      if((y2-y1)<minh) y2=y1+minh;
-      if((y2-y1)>maxh) y2=y1+maxh;
-      y2=y1+((int)((y2-y1-bh)/hi))*hi+bh;
+  if(borderstat & BACTIVE) {
+    if((!(borderstat & YACTIVE)) && ((mousey > oy2)
+       || (mousey < (oy2 - ActiveWin->BorderWidth))))
+      borderstat |= YACTIVE;
+    if(borderstat & YACTIVE) {
+      y2 = mousey;
+      if((y2 - y1) < minh) y2 = y1 + minh;
+      if((y2 - y1) > maxh) y2 = y1 + maxh;
+      y2 = y1 + ((int)((y2 - y1 - bh) / hi)) * hi + bh;
     }
   }
-  if(borderstat & LACTIVE){
-    if((!(borderstat & XACTIVE)) && ((mousex<ox1)||\
-      (mousex>ox1+ActiveWin->BorderWidth)))
-      borderstat|=XACTIVE;
-    if(borderstat & XACTIVE){
-      x1=mousex;
-      if((x2-x1)<minw) x1=x2-minw;
-      if((x2-x1)>maxw) x1=x2-maxw;
-      x1=x2-((int)((x2-x1-bw)/wi))*wi-bw;
+  if(borderstat & LACTIVE) {
+    if((!(borderstat & XACTIVE)) && ((mousex < ox1)
+       || (mousex > (ox1 + ActiveWin->BorderWidth))))
+      borderstat |= XACTIVE;
+    if(borderstat & XACTIVE) {
+      x1 = mousex;
+      if((x2 - x1) < minw) x1 = x2 - minw;
+      if((x2 - x1) > maxw) x1 = x2 - maxw;
+      x1 = x2 - ((int)((x2 - x1 - bw) / wi)) * wi - bw;
     }
   }
-  if(borderstat & RACTIVE){
-    if((!(borderstat & XACTIVE)) && ((mousex>ox2)||\
-      (mousex<ox2-ActiveWin->BorderWidth)))
-      borderstat|=XACTIVE;
-    if(borderstat & XACTIVE){
+  if(borderstat & RACTIVE) {
+    if((!(borderstat & XACTIVE)) && ((mousex > ox2)
+       ||(mousex < (ox2 - ActiveWin->BorderWidth))))
+      borderstat |= XACTIVE;
+    if(borderstat & XACTIVE) {
       x2=mousex;
-      if((x2-x1)<minw) x2=x1+minw;
-      if((x2-x1)>maxw) x2=x1+maxw;
-      x2=x1+((int)((x2-x1-bw)/wi))*wi+bw;
+      if((x2 - x1) < minw) x2 = x1 + minw;
+      if((x2 - x1) > maxw) x2 = x1 + maxw;
+      x2 = x1 + ((int)((x2 - x1 - bw) / wi)) * wi + bw;
     }
   }
-  if(borderstat!=oldstat){
+  if(borderstat != oldstat){
+    int pointerdir;
     oldstat = borderstat;
-    switch(borderstat&(RACTIVE|LACTIVE|TACTIVE|BACTIVE)){
+    switch(borderstat & (RACTIVE | LACTIVE | TACTIVE | BACTIVE)){
       case RACTIVE: 
-        XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_O],TimeStamp);
+        pointerdir = C_O;
         break;
-      case RACTIVE|TACTIVE:
-        XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_NO],TimeStamp);
+      case RACTIVE | TACTIVE:
+        pointerdir = C_NO;
         break;
       case TACTIVE:
-        XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_N],TimeStamp);
+        pointerdir = C_N;
         break;
-      case TACTIVE|LACTIVE:
-        XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_NW],TimeStamp);
+      case TACTIVE | LACTIVE:
+        pointerdir = C_NW;
         break;
       case LACTIVE:
-        XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_W],TimeStamp);
+        pointerdir = C_W;
         break;
-      case LACTIVE|BACTIVE:
-        XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_SW],TimeStamp);
+      case LACTIVE | BACTIVE:
+        pointerdir = C_SW;
         break;
       case BACTIVE:
-        XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_S],TimeStamp);
+        pointerdir = C_S;
         break;
-      case BACTIVE|RACTIVE:
-        XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_SO],TimeStamp);
+      case BACTIVE | RACTIVE:
+        pointerdir = C_SO;
         break;
       default:
-        XChangeActivePointerGrab(disp,PointerMotionMask|ButtonPressMask|\
-          ButtonReleaseMask,TheScreen.Mice[C_DEFAULT],TimeStamp);
+        pointerdir = C_DEFAULT;
         break;
     }
+    XChangeActivePointerGrab(disp, PointerMotionMask | ButtonPressMask
+                                   | ButtonReleaseMask,
+                             TheScreen.Mice[pointerdir], TimeStamp);
   }
-  SqueezeRubber(x1,y1,x2-x1,y2-y1);
+  SqueezeRubber(x1, y1, x2 - x1, y2 - y1);
 }
 
 void RiseIt()

@@ -48,6 +48,7 @@
 #include "ude-i18n.h"
 #include "wingroups.h"
 #include "windows.h"
+#include "settings.h"
 
 extern Display *disp;
 extern UDEScreen TheScreen;
@@ -82,8 +83,11 @@ void DrawWinBorder(UltimateContext *uc)
     uc->flags &= ~ACTIVE_BORDER;
   }
 
-  winbg = active ? TheScreen.ActiveBorder[TheScreen.desktop.ActiveWorkSpace]
-          : TheScreen.InactiveBorder[TheScreen.desktop.ActiveWorkSpace];
+  winbg = active
+          ? settings.workspace_settings
+	    [TheScreen.desktop.ActiveWorkSpace]->ActiveColor->pixel
+          : settings.workspace_settings
+            [TheScreen.desktop.ActiveWorkSpace]->InactiveColor->pixel;
   XSetWindowBackground(disp, uc->border, winbg);
   XClearWindow(disp, uc->border);
   if(uc->title.win != None) {
@@ -109,8 +113,9 @@ void ShapeFrame(UltimateContext *uc)
     if(shaped){
       uc->flags |= SHAPED;
       XShapeCombineShape(disp, uc->frame, ShapeBounding, uc->BorderWidth,
-                         uc->BorderWidth + TheScreen.TitleHeight, uc->win,
-                         ShapeBounding, ShapeSet);
+                         uc->BorderWidth
+                         + settings.global_settings->TitleHeight,
+                         uc->win, ShapeBounding, ShapeSet);
       if(uc->title.win != None)
         XShapeCombineShape(disp, uc->frame, ShapeBounding, uc->title.x,
                            uc->title.y , uc->title.win,
@@ -142,7 +147,7 @@ void ReparentWin(UltimateContext *uc, Window parent, int x, int y)
 void MoveResizeWin(UltimateContext *uc,int x,int y,int width,int height)
 {
   int ow,oh,ox,oy;
-  DBG(fprintf(TheScreen.errout, "MoveResizeWin (%d): (%d|%d) - %dx%d\n",
+  DBG(fprintf(TheScreen.errout, "MoveResizeWin (%d): (%d | %d) - %dx%d\n",
               uc->win, x, y, width, height);)
   ox=uc->Attr.x;
   oy=uc->Attr.y;
@@ -158,8 +163,9 @@ void MoveResizeWin(UltimateContext *uc,int x,int y,int width,int height)
     if(uc->frame != None) XMoveResizeWindow(disp,uc->frame,x,y,width,height);
     else XMoveWindow(disp, uc->win, x, y);
     if(uc->border!= None) XResizeWindow(disp,uc->border,width,height);
-    XResizeWindow(disp,uc->win,width-2*uc->BorderWidth,\
-        height-2*uc->BorderWidth-TheScreen.TitleHeight);
+    XResizeWindow(disp, uc->win, width - 2 * uc->BorderWidth,
+                  height - 2 * uc->BorderWidth
+                  - settings.global_settings->TitleHeight);
     if((uc->title.win != None ) 
        && ((uc->flags & SHAPED)
            || (InitS.BorderTitleFlags & BT_CENTER_TITLE))) {
@@ -180,17 +186,17 @@ void GravitizeWin(UltimateContext *uc,int *x, int *y, int mode)
     case SouthEastGravity:
     case SouthWestGravity:
       *y -= mode * (2 * (uc->BorderWidth - uc->OldBorderWidth)
-                                  + TheScreen.TitleHeight);
+            + settings.global_settings->TitleHeight);
       break;
     case CenterGravity:
     case EastGravity:
     case WestGravity:
       *y -= mode * (uc->BorderWidth - uc->OldBorderWidth 
-                                  + TheScreen.TitleHeight / 2);
+            + settings.global_settings->TitleHeight / 2);
       break;
     case StaticGravity:
       *y -= mode * (uc->BorderWidth - uc->OldBorderWidth
-                                  + TheScreen.TitleHeight);
+            + settings.global_settings->TitleHeight);
       break;
     default: break;
   }
@@ -224,9 +230,9 @@ void EnborderWin(UltimateContext *uc)
 
   if(uc->Attributes.override_redirect) return;
   if(uc->TransientFor) {
-    uc->BorderWidth=TheScreen.BorderWidth2;
+    uc->BorderWidth = settings.global_settings->TransientBorderWidth;
     uc->flags &= ~PLACEIT;
-  } else uc->BorderWidth=TheScreen.BorderWidth1;
+  } else uc->BorderWidth = settings.global_settings->TransientBorderWidth;
 
   if(uc->MotifWMHints){
     if((uc->MotifWMHints->flags & MWM_HINTS_FUNCTIONS)
@@ -261,25 +267,30 @@ DBG(fprintf(TheScreen.errout,"reparenting: %d\n",uc->win);)
   /*** create a frame to keep the window and its border ***/
   SAttr.override_redirect=True;
   SAttr.cursor=TheScreen.Mice[C_WINDOW];
-  uc->frame=XCreateWindow(disp,TheScreen.root,uc->Attributes.x,uc->Attributes.y,
-                                        uc->Attributes.width+2*uc->BorderWidth,\
-                  uc->Attributes.height+2*uc->BorderWidth+TheScreen.TitleHeight\
-                                  ,0,CopyFromParent,InputOutput,CopyFromParent,\
-                                            CWCursor|CWOverrideRedirect,&SAttr);
+  uc->frame=XCreateWindow(disp, TheScreen.root,
+                          uc->Attributes.x, uc->Attributes.y,
+                          uc->Attributes.width + 2 * uc->BorderWidth,
+                          uc->Attributes.height + 2 * uc->BorderWidth
+			  + settings.global_settings->TitleHeight,
+                          0, CopyFromParent, InputOutput, CopyFromParent,
+                          CWCursor | CWOverrideRedirect, &SAttr);
   if(XSaveContext(disp,uc->frame,UWMContext,(XPointer)uc))
     fprintf(TheScreen.errout,"UWM FATAL: Couldn't save Context\n");
   XSelectInput(disp,uc->frame,FRAME_EVENTS);
 
   /*** create an independent border-window ***/
   SAttr.override_redirect=True;
-  SAttr.background_pixel=TheScreen.InactiveBorder
-                         [TheScreen.desktop.ActiveWorkSpace];
+  SAttr.background_pixel = settings.workspace_settings
+                           [TheScreen.desktop.ActiveWorkSpace]->InactiveColor
+							      ->pixel;
   SAttr.cursor=TheScreen.Mice[C_BORDER];
-  uc->border=XCreateWindow(disp,uc->frame,0,0,uc->Attributes.width+\
-                           2*uc->BorderWidth,uc->Attributes.height+\
-                           2*uc->BorderWidth+TheScreen.TitleHeight,\
-                       0,CopyFromParent,InputOutput,CopyFromParent,\
-                    CWCursor|CWOverrideRedirect|CWBackPixel,&SAttr);
+  uc->border = XCreateWindow(disp, uc->frame, 0, 0,
+                             uc->Attributes.width + 2 * uc->BorderWidth,
+			     uc->Attributes.height + 2 * uc->BorderWidth
+			     + settings.global_settings->TitleHeight, 0,
+			     CopyFromParent, InputOutput, CopyFromParent,
+                             CWCursor | CWOverrideRedirect | CWBackPixel,
+			     &SAttr);
   if(XSaveContext(disp,uc->border,UWMContext,(XPointer)uc))
     fprintf(TheScreen.errout,"UWM FATAL: Couldn't save Context\n");
   XSelectInput(disp,uc->border,BORDER_EVENTS);
@@ -289,11 +300,12 @@ DBG(fprintf(TheScreen.errout,"reparenting: %d\n",uc->win);)
   if((InitS.BorderTitleFlags & (BT_INACTIVE_TITLE|BT_ACTIVE_TITLE)) && HasTitle)
   {
     SAttr.override_redirect=True;
-    SAttr.background_pixel=TheScreen.InactiveBorder
-                           [TheScreen.desktop.ActiveWorkSpace];
+    SAttr.background_pixel = settings.workspace_settings
+                           [TheScreen.desktop.ActiveWorkSpace]->InactiveColor
+							      ->pixel;
     SAttr.cursor=TheScreen.Mice[C_BORDER];
-    a = (uc->BorderWidth-TheScreen.FrameBevelWidth-1) / 2
-        + TheScreen.FrameBevelWidth;
+    a = (uc->BorderWidth - settings.global_settings->FrameBevelWidth - 1) / 2
+        + settings.global_settings->FrameBevelWidth;
     uc->title.y = uc->title.x = a;
     uc->title.win = XCreateWindow(disp, uc->frame, uc->title.x, uc->title.y,
                  1, 1, 0, CopyFromParent, InputOutput, CopyFromParent,
@@ -308,7 +320,8 @@ DBG(fprintf(TheScreen.errout,"reparenting: %d\n",uc->win);)
   XAddToSaveSet(disp,uc->win);
   
   ReparentWin(uc, uc->frame, uc->BorderWidth - uc->Attributes.border_width,
-              uc->BorderWidth + TheScreen.TitleHeight - uc->Attributes.border_width);
+              uc->BorderWidth + settings.global_settings->TitleHeight
+	      - uc->Attributes.border_width);
 
   UpdateUWMContext(uc);
   SendConfigureEvent(uc);

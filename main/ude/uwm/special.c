@@ -58,6 +58,7 @@
 #include "resize.h"
 #include "ude-desktop.h"
 #include "urm.h"
+#include "settings.h"
 
 extern UDEScreen TheScreen;
 extern Display *disp;
@@ -142,19 +143,21 @@ void BorderButton(char a,UltimateContext *uc,int x,int y,int x_root,int y_root)
 void SendConfigureEvent(UltimateContext *uc)
 {
   XEvent ToClient;                  
-  ToClient.type=ConfigureNotify;
-  ToClient.xconfigure.display=disp;
-  ToClient.xconfigure.event=uc->win;
-  ToClient.xconfigure.window=uc->win;
-  ToClient.xconfigure.x=uc->Attr.x+uc->BorderWidth-uc->Attributes.border_width;
-  ToClient.xconfigure.y=uc->Attr.y+uc->BorderWidth+TheScreen.TitleHeight-\
-                                              uc->Attributes.border_width;
-  ToClient.xconfigure.width=uc->Attributes.width;
-  ToClient.xconfigure.height=uc->Attributes.height;
-  ToClient.xconfigure.border_width=uc->Attributes.border_width;
-  ToClient.xconfigure.above=uc->frame;
-  ToClient.xconfigure.override_redirect=False;
-  XSendEvent(disp,uc->win,False,StructureNotifyMask,&ToClient);
+  ToClient.type = ConfigureNotify;
+  ToClient.xconfigure.display = disp;
+  ToClient.xconfigure.event = uc->win;
+  ToClient.xconfigure.window = uc->win;
+  ToClient.xconfigure.x = uc->Attr.x + uc->BorderWidth
+                          - uc->Attributes.border_width;
+  ToClient.xconfigure.y = uc->Attr.y + uc->BorderWidth
+                          + settings.global_settings->TitleHeight
+                          - uc->Attributes.border_width;
+  ToClient.xconfigure.width = uc->Attributes.width;
+  ToClient.xconfigure.height = uc->Attributes.height;
+  ToClient.xconfigure.border_width = uc->Attributes.border_width;
+  ToClient.xconfigure.above = uc->frame;
+  ToClient.xconfigure.override_redirect = False;
+  XSendEvent(disp, uc->win, False, StructureNotifyMask, &ToClient);
 }
 
 /* needs to be called after each writing access to TheScreen.desktop */
@@ -209,46 +212,48 @@ FILE *MyOpen(char *name, char *ppopts)
   int files[2];
   pid_t pid;
   FILE *r;
-  char temp[256];
+  char *temp = NULL;
   struct stat stats;
-
-  sprintf(temp,"%s/.ude/config/%s",TheScreen.Home,name);
+#define str3(T, A, B, C) if(T) free(T); T = MyCalloc(1 + strlen(A) + strlen(B) + strlen(C), sizeof(char)); sprintf(T, "%s%s%s", A, B, C)
+  str3(temp, TheScreen.Home, "/.ude/config/", name);
 
   if(stat(temp,&stats)){
-    sprintf(temp,"%sconfig/%s",TheScreen.udedir,name);
+    str3(temp, TheScreen.udedir, "config/", name);
     if(stat(temp,&stats)) {
-      sprintf(temp,"%s",name);
+      str3(temp, name, "", "");
       if(stat(temp,&stats)){
-        fprintf(TheScreen.errout,"UWM: file not found: %s.\n",name);
+        fprintf(TheScreen.errout, "UWM: file not found: %s.\n", name);
         return(NULL);
       }
     }
   }
+#undef str3
 
-  if(TheScreen.cppcall[0] == '\0') return(fopen(temp,"r"));
+  if(!TheScreen.cppcall) return(fopen(temp, "r"));
 
   pipe(files);
 
-  if(!(pid=fork())) {     /* Child Process */
+  if(!(pid = fork())) {     /* Child Process */
     char *temp2;
     close(files[0]);
     fclose(stdout);
-    if(STDOUT_FILENO != fcntl(files[1],F_DUPFD,STDOUT_FILENO)) exit(-1);
+    if(STDOUT_FILENO != fcntl(files[1], F_DUPFD, STDOUT_FILENO)) exit(-1);
     close(files[1]);
     if(-1==fcntl(STDOUT_FILENO,F_SETFD,0)) exit(-1);
 
     if(!(temp2 = malloc(sizeof(char) * (strlen(TheScreen.cppcall) 
                                         + strlen(ppopts) + strlen(temp) + 10))))
       exit(-1);
-    sprintf(temp2,"%s %s - < %s",TheScreen.cppcall,ppopts,temp);
+    sprintf(temp2,"%s %s - < %s", TheScreen.cppcall, ppopts, temp);
 
     execl("/bin/sh","/bin/sh","-c",temp2,NULL);
     fprintf(TheScreen.errout,"UWM: couldn't start /bin/sh\n");
     exit(-1);
   }
+  free(temp);
 
   close(files[1]);
-  if(!(r=fdopen(files[0],"r"))) {
+  if(!(r=fdopen(files[0], "r"))) {
     close(files[0]);
     return(NULL);
   }
@@ -267,34 +272,39 @@ int CheckCPP()
 {
   int files[2], ofiles[2], ret, ok;
   pid_t pid;
-  FILE *r,*w;
-  char temp[512], *cppenv;
+  FILE *r, *w;
+  char *cppenv;
+  char buffer[512];
 
-  if(cppenv = getenv("CPP")) sprintf(TheScreen.cppcall,"%.255s",cppenv);
-  else sprintf(TheScreen.cppcall,"%.255s",CPP_CALL);
+  if(cppenv = getenv("CPP")) TheScreen.cppcall = cppenv;
+  else TheScreen.cppcall = CPP_CALL;
 
   recheck:  /* ugly but undangerous in this case. */
 
-  sprintf(temp,"%.500s -",TheScreen.cppcall);
   
   if(pipe(files)) return(0);
   if(pipe(ofiles)) return(0);
 
   if(!(pid=fork())) {     /* Child Process */
+    char *temp;
+
+    temp = MyCalloc(strlen(TheScreen.cppcall) + 3, sizeof(char));
+    sprintf(temp, "%.500s -", TheScreen.cppcall);
+
     close(files[0]);
     close(ofiles[1]);
 
     fclose(stdout);
-    if(STDOUT_FILENO != fcntl(files[1],F_DUPFD,STDOUT_FILENO)) exit(-1);
+    if(STDOUT_FILENO != fcntl(files[1], F_DUPFD, STDOUT_FILENO)) exit(-1);
     close(files[1]);
-    if(-1==fcntl(STDOUT_FILENO,F_SETFD,0)) exit(-1);
+    if(-1==fcntl(STDOUT_FILENO, F_SETFD, 0)) exit(-1);
 
     fclose(stdin);
-    if(STDIN_FILENO != fcntl(ofiles[0],F_DUPFD,STDIN_FILENO)) exit(-1);
+    if(STDIN_FILENO != fcntl(ofiles[0], F_DUPFD, STDIN_FILENO)) exit(-1);
     close(ofiles[0]);
-    if(-1==fcntl(STDOUT_FILENO,F_SETFD,0)) exit(-1);
+    if(-1 == fcntl(STDOUT_FILENO, F_SETFD, 0)) exit(-1);
 
-    execl("/bin/sh","/bin/sh","-c",temp,NULL);
+    execl("/bin/sh", "/bin/sh", "-c", temp, NULL);
     fprintf(TheScreen.errout,"UWM: couldn't start application: /bin/sh\n");
     exit(-1);
   }
@@ -319,20 +329,19 @@ int CheckCPP()
   fprintf(w,"preprocessor test\n");
   fclose(w);
   ok=-1;
-  while(fgets(temp,512,r)) if(strstr(temp,"preprocessor test")) ok=0;
-  waitpid(pid,&ret,0);
+  while(fgets(buffer, 512, r)) if(strstr(buffer, "preprocessor test")) ok = 0;
+  waitpid(pid, &ret, 0);
   fclose(r);
   
-  if(ret||ok) {
-/***/printf("ret: %d, ok: %d\n",ret,ok);
-    if(cppenv){
+  if(ret || ok) {
+    if(cppenv) {
       cppenv = NULL;
-      sprintf(TheScreen.cppcall,"%.255s",CPP_CALL);
+      TheScreen.cppcall = CPP_CALL;
       goto recheck;
     }
     fprintf(TheScreen.errout,
             "UWM: looks like you don't have a working C preprocessor.\n");
-    TheScreen.cppcall[0]='\0';
+    TheScreen.cppcall = NULL;
     return(0);
   }
   return(-1);

@@ -45,6 +45,7 @@
 #include "wingroups.h"
 #include "widgets.h"
 #include "special.h"
+#include "settings.h"
 
 extern UDEScreen TheScreen;
 extern Display *disp;
@@ -89,25 +90,29 @@ void Updatera(UltimateContext *uc)
   } else uc->ra.wi=uc->ra.hi=1;
 
   if(sizehints.flags & PBaseSize) {
-    uc->ra.bw=sizehints.base_width+2*uc->BorderWidth;
-    uc->ra.bh=sizehints.base_height+2*uc->BorderWidth+TheScreen.TitleHeight;
+    uc->ra.bw = sizehints.base_width + 2 * uc->BorderWidth;
+    uc->ra.bh = sizehints.base_height + 2 * uc->BorderWidth
+                + settings.global_settings->TitleHeight;
   } else if(sizehints.flags & PMinSize) {
-    uc->ra.bw=sizehints.min_width+2*uc->BorderWidth;
-    uc->ra.bh=sizehints.min_height+2*uc->BorderWidth+TheScreen.TitleHeight;
+    uc->ra.bw = sizehints.min_width + 2 * uc->BorderWidth;
+    uc->ra.bh = sizehints.min_height + 2 * uc->BorderWidth
+                + settings.global_settings->TitleHeight;
   } else {
-    uc->ra.bw= 1 + 2*uc->BorderWidth;
-    uc->ra.bh= 1 + 2*uc->BorderWidth + TheScreen.TitleHeight;
+    uc->ra.bw = 1 + 2 * uc->BorderWidth;
+    uc->ra.bh = 1 + 2 * uc->BorderWidth + settings.global_settings->TitleHeight;
   }
   if(sizehints.flags & PMinSize) {
-    uc->ra.minw=sizehints.min_width+2*uc->BorderWidth;
-    uc->ra.minh=sizehints.min_height+2*uc->BorderWidth+TheScreen.TitleHeight;
+    uc->ra.minw = sizehints.min_width + 2 * uc->BorderWidth;
+    uc->ra.minh = sizehints.min_height + 2 * uc->BorderWidth
+                  + settings.global_settings->TitleHeight;
   } else {
     uc->ra.minw=uc->ra.bw;
     uc->ra.minh=uc->ra.bh;
   }
   if(sizehints.flags &PMaxSize) {
-    uc->ra.maxw=sizehints.max_width+2*uc->BorderWidth;
-    uc->ra.maxh=sizehints.max_height+2*uc->BorderWidth+TheScreen.TitleHeight;
+    uc->ra.maxw = sizehints.max_width + 2 * uc->BorderWidth;
+    uc->ra.maxh = sizehints.max_height + 2 * uc->BorderWidth
+                  + settings.global_settings->TitleHeight;
   } else {
     uc->ra.maxw=TheScreen.width+1;
     uc->ra.maxh=TheScreen.height+1;
@@ -132,19 +137,23 @@ void UpdateName(UltimateContext *uc)
       width = uc->title.width;
       height = uc->title.height;
       XResizeWindow(disp, uc->title.win,
-		    uc->title.width = (XTextWidth(TheScreen.TitleFont,
+		    uc->title.width = (XTextWidth(settings.global_settings
+							  ->TitleFont.xfs,
                     uc->title.name, strlen(uc->title.name))
 		    + (((InitS.BorderTitleFlags & BT_CENTER_TITLE) 
 		        || (uc->flags & SHAPED)) ? 9 : 6)),
-                    uc->title.height = (TheScreen.TitleFont->ascent
-                    + TheScreen.TitleFont->descent 
-		    + ((uc->flags & SHAPED) ? 6 : 3)));
+                    uc->title.height = (settings.global_settings->TitleFont.xfs
+								->ascent
+					+ settings.global_settings->TitleFont
+								  .xfs->descent
+					+ ((uc->flags & SHAPED) ? 6 : 3)));
       if((InitS.BorderTitleFlags & BT_CENTER_TITLE) || (uc->flags & SHAPED))
         XMoveWindow(disp, uc->title.win,
 	            uc->title.x = ((uc->Attr.width - uc->title.width) / 2),
                     uc->title.y = ((uc->flags & SHAPED) ? 0
-		    : (uc->BorderWidth - TheScreen.FrameBevelWidth - 1) / 2
-                    + TheScreen.FrameBevelWidth));
+		                   : (uc->BorderWidth
+		            - settings.global_settings->FrameBevelWidth - 1) / 2
+                                  + settings.global_settings->FrameBevelWidth));
       if((!((uc->title.width == width) && (uc->title.height == height)
           && (uc->title.x == x) && (uc->title.y == y))) && (uc->flags & SHAPED))
 	 ShapeFrame(uc);

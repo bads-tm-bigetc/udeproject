@@ -55,6 +55,7 @@
 #include "workspaces.h"
 #include "widgets.h"
 #include "applications.h"
+#include "settings.h"
 
 #include "MwmUtil.h"
 
@@ -382,7 +383,8 @@ void HandleConfigureRequest(XEvent *event)
         XConfigureWindow(disp, uc->win, event->xconfigurerequest.value_mask
                          & (CWWidth | CWHeight), &xwc);
         xwc.width += 2 * uc->BorderWidth;
-        xwc.height += TheScreen.TitleHeight + 2 * uc->BorderWidth;
+        xwc.height += settings.global_settings->TitleHeight
+	              + 2 * uc->BorderWidth;
         XConfigureWindow(disp, uc->border, event->xconfigurerequest.value_mask
                          & (CWWidth | CWHeight), &xwc);
         if(event->xconfigurerequest.value_mask & (CWX | CWY))
