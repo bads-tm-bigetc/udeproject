@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ude 0.2.6-beta\n"
-"POT-Creation-Date: 2000-12-04 00:57-0700\n"
+"POT-Creation-Date: 2000-12-08 20:13-0700\n"
 "PO-Revision-Date: 1999-11-23 18:03+0200\n"
 "Last-Translator: Fatih Demir <kabalak@gmx.net>\n"
 "Language-Team: Fatih Demir <kabalak@gmx.net>\n"

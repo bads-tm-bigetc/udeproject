@@ -158,7 +158,7 @@ void MoveResizeWin(UltimateContext *uc,int x,int y,int width,int height)
     }
   }
   UpdateUWMContext(uc);
-  if(((x!=ox)||(y!=ox))&&(((width==0)||(width==ow))&&\
+  if(((x!=ox)||(y!=oy))&&(((width==0)||(width==ow))&&\
                          ((height==0)||(height==oh))))
     SendConfigureEvent(uc);
 /***************************************************************************/

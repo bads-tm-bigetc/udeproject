@@ -1,3 +1,8 @@
+2001-01-11  Christian Ruppert <arc@gmx.li>
+
+	* windows.c: fixed a bug in MoveResizeWin(), artificial Configure
+          events are now correctly sent when they need to be.
+
 last change until 2000-12-05 Christian Ruppert <arc@gmx.li>
 
 	* massive changes to window management kernel, too complex and much to

@@ -131,8 +131,7 @@ void MoveButtons(int a,XEvent *event)
       if(RubberMove) {
         int dummy,x,y;
         StopRubber(&x,&y,&dummy,&dummy);
-        MoveResizeWin(ActiveWin,x,\
-                            y,0,0);
+        MoveResizeWin(ActiveWin, x, y, 0, 0);
         if(Rise){
           if(Riseit) RaiseWin(ActiveWin);
           else LowerWin(ActiveWin);
