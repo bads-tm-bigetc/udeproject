@@ -1,3 +1,18 @@
+2003-05-17  Christian Ruppert <arc@users.sf.net>
+	* po/Makevars: added file
+	* autogen.sh: changed the order of gettextize and aclocal and added
+          new args for new gettext versions (don't know at which version they
+          changed the behavior, it's changed now and should work with
+          gettext 0.11.5 and later)
+        * configure.in: removed intl/Makefile po/Makefile.in and po/Makefile
+          from AC_OUTPUT because gettextize now adds these files regardless
+          wether they are there or not which causes problems with
+          automake/autoconf.
+        * acconfig.h: deleted because it is no longer needed with new versoins
+          of gnu autoconf/automake
+        * configure.in: changed AC_DEFINEs and AC_DEFINE_UNQUOTEDs to
+          compensate for now missing acconfig.h
+
 2003-04-17  Christian Ruppert <arc@users.sf.net>
         * uwm/handlers.c (HandleButtonPress): replaced XQueryPointer by
           coordinate calculation from event structure.
