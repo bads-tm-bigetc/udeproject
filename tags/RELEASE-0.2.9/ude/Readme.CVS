@@ -1,0 +1,12 @@
+this is the ude cvs tree.
+
+to create a compilable source tree out of the repository files run autogen.sh.
+
+please note that this is a snapshot right out of uwms current development work
+and might be extremely unstable, however please avoid commiting evidently
+unstable code or even untested code.
+
+for info on how to use cvs please consult the cvs texinfo pages and the
+sourceforge cvs info page at
+http://sourceforge.net/docman/display_doc.php?docid=763&group_id=1.
+
