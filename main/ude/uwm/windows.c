@@ -583,8 +583,8 @@ void DeiconifyMenu(int x, int y)
   while(ucn = NodeNext(TheScreen.UltimateList,ucn)){
     UltimateContext *uc;
     uc=ucn->data;
-    if(((IsNormal(uc)) || (IsIconic(uc)))
-       && (uc->title.name || uc->title.iconname)){
+    if((IsNormal(uc)) || (IsIconic(uc))) {
+/*       && (uc->title.name || uc->title.iconname)){ */
       AppendMenuItem((uc->WorkSpace == -1) ? sticky : wspaces[uc->WorkSpace],
                      (IsIconic(uc) && uc->title.iconname) ? uc->title.iconname
 		     : (uc->title.name ? uc->title.name 

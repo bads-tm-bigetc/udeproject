@@ -22,6 +22,10 @@ msgstr "Fenster Menü"
 msgid "Sticky Windows"
 msgstr "Angepinnte Fenster"
 
+#: uwm/windows.c:592
+msgid ">nameless window<"
+msgstr ">Fenster ohne Namen<"
+
 #: uwm/winmenumenu.c:76
 msgid "Sticky window"
 msgstr "Fenster angepinnt"
