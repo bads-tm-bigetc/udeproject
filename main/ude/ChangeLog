@@ -12,6 +12,7 @@
 	* configure.in: changed version number to 2.8 and added
 	  config/StartScript to output file list.
 	* doc/Makefile.am: added the README file to installed documentation.
+	* autogen.sh: added link creation for README file to doc directory.
 	* config/StartScript moved to config/StartScript.in: now using autoconf
 	  macro for less to find installed README file.
 	* uwm/init.c: uwm now sets UDEdir environment on system installation

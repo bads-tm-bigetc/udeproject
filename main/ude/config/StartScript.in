@@ -15,4 +15,4 @@
 
 # this is very simple and will only display the Readme-file.
 
-xterm -bg black -fg yellow -fn 7x14 -e less @prefix@/doc/README &
+xterm -bg black -fg yellow -fn 7x14 -e less @prefix@/doc/@PACKAGE@-@VERSION@/README &
