@@ -1,3 +1,7 @@
+2004-09-09  Christian Ruppert <arc@users.sf.net>
+	* uwm/handlers.c(InitHandlers): uwm now stops at initialisation in
+	  case no shapes extension is found.
+
 2004-09-02  Christian Ruppert <arc@users.sf.net>
 	* uwm/init.c, uwm/uwm.c: moved TheScreen.errout initialisation code
 	  from InitUWM to an earlier point in main.

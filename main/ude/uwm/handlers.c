@@ -607,7 +607,9 @@ void InitHandlers()
   DefaultHandle[FocusIn] = HandleFocusIn;
   DefaultHandle[FocusOut] = HandleFocusOut;
 
-  XShapeQueryExtension(disp,&ShapeEvent,&i);
+  if(!XShapeQueryExtension(disp,&ShapeEvent,&i))
+    SeeYa(-1,
+          "Your X-server doesn't support the Shapes extension which is required for uwm");
   ShapeEvent += ShapeNotify;
 
   Handle = DefaultHandle;
