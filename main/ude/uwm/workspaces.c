@@ -100,12 +100,12 @@ void SetWSBackground()
 		       XInternAtom (disp, "ESETROOT_PMAP_ID", 0), XA_PIXMAP,
 		       32, PropModeReplace,
 		       (unsigned char *)
-			ActiveWSSettings->Wallpaper->image, 1);
+			&(ActiveWSSettings->Wallpaper->image), 1);
       XChangeProperty (disp, TheScreen.root,
 		       XInternAtom (disp, "_XROOTPMAP_ID", 0), XA_PIXMAP,
 		       32, PropModeReplace,
 		       (unsigned char *)
-			ActiveWSSettings->Wallpaper->image, 1);
+			&(ActiveWSSettings->Wallpaper->image), 1);
       XSetWindowBackgroundPixmap(disp, TheScreen.root,
 				 ActiveWSSettings->Wallpaper->image);
       back_changed= 1;

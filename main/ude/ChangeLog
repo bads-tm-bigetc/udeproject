@@ -1,3 +1,11 @@
+2004-08-09  Christian Ruppert <arc@users.sf.net>
+	* uwm/init.c: removed exit() statements that were introduced for
+	  debugging of the config file parsing system.
+	* uwm/workspaces.c(SetWSBackground): fixed a small bug in the code
+	  setting the background properties.
+	* uwm/init.c(InitUWM, ICCCM_WM_Init): added selection of root window
+	  events and detection if another WM that might be running.
+
 2004-08-08  Christian Ruppert <arc@users.sf.net>
 	* uwm/configconvertors.c(uopt_str_flt and uopt_str_int): added
 	  free(in->string) to close memory holes.

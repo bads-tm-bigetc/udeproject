@@ -253,13 +253,72 @@ void FreeColor(XColor *color)
     XFreeColors(disp, TheScreen.colormap, &(color->pixel), 1, 0);
 }
 
+void ICCCM_WM_Init()
+{
+  char WM_Sx[64];
+  XEvent event;
+  Window otherwmswin;
+
+  sprintf(WM_Sx,"WM_S%d",TheScreen.Screen);
+  TheScreen.WM_Sx = XInternAtom(disp,WM_Sx,False);
+
+  if(None != (otherwmswin = XGetSelectionOwner(disp, TheScreen.WM_Sx))) {
+    printf("UWM: another icccm compliant window manager seems to be running\n");
+    if(TheScreen.icccmFlags & (ICF_TRY_HARD | ICF_HOSTILE)) {
+      int a, b;
+
+      printf("UWM: --TryHard selected, overtaking control "); fflush(stdout);
+      XSetSelectionOwner(disp, TheScreen.WM_Sx, TheScreen.inputwin,
+                         TheScreen.start_tstamp);
+      XSelectInput(disp, otherwmswin, StructureNotifyMask);
+      for(a=0;a<10;a++){
+        printf("."); fflush(stdout);
+        if((b=XCheckWindowEvent(disp, otherwmswin, StructureNotifyMask, &event))
+	   && (event.type == DestroyNotify)
+	   && (event.xdestroywindow.window == otherwmswin)) break;
+        if(a < 9) sleep(1);
+      }
+      printf("\n");
+      if(b == False) {
+        printf("UWM: Other WM still active,\n");
+        if(TheScreen.icccmFlags & ICF_HOSTILE) {
+          printf("     getting hostile.\n");
+	  XKillClient(disp, otherwmswin);
+        } else {
+          SeeYa(1,"start uwm with --Hostile option to try harder to replace the wm\n\
+    ATTENTION: replacing another running wm might terminate your X-session,\n\
+               only use this option if you really know what you are doing!\n\
+UWM ");
+	}
+      }
+    } else {
+     SeeYa(1,"start uwm with --TryHard option to try to replace the wm\n\
+    ATTENTION: replacing another running wm might terminate your X-session,\n\
+               only use this option if you really know what you are doing!\n\
+UWM ");
+    }
+  }
+  XSetSelectionOwner(disp, TheScreen.WM_Sx, TheScreen.inputwin,
+                     TheScreen.start_tstamp);
+  if(TheScreen.inputwin != XGetSelectionOwner(disp, TheScreen.WM_Sx))
+    SeeYa(1,"Couldn't Acquire WM_Sx selection");
+  event.type = ClientMessage;
+  event.xclient.format = 32;
+  event.xclient.window = TheScreen.root;
+  event.xclient.message_type = XA_RESOURCE_MANAGER;
+  event.xclient.data.l[0] = TheScreen.start_tstamp;
+  event.xclient.data.l[1] = TheScreen.WM_Sx;
+  event.xclient.data.l[2] = TheScreen.inputwin;
+  event.xclient.data.l[3] = event.xclient.data.l[4] = 0;
+  XSendEvent(disp, TheScreen.root, False, StructureNotifyMask, &event);
+}
+
 void InitUWM()
 {
   char *env;
   XGCValues xgcv;
   XSetWindowAttributes xswa;
   XEvent event;
-  Window otherwmswin;
 
 #ifdef DEVEL
   TheScreen.errout = fopen("/dev/tty10","w");
@@ -305,6 +364,8 @@ void InitUWM()
   if(TheScreen.root == None)
     SeeYa(1, "No proper root Window available");
 
+  XSetIOErrorHandler((XIOErrorHandler)ArmeageddonHandler);
+
   xswa.override_redirect = True;
   TheScreen.inputwin = XCreateWindow(disp, TheScreen.root, -2, -2, 1, 1, 0, 0,
                                      InputOnly, CopyFromParent,
@@ -313,12 +374,19 @@ void InitUWM()
     SeeYa(1,"Couldn't initialize input and communication window");
   XMapWindow(disp, TheScreen.inputwin);
 
-/*** The following WM_Sx stuff is requested by icccm 2.0 ***/
   XSelectInput(disp, TheScreen.inputwin, PropertyChangeMask);
   XStoreName(disp, TheScreen.inputwin, ""); /* obtain a time stamp */
   XWindowEvent(disp, TheScreen.inputwin, PropertyChangeMask, &event);
   TheScreen.now = TheScreen.start_tstamp = event.xproperty.time;
-  XSelectInput(disp, TheScreen.inputwin, INPUTWIN_EVENTS); /* set the real event mask */
+  XSelectInput(disp, TheScreen.inputwin, INPUTWIN_EVENTS);
+    /* set the real event mask */
+
+  ICCCM_WM_Init();
+
+  XSetErrorHandler((XErrorHandler)RedirectErrorHandler);
+  XSelectInput(disp, TheScreen.root, HANDLED_EVENTS);
+  XSync(disp, False); /* in case we get thrown out: let RedirectErrorHandler */
+	       /* process this before we switch to the default error handler */
 
   XSetErrorHandler((XErrorHandler)UWMErrorHandler);
     /* The real UWM-Error-handler */
@@ -461,10 +529,6 @@ void InitUWM()
   BroadcastWorkSpacesInfo();
   UpdateDesktop();
 
-/***/XSync(disp,False);
-/***/sleep(1);
-/***/exit(0);
-
   /* Set the background for the current desktop. */
   SetWSBackground();
 }
@@ -582,6 +646,5 @@ int ReadConfigFile()
 #undef derefptr
 #undef deref
   }
-exit(0);
 }
 
