@@ -460,3 +460,10 @@ XTerm.SimpleMenu*background: @BACKGROUND@
 XTerm.SimpleMenu*foreground: @STANDARDTEXT@
 XTerm.SimpleMenu*font: @STANDARDFONT@
 
+! rxvt
+rxvt.scrollColor: @BACKGROUND@
+rxvt.troughColor: @BACKGROUND@
+rxvt.font: @TEXTFONT@
+rxvt.background: @TEXTBGR@
+rxvt.foreground: @TEXTCOLOR@
+

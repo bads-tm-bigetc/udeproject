@@ -1,3 +1,7 @@
+2001-02-27  Christian Ruppert <arc@gmx.li>
+
+	* config/urdb: added resources for rxvt
+
 2001-02-24  Christian Ruppert <arc@gmx.li>
 
 	* uwm/menu.c(DrawMenu): split into MapMenu and DrawMenuFrame
