@@ -331,17 +331,21 @@ DBG(fprintf(TheScreen.errout,"reparenting: %d\n",uc->win);)
   Updatera(uc);
   UpdateName(uc);
 
-  if(TheScreen.MaxWinWidth||TheScreen.MaxWinHeight){
-    w=TheScreen.MaxWinWidth?((TheScreen.MaxWinWidth<uc->Attr.width)?\
-                TheScreen.MaxWinWidth:uc->Attr.width):uc->Attr.width;
-    w=(w-2*uc->BorderWidth)<uc->ra.minw?uc->ra.minw:w;
-    w=((int)((w-uc->ra.bw)/uc->ra.wi))*uc->ra.wi+uc->ra.bw;
-    h=TheScreen.MaxWinHeight?((TheScreen.MaxWinHeight<uc->Attr.height)?\
-                TheScreen.MaxWinHeight:uc->Attr.height):uc->Attr.height;
-    h=(h-2*uc->BorderWidth-uc->title.height)<uc->ra.minh?uc->ra.minh:h;
-    h=((int)((h-uc->ra.bh)/uc->ra.hi))*uc->ra.hi+uc->ra.bh;
-    if((uc->Attr.width!=w)||(uc->Attr.height!=h))
-      MoveResizeWin(uc,uc->Attr.x,uc->Attr.y,w,h);
+  if(settings.global_settings->MaxWinWidth
+     || settings.global_settings->MaxWinHeight) {
+    w = (settings.global_settings->MaxWinWidth 
+         && (settings.global_settings->MaxWinWidth < uc->Attr.width))
+        ? settings.global_settings->MaxWinWidth : uc->Attr.width;
+    w = (w - 2 * uc->BorderWidth) < uc->ra.minw ? uc->ra.minw : w;
+    w = ((int)((w-uc->ra.bw) / uc->ra.wi)) * uc->ra.wi + uc->ra.bw;
+    h = (settings.global_settings->MaxWinHeight
+         && (settings.global_settings->MaxWinHeight < uc->Attr.height))
+        ? settings.global_settings->MaxWinHeight : uc->Attr.height;
+    h = ((h - 2 * uc->BorderWidth - uc->title.height) < uc->ra.minh)
+        ? uc->ra.minh : h;
+    h = ((int)((h - uc->ra.bh) / uc->ra.hi)) * uc->ra.hi + uc->ra.bh;
+    if((uc->Attr.width != w) || (uc->Attr.height != h))
+      MoveResizeWin(uc, uc->Attr.x, uc->Attr.y, w, h);
   }
 }
 

@@ -1672,7 +1672,7 @@ UWM ");
   xgcv.foreground=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]\
                                              [UDE_StandardText].pixel;
   xgcv.fill_style=FillSolid;
-  xgcv.font=TheScreen.MenuFont->fid;
+  xgcv.font = settings.global_settings->Font.xfs->fid;
   TheScreen.MenuTextGC=XCreateGC(disp,TheScreen.root, GCFunction
                                  | GCForeground | GCFillStyle | GCFont, &xgcv);
 

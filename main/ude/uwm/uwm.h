@@ -93,6 +93,8 @@ typedef struct {
 
   Cursor Mice[CURSORS];
   GC rubbercontext, blackcontext;
+  GC MenuTextGC, MenuLightGC, MenuShadowGC, MenuBackGC;
+
   NodeList *UltimateList;        /* contains all ultimized windows,
                                     data of type UltimateContext * */
   XContext MenuContext, MenuFrameContext;
@@ -120,7 +122,6 @@ typedef struct {
   Menu *AppsMenu;
   Menu *UWMMenu;
   WSName *WorkSpace;
-  int MaxWinWidth, MaxWinHeight;
   /* if SetBackground[ws#] is set to 0 the background of that ws is not
      changed unless BackPixmap[ws#] is not NULL */
   unsigned char *SetBackground;
@@ -128,8 +129,6 @@ typedef struct {
   char **BackCommand;
   Pixmap *BackPixmap;
   XpmAttributes *BackPixmapAttributes;
-  XFontStruct *MenuFont;
-  GC MenuTextGC, MenuLightGC, MenuShadowGC, MenuBackGC;
   UDEColors *Colors;
   UDEDesktop desktop;
 } UDEScreen;

@@ -40,6 +40,7 @@
 #include "nodes.h"
 #include "widgets.h"
 #include "special.h"
+#include "settings.h"
 
 #define MENUBORDERW InitS.MenuBorderWidth
 #define MENUXOFS InitS.MenuXOffset
@@ -110,7 +111,7 @@ Menu *MenuCreate(char *name)
   }
   if(!(menu->Items=NodeListCreate()))
     SeeYa(1,"FATAL: out of memory!");
-  menu->font=TheScreen.MenuFont;
+  menu->font = settings.global_settings->Font.xfs;
   menu->width = (menu->name
                  ? XTextWidth(menu->font, menu->name, strlen(menu->name))
 		 : 0) + 4 * MENUBORDERW + 2*MENUXOFS;

@@ -1,4 +1,6 @@
 2003-08-29  Christian Ruppert <arc@users.sf.net>
+	* uwm/uwm.h, windows.c, uwm/init.c, uwm/menu.c: some more stiching in
+	  of the new config system.
 	* uwm/confparse.l, uwm/confparse.lex.l: renamed file from
 	  uwm/confparse.l to uwm/confparse.lex.l for automake-compatible built.
 	* uwm/confparse.y, uwm/confparse.tab.y: renamed file from
