@@ -182,7 +182,7 @@ void PrepareIcons()
     else {
       InitS.HexPath[0]='\0';
       fprintf(TheScreen.errout,
-              "UWM: items specified in uwmrc not found, trying to load default.\n");
+              "UWM: icons specified in uwmrc not found, trying to load default.\n");
       PrepareIcons();
     }
     return;
