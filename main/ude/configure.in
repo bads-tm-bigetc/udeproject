@@ -18,7 +18,7 @@ ALL_LINGUAS="es de pt_BR tr sk sv"
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP
-AC_DEFINE_UNQUOTED(CPP_CALL, "$CPP")
+AC_DEFINE_UNQUOTED(CPP_CALL, "$CPP", [command line for preprocessor])
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
@@ -32,7 +32,7 @@ AC_PATH_XTRA
 
 AC_ARG_ENABLE(backingstore,
 AC_HELP_STRING(--disable-backingstore,Disable the use of your X-servers backing store feature. XFree4's backing store still seems to be buggy and so use this option in case you have refresh problems with menus under XFree4. With this option it won't be perfect but a lot better.),
-if test "$enableval" != "yes" ; then AC_DEFINE(DISABLE_BACKING_STORE) fi)
+if test "$enableval" != "yes" ; then AC_DEFINE(DISABLE_BACKING_STORE, 1, [define this if you don't want uwm to use your x-servers BackingStore and SaveUnder features (which are buggy in XF4)]) fi)
 
 dnl Checks for libraries.
 AM_GNU_GETTEXT
@@ -87,4 +87,4 @@ dnl AC_SUBST(LTLIBOBJS)
 dnl LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
 dnl AC_SUBST(LTALLOCA)
 dnl ******* LIB ********
-AC_OUTPUT(intl/Makefile lib/Makefile uwm/Makefile po/Makefile.in po/Makefile config/Makefile doc/Makefile doc/html/Makefile extras/Makefile extras/tools/Makefile gfx/Makefile Makefile ude.spec config/StartScript)
+AC_OUTPUT(lib/Makefile uwm/Makefile config/Makefile doc/Makefile doc/html/Makefile extras/Makefile extras/tools/Makefile gfx/Makefile Makefile ude.spec config/StartScript)
