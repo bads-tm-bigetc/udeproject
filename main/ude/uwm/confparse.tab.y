@@ -36,10 +36,17 @@
 }
 
 %token FileAtom PipeAtom
-%token ItemAtom SubmenuAtom LineAtom WinmenuAtom
-%token WorkspaceAtom EventAtom MenuAtom OptionAtom
-%token KeystrokeAtom
-%token LightOfAtom ShadowOfAtom
+%token ItemAtom MenuAtom SubmenuAtom LineAtom WinmenuAtom
+%token OptionAtom WorkspaceAtom LightOfAtom ShadowOfAtom
+%token EventAtom KeystrokeAtom ButtonAtom OpenAtom
+%token CloseAtom IconifyAtom DeiconifyAtom
+%token WindowAtom WorkspaceAtom /* MessageAtom AskAtom */ QuitAtom
+%token AnyAtom NextAtom PrevAtom AppAtom StateAtom /* PropertyAtom */ NoneAtom
+%token DragPosAtom DragSizeAtom HexMenuAtom
+%token SetWinFocusAtom ShowWinAtom RaiseWinAtom LowerWinAtom
+%token MaxWinAtom VMaxAtom HMaxAtom DemaxWinAtom
+%token ResizeWinAtom SetWinSizeAtom ReposWinAtom SetWinPosAtom
+%token CloseWinAtom IconifyWinAtom KillWinAtom
 %token PreprocessorAtom
 %token <string> IdentifierAtom StringAtom
 %token <intval> IntegerAtom

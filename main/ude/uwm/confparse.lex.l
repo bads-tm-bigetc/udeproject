@@ -39,24 +39,72 @@ extern UDEScreen TheScreen;
 
 void uwm_yydrop(unsigned int n);
 
-#define KEYWORDS 13
+#define KEYWORDS 45
 const struct ude_configfile_keys_struct {
   char *keyword;
   int   token;
 } ude_configfile_keywords[KEYWORDS] = {
-					{"FILE", FileAtom},
-					{"PIPE", PipeAtom},
-					{"ITEM", ItemAtom},
-					{"MENU", MenuAtom},
-					{"SUBMENU", SubmenuAtom},
-					{"LINE", LineAtom},
-					{"WINMENU", WinmenuAtom},
-					{"OPTION", OptionAtom},
-					{"WORKSPACE", WorkspaceAtom},
-					{"EVENT", EventAtom},
-					{"KEYSTROKE", KeystrokeAtom},
-					{"LightOf", LightOfAtom},
-					{"ShadowOf", ShadowOfAtom}};
+/* File I/O */
+	{"FILE", FileAtom},		/* Include a file */
+	{"PIPE", PipeAtom},		/* Read more from a pipe */
+/* Menu Definition */
+	{"ITEM", ItemAtom},		/* Define selectable menu item */
+	{"MENU", MenuAtom},		/* Define a Top level menu */
+	{"SUBMENU", SubmenuAtom},	/* Define a Submenu */
+	{"LINE", LineAtom},		/* Seperation line between items */
+	{"WINMENU", WinmenuAtom},	/* Include windows menu as submenu */
+/* Global and Workspace Options */
+	{"OPTION", OptionAtom},		/* Global setting */
+	{"WORKSPACE", WorkspaceAtom},	/* Workspace specific setting */
+	{"LightOf", LightOfAtom},	/* Calculate color of light bevel */
+	{"ShadowOf", ShadowOfAtom},	/* Calculate color of shadow bevel */
+/* Event definitions */
+	{"EVENT", EventAtom},		/* Define event */
+	{"KEYSTROKE", KeystrokeAtom},	/* Keyboard */
+	{"BUTTON", ButtonAtom},		/* Mouse button */
+	{"OPEN", OpenAtom},		/* Window Withdrawn -> Any */
+	{"CLOSE", CloseAtom},		/* Window Any -> Withdrawn */
+	{"ICONIFY", IconifyAtom},	/* Window Any -> Iconic */
+	{"DEICONIFY", DeiconifyAtom},	/* Window Iconic -> Normal */
+/* Top level actions */
+	{"WINDOW", WindowAtom},		/* Specify window */
+	{"WORKSPACE", WorkspaceAtom},	/* Go to workspace */
+#if 0
+	{"MESSAGE", MessageAtom},	/* Display Message */
+	{"ASK", AskAtom},		/* Display Requester */
+#endif
+	{"QUIT", QuitAtom},		/* Exit gracefully */
+/* Window specifications */
+	{"ANY", AnyAtom},		/* Any window, whatever is selected */
+	{"NEXT", NextAtom},		/* Next window or None */
+	{"PREVIOUS", PrevAtom},		/* Previous window or None */
+	{"APPLICATION", AppAtom},	/* WM_CLASS */
+	{"STATE", StateAtom},		/* WM_STATE */
+#if 0
+	{"PROPERTY", PropertyAtom},	/* Compare property value */
+#endif
+	{"NONE", NoneAtom},		/* no window/deselect if selected */
+/* Interactive window actions */
+	{"DragPosition", DragPosAtom},	/* Use mouse to reposition window */
+	{"DragSize", DragSizeAtom},	/* Use mouse to resize window */
+	{"HexMenu", HexMenuAtom},	/* Display HexMenu */
+/* Noninteractive window actions */
+	{"SetWinFocus", SetWinFocusAtom},/* Give Window the focus */
+	{"ShowWin", ShowWinAtom},	/* Deiconify, go to ws and raise win */
+	{"RaiseWin", RaiseWinAtom},	/* Raise window */
+	{"LowerWin", LowerWinAtom},	/* Lower window */
+	{"MaximizeWin", MaxWinAtom},	/* Maximize window in X and Y */
+	{"VerticalMaximizeWin", VMaxAtom},/* Maximize window in Y only */
+	{"HorizontalMaximizeWin", HMaxAtom},/* Maximize window in X only */
+	{"DemaximizeWin", DemaxWinAtom},/* Restore original size */
+	{"ResizeWin", ResizeWinAtom},	/* Add or subtract from window size */
+	{"SetWinSize", SetWinSizeAtom},	/* Set absolute window size */
+	{"RepositionWin", ReposWinAtom},/* Add or subtract from position */
+	{"SetWinPosition", SetWinPosAtom},/* Set absolute window position */
+	{"CloseWin", CloseWinAtom},	/* Close window */
+	{"IconifyWin", IconifyWinAtom},	/* Iconify window */
+	{"KillWin", KillWinAtom},	/* XKill window */
+};
 
 struct uwm_yyParseLineStackStruct *uwm_yyParseLineStack = NULL;
 

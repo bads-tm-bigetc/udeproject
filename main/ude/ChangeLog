@@ -1,3 +1,7 @@
+2004-10-10  Christian Ruppert <arc@users.sf.net>
+	* uwm/confparse.lex.l, uwm/confparse.tab.y: added atoms for event
+	  description language.
+
 2004-09-19  Christian Ruppert <arc@users.sf.net>
 	* doc/icons: added directory with latex2html navigation icons.
 	* doc/l2h.conf: modified settings for documentation to be more
