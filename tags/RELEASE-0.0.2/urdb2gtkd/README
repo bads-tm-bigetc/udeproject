@@ -1,0 +1,41 @@
+urdb2gtkd                                                                V0.0.2
+
+This is the urdb2gtk-demon that dumps ude color settings into $HOME/.gtkrc.
+
+For information about building the software read INSTALL.
+
+usage:
+  urdb2gtkd [--dump]
+
+Without the --dump option urdb2gtkd will dump the resource database into
+$HOME/.gtkrc and then wait for changes to the database. $HOME/gtkrc is
+rewritten each time the database changes. In this mode any previously existing
+.gtkrc is being backed up and restored when urdb2gtkd quits. Therefore and
+for not interrupting urdb2gtkd while writing to .gtkrc NEVER STOP THE PROGRAM
+WITH ANYTHING BUT SIGHUP!
+When --dump is used, urdb2gtkrc will exit immediately after dumping .gtkrc.
+
+This program leaks memory at least with my XFree 4.2.0 Xlib. This seems to
+be due to a bug in Xlib which does not free all of a resource database when
+XrmDestroyDatabase is called. If the leak also exists on your system you may
+want to use urdb2gtkd in dump mode (use uwm's ScreenCommand feature to call 
+urdb2gtkd --dump every time you change workspaces).
+Everybody else (or those who don't care) start urdb2gtkd & either from your
+StartScript or from your .xinintrc/.xsession file.
+
+Finally please note that this is unsupported software, i.e. if you have any
+other requests than severe bug reports don't send them in. Severe bugs are
+any real bugs such as program crashes or the program corrupting the file
+system. In particular, "urdb2gtkd sets a black text color on a black
+background in this or that application and I cannot read it." is NOT a severe
+bug. This behaviour is caused by the extremely inconsistent gtk color
+configuration mechanism, write a bug report to the gtk folks instead). Also
+don't bother to send me any feature requests for this program, they will be
+ignored for political reasons. There won't be configuration files or further
+command line options to define another name or frame for .gtkrc. If you want
+proper color support for gtk-applications ask the gtk folks to respect the
+standards and use the X resource database for configuration just like
+everybody else does as of X11R5.
+
+Have Fun
+  Christian Ruppert <arc@users.sourceforge.net>
