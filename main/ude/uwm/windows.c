@@ -61,7 +61,6 @@ extern Atom WM_TAKE_FOCUS;
 extern Atom WM_DELETE_WINDOW;
 
 UltimateContext *ActiveWin=NULL;
-UltimateContext *RaisedWin=NULL;
 
 char WinVisible(UltimateContext *uc)
 {
@@ -386,20 +385,20 @@ void ActivateWin(UltimateContext *uc)
   OldActive=ActiveWin;
   ActiveWin=uc;
   
-  if(uc!=OldActive){
-    if(OldActive){
-      XSetInputFocus(disp, PointerRoot, RevertToPointerRoot, TimeStamp);
-      DrawWinBorder(OldActive);
-    }
-    if(uc){
-      UpdateUWMContext(uc);
-      XInstallColormap(disp,uc->Attributes.colormap);
-      if(!((uc->WMHints) && (uc->WMHints->flags & InputHint)
-                         && (uc->WMHints->input == False)))
-        XSetInputFocus(disp, ActiveWin->win, RevertToPointerRoot, TimeStamp);
+  if(OldActive){
+    XSetInputFocus(disp, PointerRoot, RevertToPointerRoot, TimeStamp);
+    if(uc != OldActive) DrawWinBorder(OldActive);
+  }
+  if(uc){
+    UpdateUWMContext(uc);
+    if(!((uc->WMHints) && (uc->WMHints->flags & InputHint)
+                       && (uc->WMHints->input == False)))
+      XSetInputFocus(disp, ActiveWin->win, RevertToPointerRoot, TimeStamp);
 
-      if(ActiveWin->ProtocolFlags & TAKE_FOCUS)
-        SendWMProtocols(ActiveWin, WM_TAKE_FOCUS);
+    if(ActiveWin->ProtocolFlags & TAKE_FOCUS)
+      SendWMProtocols(ActiveWin, WM_TAKE_FOCUS);
+    if(uc != OldActive) {
+      XInstallColormap(disp,uc->Attributes.colormap);
       DrawWinBorder(ActiveWin);
     }
   }

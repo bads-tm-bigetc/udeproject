@@ -1,5 +1,12 @@
 2001-05-28  Christian Ruppert <arc@gmx.li>
 
+	* uwm/windows.c(ActivateWin): moved if(uc = OldActive) directly around
+	  graphics refreshing since we need to re-set the focus in some cases
+	  although the window is already active.
+	* uwm/windows.c: removed unused global variable RaisedWin
+
+2001-05-28  Christian Ruppert <arc@gmx.li>
+
 	* uwm/winmenu.c: changed global variables name from x1 to hexX and from
 	  y1 to hexY.
 	* uwm/winmenu.c: changed pointer warping to be done after pointer
