@@ -24,10 +24,124 @@
 
    ######################################################################## */
 
+#include "windows.h"
 #include "conf_func.h"
+
+void cf_execute(NodeList *functions, NodeList *wins)
+{
+  Node *current;
+  current = NULL;
+  while(current = NodeNext(functions, current)) {
+    cf_func_call *call;
+    call = current->data;
+    call->func(&(call->args), wins);
+  }
+}
 
 cf_function(cf_Shell)
 {
-  MySystem(args->shell.s);
+  MySystem(args->shell);
+}
+
+cf_function(cf_Quit)
+{
+  SeeYa(0,NULL);
+}
+
+cf_function(cf_AnyWindow)
+{
+  cf_execute(args->AnyWindow, wins);
+}
+
+cf_function(cf_NameWindow)
+{
+  NodeList *FoundWins;
+  Node *current;
+
+  FoundWins = NodeListCreate();
+  current = NULL;
+  while(current = NodeNext(wins, current)) {
+    UltimateContext *uc;
+    uc = current->data;
+    if(!strcmp(uc->title.name, args->NameWindow.name)) {
+      NodeAppend(FoundWins, uc);
+    }
+  }
+  cf_execute(args->NameWindow.functions, FoundWins);
+  NodeListDelete(&FoundWins);
+}
+
+cf_function(cf_AppWindow)
+{
+}
+
+cf_function(cf_NextWindow)
+{
+}
+
+cf_function(cf_PrevWindow)
+{
+}
+
+cf_function(cf_VisibleWindow)
+{
+  NodeList *FoundWins;
+  Node *current;
+
+  FoundWins = NodeListCreate();
+  current = NULL;
+  while(current = NodeNext(wins, current)) {
+    UltimateContext *uc;
+    uc = current->data;
+    if(WinVisible(uc)) {
+      NodeAppend(FoundWins, uc);
+    }
+  }
+  cf_execute(args->NameWindow.functions, FoundWins);
+  NodeListDelete(&FoundWins);
+}
+
+cf_function(cf_UniconicWindow)
+{
+  NodeList *FoundWins;
+  Node *current;
+
+  FoundWins = NodeListCreate();
+  current = NULL;
+  while(current = NodeNext(wins, current)) {
+    UltimateContext *uc;
+    uc = current->data;
+    if(IsNormal(uc)) {
+      NodeAppend(FoundWins, uc);
+    }
+  }
+  cf_execute(args->NameWindow.functions, FoundWins);
+  NodeListDelete(&FoundWins);
+}
+
+cf_function(cf_IconicWindow)
+{
+  NodeList *FoundWins;
+  Node *current;
+
+  FoundWins = NodeListCreate();
+  current = NULL;
+  while(current = NodeNext(wins, current)) {
+    UltimateContext *uc;
+    uc = current->data;
+    if(IsIconic(uc)) {
+      NodeAppend(FoundWins, uc);
+    }
+  }
+  cf_execute(args->NameWindow.functions, FoundWins);
+  NodeListDelete(&FoundWins);
+}
+
+cf_function(cf_NoneWindow)
+{
+  NodeList *FoundWins;
+  FoundWins = NodeListCreate();
+  cf_execute(args->NameWindow.functions, FoundWins);
+  NodeListDelete(&FoundWins);
 }
 

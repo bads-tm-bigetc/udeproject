@@ -7,6 +7,7 @@
 #ifndef UWM_WINDOWS_H
 #define UWM_WINDOWS_H
 
+#include "uwm.h"
 #include "nodes.h"
 
 char WinVisible(UltimateContext *uc);

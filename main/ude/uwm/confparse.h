@@ -8,6 +8,8 @@
 #define UWM_CONFPARSE_H
 
 #include <stdio.h>
+
+#include "conf_func.h"
 #ifndef UWM_CONFPARSE_TAB_H
 #define UWM_CONFPARSE_TAB_H
 #include "confparse.tab.h"

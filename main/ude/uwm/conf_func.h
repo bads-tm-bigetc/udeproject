@@ -16,9 +16,12 @@ typedef union _cf_args cf_args;
 typedef int (*cf_func)(cf_args *args, NodeList *wins);
 
 union _cf_args {
+  char *shell;
+  NodeList *AnyWindow;  /* list of functions to execute */
   struct {
-    char *s;
-  } shell;
+    char *name;
+    NodeList *functions;  /* list of functions to execute */
+  } NameWindow;
   struct {
     int x, y;
   } resize, SetSize, reposition, SetPosition;
@@ -30,7 +33,17 @@ struct _cf_func_call {
 };
 
 /* Prototypes */
-#define cf_function(A) int *A(cf_args *args, NodeList *wins)
+#define cf_function(A) int A(cf_args *args, NodeList *wins)
 extern cf_function(cf_Shell);
+extern cf_function(cf_Quit);
+extern cf_function(cf_AnyWindow);
+extern cf_function(cf_NameWindow);
+extern cf_function(cf_AppWindow);
+extern cf_function(cf_NextWindow);
+extern cf_function(cf_PrevWindow);
+extern cf_function(cf_VisibleWindow);
+extern cf_function(cf_UniconicWindow);
+extern cf_function(cf_IconicWindow);
+extern cf_function(cf_NoneWindow);
 
 #endif /* UWM_CONF_FUNC_H */

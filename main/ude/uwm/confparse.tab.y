@@ -23,6 +23,14 @@
 
    ######################################################################## */
 
+%{
+#include <stdio.h>
+#include "special.h"
+#include "nodes.h"
+#include "settings.h"
+#include "conf_func.h"
+%}
+
 %union {
   int intval;
 #define UWM_YY_INT 0
@@ -30,9 +38,12 @@
 #define UWM_YY_FLOAT 1
   char *string;
 #define UWM_YY_STRING 2
+/*** end of config file data types ***/
+#define UWM_YY_TYPENO 3
+/*** what follows are internal data types ***/
+  cf_func rawfunction;
 /*  struct uwm_yy_ContextStackStruct *uwm_yy_Context;
 ***/
-#define UWM_YY_TYPENO 3
 }
 
 %token FileAtom PipeAtom
@@ -41,8 +52,10 @@
 %token EventAtom KeystrokeAtom ButtonAtom OpenAtom
 %token CloseAtom IconifyAtom DeiconifyAtom
 %token WindowAtom /* MessageAtom AskAtom */ QuitAtom
-%token FindAtom OrAtom AnyAtom NextAtom PrevAtom NewAtom AppAtom
-%token StateAtom /* PropertyAtom */ NoneAtom
+%token FindAtom OrAtom AnyAtom
+%token NextAtom PrevAtom NewAtom AppAtom
+%token IconicAtom UniconicAtom VisibleAtom
+%token /* PropertyAtom */ NoneAtom
 %token DragPosAtom DragSizeAtom HexMenuAtom
 %token SetFocusAtom ShowAtom RaiseAtom LowerAtom
 %token MaxAtom VMaxAtom HMaxAtom DemaxAtom
@@ -62,13 +75,9 @@
 %type <string> Identifier
 /*%type <uwm_yy_Context> FunctionBlock Menu WorkspaceSetting EventSettings*/
 %type <string> String
+%type <rawfunction> WinSpecifier
 
 %{
-#include <stdio.h>
-#include "special.h"
-#include "settings.h"
-#include "conf_func.h"
-
 #define UWM_CONFPARSE_TAB_H
 #include "confparse.h"
 #include "uwm.h"
@@ -238,13 +247,15 @@ TopFunction : WorkspaceFunction ';' { }
 
 AnyWinSpecifier : AnyAtom | { } ; /* No specifier is the same as ANY */
 
-WinSpecifier : AnyWinSpecifier { }
-	     | String { }
-	     | AppAtom String { }
-	     | NextAtom { }
-	     | PrevAtom { }
-	     | StateAtom { }
-	     | NoneAtom { } ;
+WinSpecifier : AnyWinSpecifier { $$ = cf_AnyWindow; }
+	     | String { $$ = cf_NameWindow; }
+	     | AppAtom String { $$ = cf_AppWindow; }
+	     | NextAtom { $$ = cf_NextWindow; }
+	     | PrevAtom { $$ = cf_PrevWindow; }
+	     | UniconicAtom { $$ = cf_UniconicWindow; }
+	     | IconicAtom { $$ = cf_IconicWindow; }
+	     | VisibleAtom { $$ = cf_VisibleWindow; }
+	     | NoneAtom { $$ = cf_NoneWindow; } ;
 
 WinAction : DragPosAtom { }
 	  | DragSizeAtom { }
@@ -422,7 +433,7 @@ void uwm_yy_PushContext(int type, void *data)
 	 s->data_index_size = UWM_WORKSPACE_OPTION_NR;
 	 break;
     case UWM_YY_FUNCTION_CONTEXT:
-	 s->context_data = NULL; /* from event context */
+	 s->context_data = NodeListCreate(); /* list of functions to call */
 	 s->data_index = NULL;
 	 s->data_index_size = 0;
     case UWM_YY_EVENT_CONTEXT:

@@ -1,3 +1,12 @@
+2004-11-11  Christian Ruppert <arc@users.sf.net>
+	* uwm/conf_func.h, uwm/conf_func.c: added some more functions for the
+	  new config format.
+	* uwm/confparse.tab.y: added initialisation of conf_funcs to parser.
+	* uwm/confparse.tab.y, uwm/confparse.lex.l: changed StateAtom to
+	  IconicAtom, UniconicAtom and VisibleAtom
+	* uwm/windows.h: added missing #include "uwm.h"
+	* uwm/confparse.h: added missing #include "conf_func.h"
+
 2004-10-21  Christian Ruppert <arc@users.sf.net>
 	* uwm/confparse.lex.l, uwm/confparse.tab.y: added FIND and OR keywords
 	  to config file syntax.

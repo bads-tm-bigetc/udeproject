@@ -39,7 +39,7 @@ extern UDEScreen TheScreen;
 
 void uwm_yydrop(unsigned int n);
 
-#define KEYWORDS 45
+#define KEYWORDS 47
 const struct ude_configfile_keys_struct {
   char *keyword;
   int   token;
@@ -85,7 +85,9 @@ const struct ude_configfile_keys_struct {
 	{"PREVIOUS", PrevAtom},		/* Previous window or None */
 	{"NEW", NewAtom},		/* Previous window or None */
 	{"APPLICATION", AppAtom},	/* WM_CLASS */
-	{"STATE", StateAtom},		/* WM_STATE */
+	{"ICONIC", IconicAtom},		/* UWM_STATE */
+	{"UNICONIC", UniconicAtom},	/* UWM_STATE */
+	{"VISIBLE", VisibleAtom},	/* WM_STATE */
 #if 0
 	{"PROPERTY", PropertyAtom},	/* Compare property value */
 #endif
