@@ -271,6 +271,25 @@ void HandleUnmapNotify(XEvent *event)
   }
 }
 
+/* windows reparented into other client windows must not be handled by uwm */
+void HandleReparentNotify(XEvent *event)
+{
+  UltimateContext *uc;
+  XEvent event2;
+
+  DBG(fprintf(TheScreen.errout,"HandleUnmapNotify\n");)
+  
+  if(event->xreparent.parent == TheScreen.root) return;
+					/* ignore reparenting to root */
+  if(!XFindContext(disp, event->xreparent.window, UWMContext,
+                   (XPointer *)&uc)) {
+    if((event->xreparent.window == uc->win)
+       && (event->xreparent.parent != uc->frame)) {
+      DeUltimizeWin(uc, True);
+    }
+  }
+}
+
 void HandleButtonPress(XEvent *event)
 {
   UltimateContext *uc;
@@ -549,6 +568,7 @@ void InitHandlers()
   DefaultHandle[ConfigureRequest]=HandleConfigureRequest;
 /*  DefaultHandle[ColormapNotify]=HandleColormap; */
   DefaultHandle[MapRequest]=HandleMapRequest;
+  DefaultHandle[ReparentNotify]=HandleReparentNotify;
   DefaultHandle[MapNotify]=HandleMapNotify;
   DefaultHandle[EnterNotify]=HandleEnterNotify;
   DefaultHandle[LeaveNotify]=HandleLeaveNotify;

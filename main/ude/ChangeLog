@@ -1,3 +1,9 @@
+2002-11-10  Christian Ruppert <arc@gmx.li>
+	* uwm/handlers.c: now DeUltimizing windows that are reparented by
+	  cliets since we usually don't need to further care about them.
+	* uwm/windows.c (UltimizeWin): check added to avoid ultimizing root
+	  window.
+
 2002-10-13  Christian Ruppert <arc@gmx.li>
 	* uwm/special.c, uwm/special.h: added MyStrdup function to replace
 	  strdup (which doesn't exist on all systems and has no error treatment)

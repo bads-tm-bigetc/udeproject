@@ -464,6 +464,8 @@ UltimateContext *UltimizeWin(Window win)
   UltimateContext *uc;
   XWindowAttributes Attr;
 
+  if(TheScreen.root == win) return(NULL); /* never ultimize root window */
+
   if(!XFindContext(disp, win, UWMContext, (XPointer *)&uc)) return(uc);
   XGetWindowAttributes(disp,win,&Attr);
   if(Attr.override_redirect) return(NULL);
