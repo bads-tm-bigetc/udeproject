@@ -66,7 +66,7 @@ void SetWSBackground()
 {
   unsigned char back_changed= 0;
 
-  if(ActiveWSSettings->Wallpaper->image != None) {
+  if(ActiveWSSettings->Wallpaper) {
       /* To set the root pixmap and properties pointing to it XGrabServer
 	 must be called to make sure that we don't leak the pixmap if
 	 somebody else is setting it at the same time. */
@@ -115,7 +115,7 @@ void SetWSBackground()
   else
     {
       XSetWindowBackground(disp, TheScreen.root,
-                           ActiveWSSettings->Wallpaper->image);
+                           ActiveWSSettings->ScreenColor->pixel);
       back_changed= 1;
     }
   if (back_changed)

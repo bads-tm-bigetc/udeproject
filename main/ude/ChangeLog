@@ -1,3 +1,7 @@
+2004-09-19  Christian Ruppert <arc@users.sf.net>
+	* uwm/workspaces.c(SetWSBackground): fixed segfault in case no
+	  background image is defined for a workspace.
+
 2004-09-09  Christian Ruppert <arc@users.sf.net>
 	* uwm/handlers.c(InitHandlers): uwm now stops at initialisation in
 	  case no shapes extension is found.
