@@ -1,6 +1,10 @@
 2002-02-11  Christian Ruppert <arc@gmx.li>
 
+	* RELEASE: ude-0.2.8
+	* NEWS: updated for release 0.2.8
 	* README: rewritten for release 0.2.8
+	* uwm/uwmmenu.c: uwm will no longer segfault now in case it could
+	  not restart itself (no SeeYa after CleanUp...).
 	* config/Makefile.am: removed StartScript and StopScript from DATA
 	  variable so that x flag is set.
 	* config/uwmrc-behaviour.hook: removed tick to avoid preprocessor

@@ -74,7 +74,8 @@ void RestartUWM(Bool ClUp, Bool StartStopScript)
   execv(name,argv);
   execvp("uwm",argv);
 
-  SeeYa(1,"Couldn't restart uwm");
+  fprintf(TheScreen.errout, "Error restarting uwm, terminating\n");
+  exit(1);
 }
 
 void RestartProc1(MenuItem *item)

@@ -1,6 +1,12 @@
+ude-0.2.8:
+
+* fixed some bugs in the configuration/installation procedure
 * pressing ctrl-alt-mousebutton somewhere over a window will result in the
   same behaviour as if the mousebutton was pressed over the window's border
   (draging, resizing etc.).
+* several smaller bugfixes: uwm should no longer be loosing "strange" windows
+  such as x11amp or gqmpg, some fixes in shapes support.
+* some very small steps towards icccm2-compliance.
 
 SNAP07052001
 
