@@ -1,5 +1,6 @@
 2004-10-13  Christian Ruppert <arc@users.sf.net>
 	* config/urdb: added some selected Xt-resources for text boxes.
+	* config/urdb: added some more resources for non-gtk gvim
 
 2004-09-09  Christian Ruppert <arc@users.sf.net>
 	* uwm/handlers.c(InitHandlers): uwm now stops at initialisation in
