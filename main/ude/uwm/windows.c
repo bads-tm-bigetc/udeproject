@@ -237,8 +237,6 @@ void EnborderWin(UltimateContext *uc)
   if((InitS.PlacementStrategy & 1) && ((uc->Attributes.x!=0) ||\
                  (uc->Attributes.y!=0))) uc->flags &= ~PLACEIT;
 
-  GravitizeWin(uc, &(uc->Attributes.x), &(uc->Attributes.y), UWM_GRAVITIZE);
-
   if(((uc->Attributes.x + uc->Attributes.width) > TheScreen.width)
      || ((uc->Attributes.y + uc->Attributes.height) > TheScreen.height)
      || (uc->Attributes.x < 0) || (uc->Attributes.y < 0)) {
@@ -248,6 +246,9 @@ void EnborderWin(UltimateContext *uc)
       uc->Attributes.y = (TheScreen.height-uc->Attributes.height)/2;
     }
   }
+
+  if(!(uc->flags & PLACEIT))
+    GravitizeWin(uc, &(uc->Attributes.x), &(uc->Attributes.y), UWM_GRAVITIZE);
 
 DBG(fprintf(TheScreen.errout,"reparenting: %d\n",uc->win);)
   GrabServer();

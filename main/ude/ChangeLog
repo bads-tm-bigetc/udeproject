@@ -1,3 +1,8 @@
+2001-04-20  Christian Ruppert <arc@gmx.li>
+
+	* uwm/windows.c: a small bugfix so that windowgravity is now only taken
+	  into account in case we don't place the window ourselves.
+
 2001-04-19  Christian Ruppert <arc@gmx.li>
 
 	* uwm/windows.c: cleaned up UltimizeWin
