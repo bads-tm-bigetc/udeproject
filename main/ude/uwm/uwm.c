@@ -267,6 +267,7 @@ int main(int argc,char **argv)
   char dispstr[128], hdispstr[128], rmstr[256], *p;
   /*** too lazy to alloc Mem... ***/
 
+#ifdef ENABLE_NLS
   /* init i18n */
   /*setlocale (LC_ALL, "");  don't need everything, LC_NUMERIC will confuse
                              initialisation (dec points in BevelFactor)*/
@@ -290,6 +291,7 @@ int main(int argc,char **argv)
 #endif
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+#endif /* ENABLE_NLS */
 
   printf("\n\n     UDE - the Unix Desktop Environment\n\n");
   printf("Version %s\n",UWMVERSION);

@@ -1,5 +1,10 @@
 2001-01-21  Christian Ruppert <arc@gmx.li>
 
+	* uwm.c (main): added #ifdef ENABLE_NLS around init of intl so that
+	  uwm will also compile on bsd if configure is run with --disable-nls
+
+2001-01-21  Christian Ruppert <arc@gmx.li>
+
 	* uwm.c(main): changed internationalisation so that we will now require
 	  '.' as decimal seperator in all config files no matter what language
 	  the user set in LANG.
