@@ -13,7 +13,7 @@ VERSION=SNAP`date +%d%m%Y`
 dnl VERSION="0.3.0pre1"
 AM_INIT_AUTOMAKE(ude, $VERSION)
 AM_CONFIG_HEADER(config.h)
-ALL_LINGUAS="es de pt_BR tr"
+ALL_LINGUAS="es de pt_BR tr sk"
 
 dnl Checks for programs.
 AC_PROG_CC
