@@ -1,3 +1,6 @@
+SNAP07052001
+
+* overworked support for shaped windows which should now be fully functional.
 * iconified windows are now listed in the windows menu using their icon names
 * window groups are now treated as a whole in workspace management.
 * support for xservers not supporting saveunder and backingstore (xf4.0)
