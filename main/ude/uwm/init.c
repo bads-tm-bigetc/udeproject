@@ -87,6 +87,7 @@ const int iconpostab[ICONWINS][2]={
 extern UDEScreen TheScreen;
 extern Display *disp;
 extern XContext UWMContext;
+extern XContext UWMGroupContext;
 extern Atom WM_STATE_PROPERTY;
 extern Atom WM_CHANGE_STATE;
 extern Atom WM_TAKE_FOCUS;
@@ -1525,6 +1526,7 @@ UWM ");
           /*** from now on MyOpen can be called */
 
   UWMContext = XUniqueContext();   /* Create Context to store UWM-data */
+  UWMGroupContext = XUniqueContext();   /* Create Context to store group data */
   TheScreen.MenuContext = XUniqueContext();   
   TheScreen.MenuFrameContext = XUniqueContext();   
     /* Create Context to store menu-data */

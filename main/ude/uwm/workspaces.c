@@ -37,8 +37,10 @@
 
 #include "uwm.h"
 #include "windows.h"
+#include "wingroups.h"
 #include "workspaces.h"
 #include "special.h"
+#include "nodes.h"
 #include "menu.h"
 
 extern UDEScreen TheScreen;
@@ -215,6 +217,13 @@ void StickyWin(UltimateContext *uc)
 
 void WithWin2WS(UltimateContext *uc,short ws)
 {
+  if(uc->group) {
+    Node *n;
+    n = NULL;
+    while(n = NodeNext(uc->group->members, n)) { 
+      ((UltimateContext *)(n->data))->WorkSpace = ws;
+    }
+  }
   uc->WorkSpace = ws;
   ChangeWS(uc->WorkSpace);
   DrawWinBorder(uc);

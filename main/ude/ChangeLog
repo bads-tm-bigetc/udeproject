@@ -1,3 +1,15 @@
+2001-04-15  Christian Ruppert <arc@gmx.li>
+
+	* uwm/wingroups.c: added some functions
+	* uwm/wingroups.h: added prototypes
+	* uwm/uwm.c: added XContext UWMGroupContext
+	* uwm/init.c: added init for UWMGroupContext
+	* uwm/workspaces.c: window groups are now moved from one ws to another
+	  as a whole.
+	* uwm/nodes.c: added funcion NodeCount.
+	* uwm/nodes.h: added prototype for NodeCount.
+	* uwm/windows.c: added group removal if group leader is deleted
+
 2001-04-14  Christian Ruppert <arc@gmx.li>
 
 	* uwm/windows.c: fixed static gravity (must be TitleHight instead of

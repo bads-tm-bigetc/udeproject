@@ -48,6 +48,9 @@ Node* NodeNext(NodeList *list,Node *node);
 /* returns pointer to previous node in list */
 Node* NodePrev(NodeList *list,Node *node);
 
+/* returns number of nodes in list */
+unsigned int NodeCount(NodeList *list);
+
 /* moves specified node to end of list */
 void Node2End(NodeList *list,Node *node);
 

@@ -10,6 +10,10 @@ typedef struct _WinGroup {
   NodeList *members; /* Data is *UltimateContext */
 } WinGroup;
 
+WinGroup *CreateWinGroup(Window leader);
+void DeleteWinGroup(WinGroup *group);
+void AddWinToGroup(UltimateContext *uc);
+int RemoveWinFromGroup(UltimateContext *uc);
 void UpdateWinGroup(UltimateContext *uc);
 
 #endif /* UWM_WINGROUPS_H */

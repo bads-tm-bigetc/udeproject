@@ -67,6 +67,7 @@
 Display *disp=NULL; 	/* 'global' display to Server... */ 
 UDEScreen TheScreen;    /* structure that keeps all important global info */
 XContext UWMContext;    /* WM-Concidering information connected to a window */
+XContext UWMGroupContext;    /* information connected to a window group */
 Atom WM_STATE_PROPERTY;
 Atom WM_CHANGE_STATE;
 Atom WM_TAKE_FOCUS;

@@ -46,11 +46,13 @@
 #include "placement.h"
 #include "special.h"
 #include "ude-i18n.h"
+#include "wingroups.h"
 #include "windows.h"
 
 extern Display *disp;
 extern UDEScreen TheScreen;
 extern InitStruct InitS;
+extern XContext UWMGroupContext;
 extern XContext UWMContext;
 extern HandlerTable *Handle;
 extern HandlerTable MoveHandle[LASTEvent];
@@ -417,6 +419,15 @@ void DisenborderWin(UltimateContext *uc, Bool alive)
 Node* PlainDeUltimizeWin(UltimateContext *uc,Bool alive)
 {
   Node *n;
+  WinGroup *group;
+
+  if(uc->group) {
+    if(uc->group->leader == uc) DeleteWinGroup(uc->group);
+    else RemoveWinFromGroup(uc);
+  }
+
+  if(!XFindContext(disp, uc->win, UWMGroupContext, (XPointer *)&group))
+    DeleteWinGroup(group);
 
   n = NodeDelete(TheScreen.UltimateList, InNodeList(TheScreen.UltimateList,uc));
   XDeleteContext(disp,uc->win,UWMContext);

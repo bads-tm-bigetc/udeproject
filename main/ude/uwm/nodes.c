@@ -41,7 +41,6 @@
  * InNodeList - searches for given data pointer in list and returns pointer to
  *              corresponding Node-structure if found else NULL.
  *
- *
  *******************************************************************************/
 
 Node *InNodeList(NodeList *list,void *ptr)
@@ -205,6 +204,21 @@ Node* NodePrev(NodeList *list,Node *node)
 {
   if(node) return(node->prev);
   else return(list->last);
+}
+
+/*******************************************************************************
+ *
+ * NodeCount - returns number of nodes in list.
+ *
+ *******************************************************************************/
+
+unsigned int NodeCount(NodeList *list)
+{
+  Node *n = NULL;
+  unsigned int cnt = 0;
+
+  while(n = NodeNext(list, n)) cnt++;
+  return cnt;
 }
 
 /*******************************************************************************
