@@ -29,8 +29,12 @@
 %{
 #include <string.h>
 #include <stdlib.h>
+
 #include "special.h"
 #include "confparse.h"
+#include "uwm.h"
+
+extern UDEScreen TheScreen;
 
 void uwm_yydrop(unsigned int n);
 
@@ -154,7 +158,7 @@ BEGIN Unquoted;
 <Unquoted>[ \t] ;
 <Unquoted>[#%].*$ ;		/* delete comments */
 <Unquoted>.		{
-			fprintf(stderr,
+			fprintf(TheScreen.errout,
 			        "UWM: error on line %d of file <%s>: >%s< does not parse\n",
 			        uwm_yyParseLineStack->linenumber,
 			        uwm_yyParseLineStack->filename, yytext);
@@ -185,7 +189,7 @@ void uwm_yypush_LineStack(char *file)
   if(file) {
     s->file = MyOpen(file, "");
     if(! s->file) {
-      fprintf(stderr, "UWM: file not found - %s - ignoring\n", file);
+      fprintf(TheScreen.errout, "UWM: file not found - %s - ignoring\n", file);
       free(s);
       return;
     }

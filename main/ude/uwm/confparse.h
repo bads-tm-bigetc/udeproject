@@ -50,5 +50,6 @@ void uopt_int_int(YYSTYPE *in, uwm_init_index *out, void *base);
 void uopt_int_flt(YYSTYPE *in, uwm_init_index *out, void *base);
 void uopt_flt_flt(YYSTYPE *in, uwm_init_index *out, void *base);
 void uopt_str_str(YYSTYPE *in, uwm_init_index *out, void *base);
+void uopt_str_fnt(YYSTYPE *in, uwm_init_index *out, void *base);
 
 #endif

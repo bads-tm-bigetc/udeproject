@@ -60,6 +60,9 @@
 
 #define UWM_CONFPARSE_TAB_H
 #include "confparse.h"
+#include "uwm.h"
+
+extern UDEScreen TheScreen;
 
 #define OFFSET_OF(STRUCTURE, NAME) ((&(((struct STRUCTURE *)(0L))->NAME)))
 
@@ -107,7 +110,7 @@ const ConverterFunction uwm_yy_to_setting_table[UWM_S_TYPENO][UWM_YY_TYPENO] = {
 /* UWM_S_INT	*/ {	uopt_int_int,	NULL,		NULL		},
 /* UWM_S_FLOAT	*/ {	uopt_int_flt,	uopt_flt_flt,	NULL		},
 /* UWM_S_STRING	*/ {	NULL,		NULL,		uopt_str_str	},
-/* UWM_S_FONT  	*/ {	NULL,		NULL,		NULL		}
+/* UWM_S_FONT  	*/ {	NULL,		NULL,		uopt_str_fnt	}
 };
 %}
 
@@ -379,15 +382,17 @@ void uwm_init_set_option(char *name, int type, YYSTYPE *value)
     }
   }
   if(!r) {
-    fprintf(stderr, "UWM: Invalid configuration option on line %d of %s: %s\n",
+    fprintf(TheScreen.errout,
+	    "UWM: Invalid configuration option on line %d of %s: %s\n",
             uwm_yyParseLineStack->linenumber,
 	    uwm_yyParseLineStack->filename, name);
   } else if(converter = uwm_yy_to_setting_table[r->type][type]) {
     converter(value, (uwm_init_index *)r, ctxt->context_data);
   } else {
-    fprintf(stderr,
+    fprintf(TheScreen.errout,
 	    "UWM: Invalid datatype for option \"%s\" on line %d of %s.\n",
             name, uwm_yyParseLineStack->linenumber,
 	    uwm_yyParseLineStack->filename, name);
   }
+  free(name);
 }

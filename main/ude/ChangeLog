@@ -1,3 +1,14 @@
+2003-03-02  Christian Ruppert <arc@users.sf.net>
+	* uwm/configconvertors.c: added convertor for font datatype.
+	* uwm/confparse.h: added prototype of convertor for font datatype.
+	* uwm/confparse.y: added convertor for font datatype to convertor
+	  table.
+	* uwm/confparse.y, uwm/confparse.l: changed stderr to TheScreen.errout.
+	* uwm/settings.h: changed datatype for font settings to contain font
+	  description string.
+	* uwm/confparse.y: small bugfix now releases memory for config file
+	  atom names.
+
 2003-02-09  Christian Ruppert <arc@users.sf.net>
 	* uwm/confparse.h, uwm/confparse.l, confparse.y, configconvertors.c,
 	  settings.h: added files for new configuration file parser

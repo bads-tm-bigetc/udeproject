@@ -19,6 +19,11 @@ typedef struct _uwm_init_index {
   int type;
 } uwm_init_index; 
 
+typedef struct _FontStruct {
+  XFontStruct *xfs;
+  char *name;
+} FontStruct;
+
 /* global settings */
 typedef struct _uwm_global_settings {
 /*** geometry */
@@ -32,11 +37,11 @@ typedef struct _uwm_global_settings {
   int FrameFlags;
 
 /*** fonts */
-  XFontStruct *TitleFont;
-  XFontStruct *Font;
-  XFontStruct *MonoFont;
-  XFontStruct *HighlightFont;
-  XFontStruct *InactiveFont;
+  FontStruct TitleFont;
+  FontStruct Font;
+  FontStruct MonoFont;
+  FontStruct HighlightFont;
+  FontStruct InactiveFont;
 
 /*** batch */
   char *StartScript;

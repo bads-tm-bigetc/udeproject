@@ -23,10 +23,15 @@
 
    ######################################################################## */
 
+#include <X11/Xlib.h>
+
 #include "settings.h"
 #include "confparse.h"
+#include "uwm.h"
 
 #define deref(TYPE) (*((TYPE *)((base) + ((unsigned long)out->offset))))
+
+extern Display *disp;
 
 void uopt_int_int(YYSTYPE *in, uwm_init_index *out, void *base)
 {
@@ -48,4 +53,17 @@ void uopt_flt_flt(YYSTYPE *in, uwm_init_index *out, void *base)
 void uopt_str_str(YYSTYPE *in, uwm_init_index *out, void *base)
 {
   deref(char *) = in->string;
+}
+
+void uopt_str_fnt(YYSTYPE *in, uwm_init_index *out, void *base)
+{
+  XFontStruct *nxfs;
+  if(nxfs = XLoadQueryFont(disp, in->string)) {
+    FontStruct *fs;
+    fs = deref(FontStruct *);
+    if(fs->xfs) XFreeFont(disp, fs->xfs);
+    if(fs->name) free(fs->name);
+    fs->xfs = nxfs;
+    fs->name = in->string;
+  }
 }
