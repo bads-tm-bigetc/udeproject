@@ -5,6 +5,7 @@
 	  will probably have to be rewritten since the event description
 	  language changed significantly since it was initially created.
 	* config/urdb: added some selected Xt-resources for textboxes
+	* config/urdb: added some more resources for non-gtk gvim
 
 2004-10-10  Christian Ruppert <arc@users.sf.net>
 	* uwm/confparse.lex.l, uwm/confparse.tab.y: added atoms for event

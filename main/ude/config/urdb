@@ -259,6 +259,20 @@
 
 Vim*menuBar*font: @STANDARDFONT@
 Vim*font: @TEXTFONT@
+Vim*reverseVideo: True
+Vim*background: @TEXTBGR@
+Vim*foreground: @TEXTCOLOR@
+Vim*scrollBackground: @BACKGROUND@
+Vim*scrollForeground: @HIGHLIGHTEDBGR@
+Vim*menuBackground: @BACKGROUND@
+Vim*menuForeground: @STANDARDTEXT@
+Vim*tooltipBackground: @BACKGROUND@
+Vim*tooltipForeground: @STANDARDTEXT@
+Vim*menuFont: @FONT@
+Vim*menuFontSet: @FONT@
+Vim*tooltipFont: @FONT@
+Vim*tooltipFontSet: @FONT@
+Vim*borderWidth: @BEVELWIDTH@
 
 ! Emacs
 
