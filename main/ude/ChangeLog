@@ -1,5 +1,10 @@
 2001-05-28  Christian Ruppert <arc@gmx.li>
 
+	* uwm/winmenu.c(StopWinMenu): winmenu is now unmapped AFTER selected
+	  action is taken.
+	* uwm/windows.c(ActivateWin): some cosmetics
+	* uwm/windows.c(ActivateWin): windows not in NormalState are not
+	  being activated.
 	* uwm/windows.c(ActivateWin): moved if(uc = OldActive) directly around
 	  graphics refreshing since we need to re-set the focus in some cases
 	  although the window is already active.

@@ -85,13 +85,6 @@ void StartWinMenu(UltimateContext *uc,int x,int y)
 
 void StopWinMenu(short selected, XEvent *event)
 {
-  XUnmapWindow(disp,TheScreen.icons.IconParent);
-  if(TheWin) XInstallColormap(disp,TheWin->Attributes.colormap);
-  ReinstallDefaultHandle();
-
-  if(selectedHex<ICONWINS)
-    XSetWindowBackgroundPixmap(disp,TheScreen.icons.IconWins[selectedHex],\
-                                    TheScreen.icons.IconPixs[selectedHex]);
   switch(selected){
     case I_ICONIFY:
       IconifyWin(TheWin);
@@ -136,6 +129,13 @@ void StopWinMenu(short selected, XEvent *event)
     default:
       if(move_back) XWarpPointer(disp,None,None,0,0,0,0,hexX,hexY);
   }
+  XUnmapWindow(disp,TheScreen.icons.IconParent);
+  if(TheWin) XInstallColormap(disp,TheWin->Attributes.colormap);
+  ReinstallDefaultHandle();
+
+  if(selectedHex<ICONWINS)
+    XSetWindowBackgroundPixmap(disp,TheScreen.icons.IconWins[selectedHex],\
+                                    TheScreen.icons.IconPixs[selectedHex]);
   UngrabPointer();
 }
 

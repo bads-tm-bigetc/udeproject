@@ -373,14 +373,15 @@ void ActivateWin(UltimateContext *uc)
 
   if((Handle==MoveHandle)||(Handle==ResizeHandle)) return;
                        /* Don't confuse window moving or resizing routines!!! */
-  if(uc) { if(!OnActiveWS(uc->WorkSpace)) return;}
-  else {
+  if(!uc) {
     Window dummywin, win;
     int dummy;
     XQueryPointer(disp, TheScreen.root, &dummywin, &win, &dummy, &dummy,
                   &dummy, &dummy, &dummy);
     if(XFindContext(disp, win, UWMContext, (XPointer *)&uc)) uc = NULL;
   }
+  if(uc && ((!OnActiveWS(uc->WorkSpace)) || (uc->wmstate != NormalState)))
+    uc = NULL;
 
   OldActive=ActiveWin;
   ActiveWin=uc;
