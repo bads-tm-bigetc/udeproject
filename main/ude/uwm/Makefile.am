@@ -7,6 +7,8 @@ INCLUDES= ${X_CFLAGS} -I../lib -DUWMVERSION=\"@VERSION@\" \
 	-DLOCALEDIR=\"${datadir}/locale\" -DUDE_DIR=\"${pkgdatadir}\" \
 	-DUDE_BIN_PATH=\"${bindir}\"
 uwm_SOURCES=  \
+    confparse.lex.c \
+    confparse.tab.c \
     widgets.c \
     special.c\
     rubber.c\
@@ -29,8 +31,6 @@ uwm_SOURCES=  \
     selection.c \
     wingroups.c \
     tree.c \
-    confparse.lex.c \
-    confparse.tab.c \
     configconvertors.c \
     uwm.c
 
