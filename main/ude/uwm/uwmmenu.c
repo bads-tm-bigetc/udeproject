@@ -128,6 +128,7 @@ void CreateUWMMenu()
 {
   Menu *really,*others;
   int j;
+  short useTitle = (TheScreen.desktop.flags & UDESubMenuTitles);
 
   really= MenuCreate (_("Really?!"));
   if(!really)
@@ -143,7 +144,7 @@ void CreateUWMMenu()
   AppendMenuItem (TheScreen.UWMMenu, _("Quit UDE"), really, I_SUBMENU);
 
   /* restart */
-  really= MenuCreate(_("Restart UDE"));
+  really= MenuCreate(useTitle ? _("Restart UDE") : NULL);
   if(!really)
     SeeYa(1,"FATAL: out of memory!");
   AppendMenuItem (really, _("Reexecute StartScript"), RestartProc1, I_SELECT);
@@ -154,7 +155,7 @@ void CreateUWMMenu()
   /* submenu restart "Other WM" */
   if(InitS.OtherWmCount)
     {
-      others= MenuCreate(_("Launch another WM"));
+      others= MenuCreate(useTitle ? _("Launch another WM") : NULL);
       if(!others)
 	SeeYa(1,"FATAL: out of memory!");
       for (j = 0; j < InitS.OtherWmCount; j++)

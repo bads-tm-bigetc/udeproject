@@ -73,6 +73,7 @@ struct _UDEWorkspaceExchange {
                                                                             ***/
 /** user preferences flags (item flags): **/
 #define UDETransientMenus (1<<0) /* are menues transient or not? */
+#define UDESubMenuTitles  (1<<1) /* do submenus have titles or not? */
 typedef struct _UDEDesktop UDEDesktop;
 
 struct _UDEDesktop {

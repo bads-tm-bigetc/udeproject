@@ -1,3 +1,18 @@
+2002-03-05  Christian Ruppert <arc@gmx.li>
+	* doc/manual.tex: added documentation for SubMenuTitles option.
+
+2002-03-04  Brian Roberts <flicken@wpi.edu>
+	* config/uwmrc-behaviour.hook: added SubMenuTitles configuration
+	  option.
+	* lib/ude-desktop.h: added UDESubMenuTitles user preference flag
+	* uwm/init.c: handler for SubMenuTitles option
+	* uwm/menu.c: when menu title is NULL, don't print space for title.
+	* uwm/uwmmenu.c, 
+	  uwm/windows.c,
+	  uwm/winmenumenu.c: changed to set submenu title to "" if user
+			     preference is no SubMenuTitles. 
+
+
 2002-02-11  Christian Ruppert <arc@gmx.li>
 
 	* RELEASE: ude-0.2.8

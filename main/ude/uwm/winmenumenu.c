@@ -67,6 +67,7 @@ void WinMenuMenu(UltimateContext *TheWin,int x, int y)
   int a;
   Menu *men,*wsmen;
   MenuItem *item;
+  short useTitle = (TheScreen.desktop.flags & UDESubMenuTitles);
 
   if(!(men = TheWin->title.name ? MenuCreate(TheWin->title.name) : MenuCreate("")))
     SeeYa(1,"FATAL: out of memory!");
@@ -76,7 +77,8 @@ void WinMenuMenu(UltimateContext *TheWin,int x, int y)
       AppendMenuItem(men, _("Sticky window"), &sticky,\
 		     (TheWin->WorkSpace==-1) ? I_SWITCH_ON: I_SWITCH_OFF);
 
-      wsmen = TheWin->title.name ? MenuCreate(TheWin->title.name) : MenuCreate("");
+      wsmen = MenuCreate((TheWin->title.name && useTitle)
+                         ? TheWin->title.name : NULL);
       if(!wsmen)
 	SeeYa(1,"FATAL: out of memory!");
       for (a=0; a<TheScreen.desktop.WorkSpaces; a++)

@@ -100,16 +100,22 @@ Menu *MenuCreate(char *name)
 
   if(!(menu=malloc(sizeof(Menu)))) return (NULL);
 
-  menu->name=MyCalloc(strlen(name)+1,sizeof(char));
-  strcpy(menu->name,name);
+  if(name) {
+    menu->name = MyCalloc(strlen(name)+1, sizeof(char));
+    strcpy(menu->name, name);
+  } else {
+    menu->name = NULL;
+  }
   if(!(menu->Items=NodeListCreate()))
     SeeYa(1,"FATAL: out of memory!");
   menu->font=TheScreen.MenuFont;
-  menu->width=XTextWidth(menu->font,menu->name,strlen(menu->name)) +\
-                 4 * MENUBORDERW + 2*MENUXOFS;
-  menu->ItemHeight=menu->font->ascent + menu->font->descent +\
+  menu->width = (menu->name
+                 ? XTextWidth(menu->font, menu->name, strlen(menu->name))
+		 : 0) + 4 * MENUBORDERW + 2*MENUXOFS;
+  menu->ItemHeight=menu->font->ascent + menu->font->descent +
                  2 * MENUBORDERW + 2*MENUYOFS;
-  menu->height=menu->ItemHeight + 2 * MENUBORDERW;
+
+  menu->height = (menu->name ? menu->ItemHeight : 0) + 2 * MENUBORDERW;
 
   wattr.background_pixel=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]\
                                                             [UDE_Back].pixel;
@@ -248,7 +254,7 @@ void DestroyMenu(Menu *menu)
   XDeleteContext(disp, menu->win, TheScreen.MenuFrameContext);
   XDestroyWindow(disp,menu->win);
   NodeListDelete(&(menu->Items));
-  free(menu->name);
+  if(menu->name) free(menu->name);
   free(menu);
 }
 
@@ -301,12 +307,14 @@ void DrawMenuFrame(Menu *menu, int items)
 
   DrawBevel(menu->win,0,0,menu->width-1,menu->height-1,MENUBORDERW,\
                                       menu->LightGC,menu->ShadowGC);
-  DrawBevel(menu->win,MENUBORDERW,MENUBORDERW,menu->width-MENUBORDERW-1,\
-                             menu->ItemHeight+MENUBORDERW-1,MENUBORDERW,\
-                                           menu->ShadowGC,menu->LightGC);
+  if(menu->name) {
+    DrawBevel(menu->win,MENUBORDERW,MENUBORDERW,menu->width-MENUBORDERW-1,\
+                               menu->ItemHeight+MENUBORDERW-1,MENUBORDERW,\
+                                             menu->ShadowGC,menu->LightGC);
+    XDrawString(disp,menu->win,menu->TextGC,MENUXOFS+2*MENUBORDERW,MENUYOFS+\
+             2*MENUBORDERW+menu->font->ascent,menu->name,strlen(menu->name));
+  }
 
-  XDrawString(disp,menu->win,menu->TextGC,MENUXOFS+2*MENUBORDERW,MENUYOFS+\
-           2*MENUBORDERW+menu->font->ascent,menu->name,strlen(menu->name));
   mi=NULL;
   while(mi=NodeNext(menu->Items,mi)){
     MenuItem *item;

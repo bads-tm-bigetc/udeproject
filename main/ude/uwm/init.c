@@ -281,6 +281,7 @@ ReadMenuFile (FILE *mf)
   enum MenuKeyNames a;
   FILE *nmf;
   Node *n;
+  short useTitle = (TheScreen.desktop.flags & UDESubMenuTitles);
   
   while (EOF != fscanf (mf, "%s", s))
     {
@@ -315,7 +316,7 @@ ReadMenuFile (FILE *mf)
 		    }
 		  else
 		    {
-		      if(!(men=MenuCreate(t)))
+		      if(!(men=MenuCreate(useTitle ? t : NULL)))
 			SeeYa(1,"FATAL: out of Memory!(Submenu)");
 		      AppendMenuItem(Stack->first->data,t,men,I_SUBMENU);
 		    }
@@ -643,7 +644,7 @@ void AllocWSS(short wss)
   TheScreen.desktop.WorkSpaces=wss;
 }
 
-#define KEYWORDS 54
+#define KEYWORDS 55
 
 const char *Keywords[KEYWORDS]={
   "BorderWidth",
@@ -663,6 +664,7 @@ const char *Keywords[KEYWORDS]={
   "UWMMenuButton",
   "DeiconifyButton",
   "AppMenuButton",
+  "SubMenuTitles",
   "TransientMenues",
   "WinMenuButton",
   "DragButtons",
@@ -719,6 +721,7 @@ enum KeyNames {
   UWMMenuButton,
   DeiconifyButton,
   AppMenuButton,
+  SubMenuTitles,
   TransientMenues,
   WinMenuButton,
   DragButtons,
@@ -933,6 +936,11 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
 			b=atoi(p);
 			if((b<4)&&(b>0)) InitS.menuType[b-1] = 'A';
 			break;
+                     case SubMenuTitles:
+                       TheScreen.desktop.flags = (atoi(p)!=0) 
+                                   ? TheScreen.desktop.flags|UDESubMenuTitles
+                                   : TheScreen.desktop.flags&~UDESubMenuTitles;
+                        break;
 		      case TransientMenues:
 			TheScreen.desktop.flags = (atoi(p)!=0) 
                                    ? TheScreen.desktop.flags|UDETransientMenus

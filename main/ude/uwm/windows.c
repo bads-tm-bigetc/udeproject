@@ -555,10 +555,11 @@ void CloseWin(UltimateContext *uc)
 
 void DeiconifyMenu(int x, int y)
 {
-  int a;
+  int a, b;
   Node *ucn;
   Menu *men, **wspaces=NULL, *sticky;
   MenuItem *item;
+  short useTitle = (TheScreen.desktop.flags & UDESubMenuTitles);
 
   men=MenuCreate(_("Windows Menu"));
   if(!men)
@@ -567,11 +568,11 @@ void DeiconifyMenu(int x, int y)
   wspaces=MyCalloc(TheScreen.desktop.WorkSpaces,sizeof(Menu *));
   if(TheScreen.desktop.WorkSpaces>1){
     for(a=0;a<TheScreen.desktop.WorkSpaces;a++){
-      wspaces[a]=MenuCreate(TheScreen.WorkSpace[a]);
+      wspaces[a]=MenuCreate(useTitle ? TheScreen.WorkSpace[a] : NULL);
       AppendMenuItem(men,TheScreen.WorkSpace[a],wspaces[a],I_SUBMENU);
     }
     AppendMenuItem (men, NULL, NULL, I_LINE);
-    sticky = MenuCreate (_("Sticky Windows"));
+    sticky = MenuCreate (useTitle ? _("Sticky Windows") : NULL);
     AppendMenuItem (men, _("Sticky Windows"), sticky, I_SUBMENU);
   } else {
     wspaces[0]=men;
@@ -584,7 +585,6 @@ void DeiconifyMenu(int x, int y)
     UltimateContext *uc;
     uc=ucn->data;
     if((IsNormal(uc)) || (IsIconic(uc))) {
-/*       && (uc->title.name || uc->title.iconname)){ */
       AppendMenuItem((uc->WorkSpace == -1) ? sticky : wspaces[uc->WorkSpace],
                      (IsIconic(uc) && uc->title.iconname) ? uc->title.iconname
 		     : (uc->title.name ? uc->title.name 
