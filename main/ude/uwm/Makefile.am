@@ -73,8 +73,12 @@ EXTRA_DIST= shape.bitmap confparse.l confparse.y
 FLEX = flex
 
 confparse.tab.c: confparse.y
-	@which $(YACC) >/dev/null \
-          || (echo "	======> INSTALL YACC/BISON TO BUILD FROM CVS <======" ;\
+	@(which $(YACC) >/dev/null \
+          && test -z "`$(YACC) --version |grep -i bison`") \
+          || (echo "	====================================================" ;\
+              echo "	======> NEEDS BERKLEY YACC TO BUILD FROM CVS <======" ;\
+              echo "	======>  BISON DOES NOT WORK FOR THE MOMENT  <======" ;\
+              echo "	====================================================" ;\
               exit 1)
 	$(YACC) -d -b confparse confparse.y
 
@@ -82,7 +86,9 @@ confparse.tab.h: confparse.tab.c
 
 confparse.lex.c: confparse.l confparse.tab.h
 	@which $(FLEX) >/dev/null \
-          || (echo "	======> INSTALL FLEX TO BUILD FROM CVS <======" ;\
+          || (echo "	==================================================" ;\
+              echo "	======>   INSTALL FLEX TO BUILD FROM CVS   <======" ;\
+              echo "	==================================================" ;\
               exit 1)
 	$(FLEX) -oconfparse.lex.c confparse.l
 

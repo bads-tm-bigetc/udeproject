@@ -12,6 +12,8 @@
 	* configure.in: changed AC_DEFINEs and AC_DEFINE_UNQUOTEDs to
 	  compensate for now missing acconfig.h
 	* po/*.po: completed headers so that new msgfmt won't complain anymore.
+	* uwm/Makefile.am: added test for bison pretending to be berkley yacc
+	  which currently does not work.
 
 2003-05-04  Christian Ruppert <arc@users.sf.net>
 	* added po/Makevars
