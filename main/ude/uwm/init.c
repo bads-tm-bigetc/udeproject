@@ -320,14 +320,6 @@ void InitUWM()
   XSetWindowAttributes xswa;
   XEvent event;
 
-#ifdef DEVEL
-  TheScreen.errout = fopen("/dev/tty10","w");
-  fprintf(TheScreen.errout,"UWM: Using this display for Error output!\n");
-  fflush(TheScreen.errout);
-#else
-  TheScreen.errout = stderr;
-#endif
-
 /*** some inits to let SeeYa know what to deallocate etc... ***/
 
   TheScreen.UltimateList= NULL;

@@ -303,6 +303,14 @@ int main(int argc,char **argv)
   textdomain (PACKAGE);
 #endif /* ENABLE_NLS */
 
+#ifdef DEVEL
+  TheScreen.errout = fopen("/dev/tty10","w");
+  fprintf(TheScreen.errout,"UWM: Using this display for Error output!\n");
+  fflush(TheScreen.errout);
+#else
+  TheScreen.errout = stderr;
+#endif
+
   ParseCommandLine(argc, argv);
 
   CheckCPP(); /* do this before initializing SIGCHLD */
