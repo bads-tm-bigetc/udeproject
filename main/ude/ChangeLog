@@ -1,3 +1,9 @@
+2002-09-12  Christian Ruppert <arc@gmx.li>
+	* uwm/nodes.c, uwm/nodes.h: added SortList(NodeList *list, melfunc mel)
+	  function.
+	* uwm/nodes.c, uwm/nodes.h: removed actual pointer from node lists which
+	  was not used anyway.
+
 2002-09-04  Christian Ruppert <arc@gmx.li>
 	* uwm/init.c: added grabbing of UWM_MODIFIERS/End which must either
 	  have been forgotten when keyboard stuff was implemented or gotten

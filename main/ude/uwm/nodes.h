@@ -20,7 +20,7 @@ struct _Node {
 typedef struct _NodeList NodeList;
 
 struct _NodeList {
-  Node *first,*last,*actual;
+  Node *first,*last;
 };
 
 /* returns pointer to node of data pointer or Null if ptr is not listed. */
@@ -56,5 +56,11 @@ void Node2End(NodeList *list,Node *node);
 
 /* moves specified node to beginning of list */
 void Node2Start(NodeList *list,Node *node);
+
+/* more/equal/less-function returns >0 if a>b, 0 if a=b and <0 if a<b */
+typedef int (*melfunc)(void *a, void *b);
+
+/* sorts the given NodeList */
+void SortNodeList(NodeList *list, melfunc mel);
 
 #endif

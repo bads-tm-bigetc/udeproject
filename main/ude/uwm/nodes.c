@@ -127,7 +127,7 @@ int NodeInsert(NodeList *list,void *ptr)
   if(node->next) node->next->prev=node;
   else list->last=node;
 
-  list->first=list->actual=node;
+  list->first=node;
 
   return(True);
 }
@@ -260,4 +260,52 @@ void Node2Start(NodeList *list,Node *node)
   node->next=list->first;
   list->first=node;
   node->prev=NULL;
+}
+
+/*******************************************************************************
+ *
+ * SortNodeList - Sort a list following a criteria given by mel
+ *                This is written to put a completely unsorted list into order
+ *                once and forever in its lifetime. it's not optimized for
+ *                resorting or similar stuff!
+ *
+ *******************************************************************************/
+
+void SortNodeList(NodeList *list, melfunc mel)
+{
+  NodeList origlist;
+  Node *next;
+
+  next = list->first;
+  list->first = NULL;
+
+  while(next) {
+    Node *n;
+
+    n = next;
+    next = n->next;
+    if(!(list->first)) { /* no sorting necessary, sorted list empty */
+      n->prev = n->next = NULL;
+      list->first = list->last = n;
+    } else {             /* the list is not empty */
+      Node *scan;
+      scan = NULL;
+      while((scan = NodeNext(list, scan)) && (mel(scan->data, n->data) < 0));
+      if(scan) {
+	n->prev = scan->prev;
+        n->next = scan;
+	n->next->prev = n;
+	if(n->prev) {
+	  n->prev->next = n;
+	} else {
+	  list->first = n;
+        }
+      } else {               /* insert as last element */
+        n->prev = list->last;
+	n->prev->next = n;   /* list non-empty, no check needed */
+	n->next = NULL;
+	list->last = n;
+      }
+    }
+  }
 }
