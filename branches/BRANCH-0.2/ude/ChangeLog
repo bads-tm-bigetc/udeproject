@@ -1,5 +1,11 @@
+2004-11-24  Christian Ruppert <arc@users.sf.net>
+	* uwm/windows.c(MoveResizeWindow): fixed bug that windows with static
+	  gravity aren't properly moved/resized.
+	* uwm/handlers.c(HandleFocusOut): fixed bug that sometimes erroneously
+	  displayed new windows as if they had the focus although they had not.
+
 2004-10-14  Christian Ruppert <arc@users.sf.net>
-·       * uwm/urdb: fixed a typo in gvim resources
+	* uwm/urdb: fixed a typo in gvim resources
 
 2004-10-13  Christian Ruppert <arc@users.sf.net>
 	* config/urdb: added some selected Xt-resources for text boxes.

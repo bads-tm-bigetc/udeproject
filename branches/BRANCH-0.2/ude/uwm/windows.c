@@ -75,11 +75,13 @@ void DrawWinBorder(UltimateContext *uc)
   unsigned long winbg;
 
   if(uc->frame == None) return;
-
+/***/printf("uc: %X, FocusWin: %X\n", uc, FocusWin);
   if(active = (uc == FocusWin)) {
     uc->flags |= ACTIVE_BORDER;
+/***/printf("Active\n");
   } else {
     uc->flags &= ~ACTIVE_BORDER;
+/***/printf("Inactive\n");
   }
 
   winbg = active ? TheScreen.ActiveBorder[TheScreen.desktop.ActiveWorkSpace]
@@ -156,10 +158,12 @@ void MoveResizeWin(UltimateContext *uc,int x,int y,int width,int height)
     else XMoveWindow(disp, uc->win, x, y);
   } else {
     if(uc->frame != None) XMoveResizeWindow(disp,uc->frame,x,y,width,height);
-    else XMoveWindow(disp, uc->win, x, y);
+    else XMoveResizeWindow(disp, uc->win, x, y, width, height);
     if(uc->border!= None) XResizeWindow(disp,uc->border,width,height);
-    XResizeWindow(disp,uc->win,width-2*uc->BorderWidth,\
-        height-2*uc->BorderWidth-TheScreen.TitleHeight);
+    XMoveResizeWindow(disp, uc->win,
+		      uc->BorderWidth, uc->BorderWidth + TheScreen.TitleHeight,
+		      width - 2 * uc->BorderWidth,
+		      height - 2 * uc->BorderWidth - TheScreen.TitleHeight);
     if((uc->title.win != None ) 
        && ((uc->flags & SHAPED)
            || (InitS.BorderTitleFlags & BT_CENTER_TITLE))) {
@@ -376,9 +380,11 @@ void ActivateWin(UltimateContext *uc)
 
   if((Handle==MoveHandle)||(Handle==ResizeHandle)) return;
                        /* Don't confuse window moving or resizing routines!!! */
+/***/printf("puh\n");
   if(!uc) {
     Window dummywin, win;
     int dummy;
+/***/printf("boo: %x\n", ActiveWin);
     XQueryPointer(disp, TheScreen.root, &dummywin, &win, &dummy, &dummy,
                   &dummy, &dummy, &dummy);
     if(XFindContext(disp, win, UWMContext, (XPointer *)&uc)) uc = NULL;
@@ -411,6 +417,7 @@ void ActivateWin(UltimateContext *uc)
   } else if(OldActive) {
     XSetInputFocus(disp, PointerRoot, RevertToPointerRoot, TimeStamp);
   }
+/***/printf("zoo: %x\n", ActiveWin);
 }
 
 void DisenborderWin(UltimateContext *uc, Bool alive)
@@ -449,7 +456,7 @@ Node* PlainDeUltimizeWin(UltimateContext *uc,Bool alive)
   if(alive) XSetWindowBorderWidth(disp,uc->win,uc->OldBorderWidth);
   DisenborderWin(uc,alive);
 
-  if(uc==ActiveWin) ActivateWin(NULL);
+  if(uc == ActiveWin) ActivateWin(NULL);
 
   free(uc);
 
