@@ -1543,10 +1543,6 @@ UWM ");
 
 /*** set up some uwm-specific stuff ***/
 
-  CheckCPP();  /* check for the c preprocessor */
-
-          /*** from now on MyOpen can be called */
-
   UWMContext = XUniqueContext();   /* Create Context to store UWM-data */
   UWMGroupContext = XUniqueContext();   /* Create Context to store group data */
   TheScreen.MenuContext = XUniqueContext();   
