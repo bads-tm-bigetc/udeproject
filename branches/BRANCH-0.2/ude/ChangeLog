@@ -1,3 +1,8 @@
+2003-04-16  Christian Ruppert <arc@users.sf.net>
+	* uwm/special.h: pointer grabs are now confined to the screen's root
+	  window to avoid trouble with crashing xfree when running multiheaded
+	  multiscreen.
+
 2003-02-09  Christian Ruppert <arc@users.sf.net>
 	* uwm/workspaces.c: changed order of UpdateDesktop and SetWSBackground
 	  calls in ChangeWS to prevent race condition problem in urdb2gtkd
