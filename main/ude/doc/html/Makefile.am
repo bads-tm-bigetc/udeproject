@@ -13,6 +13,7 @@ EXTRA_DIST= ${DIR_CONTENTS}
 
 manual.css: ${TEXSOURCES}
 	ln -s ../manual.tex .
+	rm -f manual.css
 	latex2html -no_subdir -init_file ../l2h.conf manual.tex
 	rm manual.tex
 

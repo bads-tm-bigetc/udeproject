@@ -11,6 +11,8 @@
 	* uwm/init.c: added config option BehaviourFlags
 	* doc/manual.tex: added description for BehaviourFlags option.
 	* doc/manual.tex: started chapter "The Keyboard".
+	* doc/html/Makefile.am: removing manual.css now every time we rebuilt
+	  to make sure it is rebuilt.
 	* config/uwmrc-behaviour.hook: added BehaviourFlags example.
 	* uwm/handlers.c (HandleButtonPress): added support for
 	  BehaviourFlags/BF_IN_WIN_CTRL option.
