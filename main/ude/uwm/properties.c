@@ -160,14 +160,14 @@ void UpdateIconName(UltimateContext *uc)
   DBG(fprintf(TheScreen.errout,"Window icon Name: %s\n",uc->title.iconname);)
 }
 
-void UpdateWMHints(UltimateContext *uc, Time stamp)
+void UpdateWMHints(UltimateContext *uc)
 {
   if(uc->WMHints) XFree(uc->WMHints);
   uc->WMHints = XGetWMHints(disp,uc->win);
   if((uc == ActiveWin) && ((!uc->WMHints)
      ||(uc->WMHints && (uc->WMHints->flags & InputHint) && uc->WMHints->input)))
   {
-    XSetInputFocus(disp, ActiveWin->win, RevertToPointerRoot, stamp);
+    XSetInputFocus(disp, ActiveWin->win, RevertToPointerRoot, TheScreen.now);
   }
 }
 
@@ -194,7 +194,7 @@ void UpdateTransientForHint(UltimateContext *uc)
     uc->TransientFor = None;
 }
 
-void UpdateWMProtocols(UltimateContext *uc, Time stamp)
+void UpdateWMProtocols(UltimateContext *uc)
 {
   Atom *prots;
   int count,a;
@@ -204,7 +204,7 @@ void UpdateWMProtocols(UltimateContext *uc, Time stamp)
     for(a=0;a<count;a++){
       if(prots[a]==WM_TAKE_FOCUS) {
         uc->ProtocolFlags|=TAKE_FOCUS;
-        if(uc == ActiveWin) SendWMProtocols(uc, WM_TAKE_FOCUS, stamp);
+        if(uc == ActiveWin) SendWMProtocols(uc, WM_TAKE_FOCUS, TheScreen.now);
       }
       if(prots[a]==WM_DELETE_WINDOW) uc->ProtocolFlags|=DELETE_WINDOW;
     }

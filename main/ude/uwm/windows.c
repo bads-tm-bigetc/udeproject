@@ -353,7 +353,7 @@ void MapWin(UltimateContext *uc,Bool NoPlacement){
   SetWinMapState(uc,NormalState);
 }
 
-void ActivateWin(UltimateContext *uc, Time stamp)
+void ActivateWin(UltimateContext *uc)
 {
   UltimateContext *OldActive;
 
@@ -373,7 +373,7 @@ void ActivateWin(UltimateContext *uc, Time stamp)
   
   if(uc!=OldActive){
     if(OldActive){
-      XSetInputFocus(disp, PointerRoot, RevertToPointerRoot, stamp);
+      XSetInputFocus(disp, PointerRoot, RevertToPointerRoot, TheScreen.now);
       DrawWinBorder(OldActive);
     }
     if(uc){
@@ -381,10 +381,10 @@ void ActivateWin(UltimateContext *uc, Time stamp)
       XInstallColormap(disp,uc->Attributes.colormap);
       if(!((uc->WMHints) && (uc->WMHints->flags & InputHint)
                          && (uc->WMHints->input == False)))
-        XSetInputFocus(disp, ActiveWin->win, RevertToPointerRoot, stamp);
+        XSetInputFocus(disp, ActiveWin->win, RevertToPointerRoot, TheScreen.now);
 
       if(ActiveWin->ProtocolFlags & TAKE_FOCUS)
-        SendWMProtocols(ActiveWin, WM_TAKE_FOCUS, stamp);
+        SendWMProtocols(ActiveWin, WM_TAKE_FOCUS);
       DrawWinBorder(ActiveWin);
     }
   }
@@ -442,7 +442,7 @@ void DisenborderWin(UltimateContext *uc, Bool alive)
   }
 }
 
-Node* PlainDeUltimizeWin(UltimateContext *uc,Bool alive, Time stamp)
+Node* PlainDeUltimizeWin(UltimateContext *uc,Bool alive)
 {
   Node *n;
 
@@ -452,18 +452,18 @@ Node* PlainDeUltimizeWin(UltimateContext *uc,Bool alive, Time stamp)
   if(alive) XSetWindowBorderWidth(disp,uc->win,uc->OldBorderWidth);
   DisenborderWin(uc,alive);
 
-  if(uc==ActiveWin) ActivateWin(NULL, stamp);
+  if(uc==ActiveWin) ActivateWin(NULL);
 
   free(uc);
 
   return(n);
 }
 
-Node* DeUltimizeWin(UltimateContext *uc,Bool alive, Time stamp)
+Node* DeUltimizeWin(UltimateContext *uc,Bool alive)
 {
   Node *n;
   if(alive) SetWinMapState(uc, WithdrawnState);
-  return(PlainDeUltimizeWin(uc, alive, stamp));
+  return(PlainDeUltimizeWin(uc, alive));
 }
 
 /***************************************************************************/
@@ -504,14 +504,14 @@ DBG(fprintf(TheScreen.errout,"ULTIMIZING WIN #%d: no override redirect.\n",win);
   Updatera(uc);
   
   uc->WMHints=NULL;
-  UpdateWMHints(uc, TheScreen.start_tstamp); /* dummy time, cannot be active */
+  UpdateWMHints(uc); /* dummy time, cannot be active */
 
   uc->MotifWMHints=NULL;
   UpdateMotifHints(uc);
 
   UpdateTransientForHint(uc);
 
-  UpdateWMProtocols(uc, TheScreen.start_tstamp);
+  UpdateWMProtocols(uc);
                                        /* dummy time, window can't be active */
 
   SetWinMapState(uc,WithdrawnState);
@@ -554,13 +554,13 @@ void DisplayWin(UltimateContext *uc)
   SetWinMapState(uc, NormalState);
 }
 
-void CloseWin(UltimateContext *uc, Time stamp)
+void CloseWin(UltimateContext *uc)
 {
   if(uc->ProtocolFlags & DELETE_WINDOW)
-    SendWMProtocols(uc, WM_DELETE_WINDOW, stamp);
+    SendWMProtocols(uc, WM_DELETE_WINDOW);
 }
 
-void DeiconifyMenu(int x, int y, Time stamp)
+void DeiconifyMenu(int x, int y)
 {
   int a;
   Node *ucn;
@@ -606,7 +606,7 @@ void DeiconifyMenu(int x, int y, Time stamp)
         DisplayWin(uc);
       } else {
         ChangeWS(uc->WorkSpace);
-        ActivateWin(uc, stamp);
+        ActivateWin(uc);
         if(uc->frame!=None) {
           XRaiseWindow(disp,uc->frame);
         } else {

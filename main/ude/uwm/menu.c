@@ -461,23 +461,25 @@ Bool VisibleMenuWin(Window win)
 void MenuEnterNotify(XEvent *event)
 {
   MenuItem *mc;
+  TheScreen.now = event->xcrossing.time;
   if(VisibleMenuWin(event->xcrossing.window))
     XChangeActivePointerGrab(disp,ButtonPressMask|ButtonReleaseMask|\
-          EnterWindowMask|LeaveWindowMask,TheScreen.Mice[C_WINDOW],CurrentTime);
+          EnterWindowMask|LeaveWindowMask,TheScreen.Mice[C_WINDOW],TheScreen.now);
   if(!XFindContext(disp,event->xcrossing.window,TheScreen.MenuContext,\
                                                      (XPointer *)&mc)){
     SelectItem(mc);
     XChangeActivePointerGrab(disp,ButtonPressMask|ButtonReleaseMask|\
-          EnterWindowMask|LeaveWindowMask,TheScreen.Mice[C_WINDOW],CurrentTime);
+          EnterWindowMask|LeaveWindowMask,TheScreen.Mice[C_WINDOW],TheScreen.now);
   }
   else if(quittable) SelectItem(NULL);
 }
 
 void MenuLeaveNotify(XEvent *event)
 {
+  TheScreen.now = event->xcrossing.time;
   if(VisibleMenuWin(event->xcrossing.window)) {
     XChangeActivePointerGrab(disp,ButtonPressMask|ButtonReleaseMask|\
-         EnterWindowMask|LeaveWindowMask,TheScreen.Mice[C_DEFAULT],CurrentTime);
+         EnterWindowMask|LeaveWindowMask,TheScreen.Mice[C_DEFAULT],TheScreen.now);
     if(quittable) SelectItem(NULL);
   }
 }
@@ -509,12 +511,14 @@ void MenuDontKeepItAnymore()
 
 void MenuButtonPress(XEvent *event)
 {
+  TheScreen.now = event->xbutton.time;
   keepIt=False;
   Buttoncount++;
 }
 
 void MenuButtonRelease(XEvent *event)
 {
+  TheScreen.now = event->xbutton.time;
   Buttoncount--;
   if( Buttoncount && (SpecialProc!=NULL)) {
     SpecialProc(event,selectedMenuItem);

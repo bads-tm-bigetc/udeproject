@@ -92,7 +92,7 @@ void CleanUp(Bool StopScript)
   if(TheScreen.UltimateList) if(n=TheScreen.UltimateList->first)
     while(n) {
       XMapWindow(disp, ((UltimateContext *)(n->data))->win);
-      n = PlainDeUltimizeWin(n->data, True, TheScreen.start_tstamp);
+      n = PlainDeUltimizeWin(n->data, True);
     }
   if(TheScreen.AppsMenu)     DestroyMenu(TheScreen.AppsMenu);
   if(TheScreen.UWMMenu)      DestroyMenu(TheScreen.UWMMenu);
@@ -183,7 +183,7 @@ void CatchWindows()
                IconifyWin(uc);
 	       break;
 	    case WithdrawnState:
-	       DeUltimizeWin(uc, True, TheScreen.start_tstamp);
+	       DeUltimizeWin(uc, True);
 	       break;
 	    case NormalState:
                DisplayWin(uc);

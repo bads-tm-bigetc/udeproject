@@ -1406,7 +1406,7 @@ void InitUWM()
   XSelectInput(disp, TheScreen.inputwin, PropertyChangeMask);
   XStoreName(disp, TheScreen.inputwin, ""); /* obtain a time stamp */
   XWindowEvent(disp, TheScreen.inputwin, PropertyChangeMask, &event);
-  TheScreen.start_tstamp = event.xproperty.time;
+  TheScreen.now = TheScreen.start_tstamp = event.xproperty.time;
   XSelectInput(disp, TheScreen.inputwin, INPUTWIN_EVENTS); /* set the real event mask */
 
   {

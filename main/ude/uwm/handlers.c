@@ -136,7 +136,7 @@ void HandleDestroyNotify(XEvent *event)
   
   if(!XFindContext(disp,event->xdestroywindow.window,UWMContext,\
                                                 (XPointer *)&uc))
-    DeUltimizeWin(uc, False, TheScreen.start_tstamp);
+    DeUltimizeWin(uc, False);
           /* icccm says we shouldn't use CurrentTime here, but what else
              can we use, this *might* be safer at least reverting to root?! */
 }
@@ -147,17 +147,20 @@ void HandleEnterNotify(XEvent *event)
   
   DBG(fprintf(TheScreen.errout,"HandleEnterNotify\n"));
 
+  TheScreen.now = event->xcrossing.time;
+
   if(!XFindContext(disp, event->xcrossing.window, UWMContext, (XPointer *)&uc))
     if(event->xcrossing.window == uc->frame)
-      ActivateWin(uc, event->xcrossing.time);
+      ActivateWin(uc);
     else if((event->xcrossing.window == uc->title.win)
             && (InitS.BorderTitleFlags & BT_DODGY_TITLE))
       XLowerWindow(disp,uc->title.win);
 }
 
-/*void HandleLeaveNotify(XEvent *event)
-{ Lazy Focus...
-} */
+void HandleLeaveNotify(XEvent *event)
+{ 
+  TheScreen.now = event->xcrossing.time;
+}
 
 void HandleExpose(XEvent *event)
 {
@@ -250,17 +253,17 @@ void HandleUnmapNotify(XEvent *event)
                                   &event2))
          && (uc->frame != None)) XUnmapWindow(disp, uc->frame);
 /*      if(uc->frame != None) XUnmapWindow(disp, uc->frame); */
-      if(uc == ActiveWin) ActivateWin(NULL, TheScreen.start_tstamp);
+      if(uc == ActiveWin) ActivateWin(NULL);
       GrabServer();
       XSync(disp, False);
       if(XCheckTypedWindowEvent(disp, event->xunmap.event,
                                 DestroyNotify, &event2)
          && (event2.xdestroywindow.window == uc->win)) {
-        DeUltimizeWin(uc, False, TheScreen.start_tstamp);
+        DeUltimizeWin(uc, False);
       } else {
         UpdateUWMContext(uc);
         if(uc->own_unmap_events) uc->own_unmap_events--;
-        else DeUltimizeWin(uc, True, TheScreen.start_tstamp);
+        else DeUltimizeWin(uc, True);
       }
       UngrabServer();
     } else UpdateUWMContext(uc);
@@ -274,6 +277,8 @@ void HandleButtonPress(XEvent *event)
   Window rootret,childret;
 
   DBG(fprintf(TheScreen.errout,"HandleButtonPress\n");)
+
+  TheScreen.now = event->xbutton.time;
 
   XQueryPointer(disp,TheScreen.root,&rootret,&childret,&dummy,&dummy,\
                                                 &dummy,&dummy,&dummy);
@@ -295,7 +300,7 @@ void HandleButtonPress(XEvent *event)
 
     if(uc->frame!=None) XQueryPointer(disp,uc->frame,&rootret,&childret,\
                                              &dummy,&dummy,&x,&y,&dummy);
-    ActivateWin(uc, event->xbutton.time);
+    ActivateWin(uc);
     switch(event->xbutton.button){
       case Button1: BorderButton(0,uc,x,y,event->xbutton.x_root,\
                                           event->xbutton.y_root);
@@ -312,13 +317,15 @@ void HandleButtonPress(XEvent *event)
   }
 }
 
-/*void HandleButtonRelease(XEvent *event)
+void HandleButtonRelease(XEvent *event)
 {
+  TheScreen.now = event->xbutton.time;
 }
 
 void HandleMotionNotify(XEvent *event)
 {
-}*/
+  TheScreen.now = event->xmotion.time;
+}
 
 void HandleConfigureRequest(XEvent *event)
 {
@@ -394,14 +401,17 @@ void HandleClientMsg(XEvent *event)
   }
 }
 
-/*void HandleKeyPress(XEvent *event)
+void HandleKeyPress(XEvent *event)
 {
-}*/
+  TheScreen.now = event->xkey.time;
+}
 
 void HandleKeyRelease(XEvent *event)
 {
   DBG(fprintf(TheScreen.errout,"HandleKeyRelease\n");)
   
+  TheScreen.now = event->xkey.time;
+
   if(event->xkey.state==(ControlMask|Mod1Mask)){
     Node *n,*n2;
     switch(XKeycodeToKeysym(disp,event->xkey.keycode,0)){
@@ -417,8 +427,8 @@ void HandleKeyRelease(XEvent *event)
                          if(n2=NodePrev(TheScreen.UltimateList,n2))
                            if(WinVisible(n2->data)) break;
                        } while(n!=n2);
-                       if(n2) ActivateWin(n2->data, event->xkey.time);
-		       else ActivateWin(NULL, event->xkey.time);
+                       if(n2) ActivateWin(n2->data);
+		       else ActivateWin(NULL);
                      }
                      break;
       case XK_Down:  n=n2=InNodeList(TheScreen.UltimateList,ActiveWin);{
@@ -426,8 +436,8 @@ void HandleKeyRelease(XEvent *event)
                          if(n2=NodeNext(TheScreen.UltimateList,n2))
                            if(WinVisible(n2->data)) break;
                        } while(n!=n2);
-                       if(n2) ActivateWin(n2->data, event->xkey.time);
-		       else ActivateWin(NULL, event->xkey.time);
+                       if(n2) ActivateWin(n2->data);
+		       else ActivateWin(NULL);
                      }
                      break;
       case XK_Page_Up: if(ActiveWin) RaiseWin(ActiveWin);
@@ -446,17 +456,19 @@ void HandlePropertyNotify(XEvent *event)
   
   DBG(fprintf(TheScreen.errout,"HandlePropertyNotify\n");)
 
+  TheScreen.now = event->xproperty.time;
+
   GrabServer();
   if(!XFindContext(disp,event->xproperty.window,UWMContext,(XPointer *)&uc)){
     if(event->xproperty.window == uc->win) switch(event->xproperty.atom){
       case XA_WM_NORMAL_HINTS: Updatera(uc); break;
       case XA_WM_NAME: UpdateName(uc); break;
       case XA_WM_ICON_NAME: UpdateIconName(uc); break;
-      case XA_WM_HINTS: UpdateWMHints(uc, event->xproperty.time); break;
+      case XA_WM_HINTS: UpdateWMHints(uc); break;
       default:
         if(event->xproperty.atom==MOTIF_WM_HINTS) UpdateMotifHints(uc);
         if(event->xproperty.atom==WM_PROTOCOLS)
-	  UpdateWMProtocols(uc, event->xproperty.time);
+	  UpdateWMProtocols(uc);
     }
   }
   UngrabServer();
@@ -479,6 +491,8 @@ void HandleSelectionClear(XEvent *event)
 {
   DBG(fprintf(TheScreen.errout,"HandleSelectionClear\n");)
 
+  TheScreen.now = event->xselectionclear.time;
+
   if((event->xselectionclear.selection == TheScreen.WM_Sx)
      && (TheScreen.inputwin != XGetSelectionOwner(disp, TheScreen.WM_Sx))){
     if(!(InitS.icccmFlags & ICF_STAY_ALIVE))
@@ -493,6 +507,8 @@ void HandleSelectionRequest(XEvent *event)
   Atom prop = None;
 
   DBG(fprintf(TheScreen.errout,"HandleSelectionRequest\n");)
+
+  TheScreen.now = event->xselectionrequest.time;
 
   if(event->xselectionrequest.selection == TheScreen.WM_Sx) {
     if((event->xselectionrequest.time >= TheScreen.start_tstamp)
@@ -522,11 +538,11 @@ void InitHandlers()
   DefaultHandle[MapRequest]=HandleMapRequest;
   DefaultHandle[MapNotify]=HandleMapNotify;
   DefaultHandle[EnterNotify]=HandleEnterNotify;
-/*  DefaultHandle[LeaveNotify]=HandleLeaveNotify; */
+  DefaultHandle[LeaveNotify]=HandleLeaveNotify;
   DefaultHandle[ButtonPress]=HandleButtonPress;
-/*  DefaultHandle[MotionNotify]=HandleMotionNotify; 
+  DefaultHandle[MotionNotify]=HandleMotionNotify; 
   DefaultHandle[ButtonRelease]=HandleButtonRelease;
-  DefaultHandle[KeyPress]=HandleKeyPress; */
+  DefaultHandle[KeyPress]=HandleKeyPress;
   DefaultHandle[KeyRelease]=HandleKeyRelease;
   DefaultHandle[PropertyNotify]=HandlePropertyNotify;
   DefaultHandle[SelectionClear]=HandleSelectionClear;

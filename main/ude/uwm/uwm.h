@@ -126,6 +126,7 @@ typedef struct
   Atom UDE_WORKSPACES_PROPERTY, UDE_SETTINGS_PROPERTY, UDE_WINDOW_PROPERTY;
   Atom WM_Sx, VERSION_ATOM, ATOM_PAIR, TARGETS, MULTIPLE, TIMESTAMP;
   Time start_tstamp;
+  Time now;
 
   FILE *errout;
 } UDEScreen;

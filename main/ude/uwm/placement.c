@@ -309,7 +309,6 @@ void ManualPlace(NodeList *wins,int w,int h,int *x,int *y)
   int dummy,placing;
   Window dummyWin;
   UltimateContext *RealActive;
-  Time stamp;
 
   MenuDontKeepItAnymore();
   GrabPointer(TheScreen.root,PointerMotionMask|ButtonReleaseMask|\
@@ -318,9 +317,9 @@ void ManualPlace(NodeList *wins,int w,int h,int *x,int *y)
                                                      &dummy,&dummy);
   GrabServer();
   RealActive = ActiveWin;
-  ActivateWin(NULL, TheScreen.start_tstamp);
+  ActivateWin(NULL);
   XSetInputFocus(disp, TheScreen.inputwin, RevertToPointerRoot,
-                 TheScreen.start_tstamp);
+                 TheScreen.now);
   XSync(disp,False);
   StartRubber(*x,*y,w,h,TheScreen.BorderWidth1);
   placing=-1;
@@ -352,11 +351,11 @@ void ManualPlace(NodeList *wins,int w,int h,int *x,int *y)
 #endif
                                  0) {
 			        placing=0;
-			        stamp = event.xkey.time;
+			        TheScreen.now = event.xkey.time;
 			      }
                               break;
       case ButtonRelease:     placing=0;
-                              stamp = event.xbutton.time;
+                              TheScreen.now = event.xbutton.time;
                               state = event.xbutton.state & ( Button1Mask
                                       | Button2Mask | Button3Mask | Button4Mask
                                       | Button5Mask);
@@ -371,7 +370,7 @@ void ManualPlace(NodeList *wins,int w,int h,int *x,int *y)
       default:                break;
     }
   }
-  ActivateWin(RealActive, stamp);
+  ActivateWin(RealActive);
   StopRubber(&dummy,&dummy,&dummy,&dummy);
   UngrabServer();
   UngrabPointer();
