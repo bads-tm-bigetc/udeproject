@@ -1507,11 +1507,9 @@ UWM ");
        it will usually be /usr/local/share/ude */
     char *e;
     sprintf(TheScreen.udedir, "%s/", UDE_DIR);
-    e = MyCalloc(strlen(TheScreen.udedir) + strlen("UDEdir="), sizeof(char));
-    if(e) {
-      sprintf(e,"UDEdir=%s", TheScreen.udedir);
-      putenv(e);
-    } /* errors setting UDEdir are not fatal, so we ignore them. */
+    e = MyCalloc(strlen(TheScreen.udedir) + strlen("UDEdir=") +1, sizeof(char));
+    sprintf(e,"UDEdir=%s", TheScreen.udedir);
+    putenv(e);     /* errors setting UDEdir are not fatal, so we ignore them. */
   } else {
       char *e;
       
@@ -1520,7 +1518,7 @@ UWM ");
 	sprintf(TheScreen.udedir,"%s/",e);
       else
 	sprintf(TheScreen.udedir,"%s",e);
-    }
+  }
 
   TheScreen.cppincpaths = malloc(sizeof(char) * (1 + strlen("-I ")
          + strlen(TheScreen.Home) + strlen("/.ude/config/ -I ") 
