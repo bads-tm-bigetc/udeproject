@@ -16,5 +16,6 @@ void InstallMoveHandle();
 void InstallResizeHandle();
 void InstallWinMenuHandle();
 void InstallMenuHandle();
+void HandleUnmapNotify(XEvent *event);
 
 #endif

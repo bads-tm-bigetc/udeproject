@@ -86,6 +86,62 @@ void StartWinMenu(UltimateContext *uc,int x,int y)
   InstallWinMenuHandle();
 }
 
+void StopWinMenu(short selected, XEvent *event)
+{
+  UngrabPointer();
+  XUnmapWindow(disp,TheScreen.icons.IconParent);
+  if(TheWin) XInstallColormap(disp,TheWin->Attributes.colormap);
+  ReinstallDefaultHandle();
+
+  if(selectedHex<ICONWINS)
+    XSetWindowBackgroundPixmap(disp,TheScreen.icons.IconWins[selectedHex],\
+                                    TheScreen.icons.IconPixs[selectedHex]);
+  switch(selected){
+    case I_ICONIFY:
+      IconifyWin(TheWin);
+      break;
+    case I_CLOSE:
+      CloseWin(TheWin);
+      break;
+    case I_AUTORISE:
+      if(TheWin->flags & RISEN) {
+        MoveResizeWin(TheWin,TheWin->ra.x,TheWin->ra.y,\
+                                TheWin->ra.w,TheWin->ra.h);
+        TheWin->flags &= ~RISEN;
+      } else {
+        int maxw,maxh,bw,bh,wi,hi;
+        maxw=TheWin->ra.maxw;maxh=TheWin->ra.maxh;
+        bw=TheWin->ra.bw;bh=TheWin->ra.bh;
+        wi=TheWin->ra.wi;hi=TheWin->ra.hi;
+        TheWin->ra.x=TheWin->Attr.x;
+        TheWin->ra.y=TheWin->Attr.y;
+        TheWin->ra.w=TheWin->Attr.width;
+        TheWin->ra.h=TheWin->Attr.height;
+        MoveResizeWin(TheWin,0,0,(maxw>TheScreen.width)?\
+         (bw+((int)((TheScreen.width-bw-1)/wi))*wi):maxw,\
+                      (maxh>TheScreen.height)?(bh+((int)\
+                 ((TheScreen.height-bh-1)/hi))*hi):maxh);
+
+
+        TheWin->flags |= RISEN;
+      }
+      break;
+    case I_BACK:
+      LowerWin(TheWin);
+      break;
+    case I_KILL:
+      break;
+    case I_MENU:
+      WinMenuMenu(TheWin,event->xbutton.x,event->xbutton.y);
+      break;
+    case I_REALLY:
+      XKillClient(disp,TheWin->win);
+      break;
+    default:
+      if(move_back) XWarpPointer(disp,None,None,0,0,0,0,x1,y1);
+  }
+}
+
 void WinMenuEnterNotify(XEvent *event)
 {
   int a;
@@ -167,59 +223,14 @@ void WinMenuButtonRelease(XEvent *event)
       case Button4: break;
       case Button5: break;
     }
-    return;
+  } else {
+    StopWinMenu(selectedHex, event);
   }
+  
+}
 
-  UngrabPointer();
-  XUnmapWindow(disp,TheScreen.icons.IconParent);
-  if(TheWin) XInstallColormap(disp,TheWin->Attributes.colormap);
-  ReinstallDefaultHandle();
-
-  if(selectedHex<ICONWINS)
-    XSetWindowBackgroundPixmap(disp,TheScreen.icons.IconWins[selectedHex],\
-                                    TheScreen.icons.IconPixs[selectedHex]);
-  switch(selectedHex){
-    case I_ICONIFY:
-      IconifyWin(TheWin);
-      break;
-    case I_CLOSE:
-      CloseWin(TheWin);
-      break;
-    case I_AUTORISE:
-      if(TheWin->flags & RISEN) {
-        MoveResizeWin(TheWin,TheWin->ra.x,TheWin->ra.y,\
-                                TheWin->ra.w,TheWin->ra.h);
-        TheWin->flags &= ~RISEN;
-      } else {
-        int maxw,maxh,bw,bh,wi,hi;
-        maxw=TheWin->ra.maxw;maxh=TheWin->ra.maxh;
-        bw=TheWin->ra.bw;bh=TheWin->ra.bh;
-        wi=TheWin->ra.wi;hi=TheWin->ra.hi;
-        TheWin->ra.x=TheWin->Attr.x;
-        TheWin->ra.y=TheWin->Attr.y;
-        TheWin->ra.w=TheWin->Attr.width;
-        TheWin->ra.h=TheWin->Attr.height;
-        MoveResizeWin(TheWin,0,0,(maxw>TheScreen.width)?\
-         (bw+((int)((TheScreen.width-bw-1)/wi))*wi):maxw,\
-                      (maxh>TheScreen.height)?(bh+((int)\
-                 ((TheScreen.height-bh-1)/hi))*hi):maxh);
-
-
-        TheWin->flags |= RISEN;
-      }
-      break;
-    case I_BACK:
-      LowerWin(TheWin);
-      break;
-    case I_KILL:
-      break;
-    case I_MENU:
-      WinMenuMenu(TheWin,event->xbutton.x,event->xbutton.y);
-      break;
-    case I_REALLY:
-      XKillClient(disp,TheWin->win);
-      break;
-    default:
-      if(move_back) XWarpPointer(disp,None,None,0,0,0,0,x1,y1);
-  }
+void WinMenuUnmapNotify(XEvent *event)
+{
+  if(event->xunmap.window == TheWin->win) StopWinMenu(ICONWINS, event);
+  HandleUnmapNotify(event);
 }

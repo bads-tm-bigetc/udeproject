@@ -6,5 +6,6 @@ void WinMenuEnterNotify(XEvent *event);
 void WinMenuButtonRelease(XEvent *event);
 void WinMenuButtonPress(XEvent *event);
 void WinMenuVisibility(XEvent *event);
+void WinMenuUnmapNotify(XEvent *event);
 
 #endif

@@ -571,6 +571,7 @@ void InitHandlers()
   WinMenuHandle[ButtonPress]=WinMenuButtonPress;
   WinMenuHandle[ButtonRelease]=WinMenuButtonRelease;
   WinMenuHandle[VisibilityNotify]=WinMenuVisibility;
+  WinMenuHandle[UnmapNotify]=WinMenuUnmapNotify;
   for(i=0;i<LASTEvent;i++) MenuHandle[i]=DefaultHandle[i];
   MenuHandle[EnterNotify]=MenuEnterNotify;
   MenuHandle[LeaveNotify]=MenuLeaveNotify;

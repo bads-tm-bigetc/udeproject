@@ -1,3 +1,12 @@
+2001-02-23  Christian Ruppert <arc@gmx.li>
+
+	* uwm/winmenu.c: added handler WinMenuUnmapNotify.
+	* uwm/winmenu.c: split WinMenuButtonRelease into WinMenuButtonRelease
+	  and StopWinMenu.
+	* uwm/winmenu.h: added prototype for WinMenuUnmapNotify.
+	* uwm/handlers.h: added prototype for HandleUnmapNotify.
+	* uwm/handlers.c: added WinMenuUnmapNotify to handler table init.
+
 2001-01-21  Christian Ruppert <arc@gmx.li>
 
 	* uwm.c (main): added #ifdef ENABLE_NLS around init of intl so that
