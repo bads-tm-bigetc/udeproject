@@ -36,16 +36,17 @@
 extern Atom UDEContext, UDE_WORKSPACES_PROPERTY, UDE_SETTINGS_PROPERTY,
             UDE_WINDOW_PROPERTY;
 
-#define UDE_MAXCOLORS 9
+#define UDE_MAXCOLORS 10
 #define UDE_Back 0
 #define UDE_Light 1
 #define UDE_Shadow 2
 #define UDE_StandardText 3
 #define UDE_InactiveText 4
-#define UDE_HighlightedText 5
-#define UDE_HighlightedBgr 6
-#define UDE_TextColor 7
-#define UDE_TextBgr 8
+#define UDE_InactiveBgr 5
+#define UDE_HighlightedText 6
+#define UDE_HighlightedBgr 7
+#define UDE_TextColor 8
+#define UDE_TextBgr 9
 typedef XColor UDEColor;
 typedef UDEColor UDEColors[UDE_MAXCOLORS];
 
@@ -61,13 +62,16 @@ struct _UDEWin {
 };
 
 /*** global array of structure available in root win's UDE_WORKSPACES_PROPERTY
-                                                                            ***/
+
+           THIS IS BUGGY!!! REEMPLEMENTATION NEEDED!!!
+
 typedef struct _UDEWorkspaceExchange UDEWorkspaceExchange;
 
 struct _UDEWorkspaceExchange {
   char name[32];
   UDEColors WorkspaceColors;
 };
+                                                                            ***/
 
 /*** global structure, available only once in root win's UDE_SETTINGS_PROPERTY.
                                                                             ***/
@@ -76,11 +80,11 @@ struct _UDEWorkspaceExchange {
 #define UDESubMenuTitles  (1<<1) /* do submenus have titles or not? */
 typedef struct _UDEDesktop UDEDesktop;
 
-struct _UDEDesktop {
+struct _UDEDesktop { /* this is also buggy and needs reimplementation */
   Display *disp;        /* we need this to identify the gcs and fonts */
   unsigned short flags;
   unsigned int BevelWidth;
-  UDEWorkspaceExchange *WorkSpacesData;
+/*  UDEWorkspaceExchange *WorkSpacesData;  buggy, needs reimplementation */
   short ActiveWorkSpace, WorkSpaces;
   UDEColor *ActualColors;    /* preallocated color cells to be used with ALL
                                 ude colors drawing and refreshing! */
