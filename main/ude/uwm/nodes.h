@@ -57,10 +57,10 @@ void Node2End(NodeList *list,Node *node);
 /* moves specified node to beginning of list */
 void Node2Start(NodeList *list,Node *node);
 
-/* more/equal/less-function returns >0 if a>b, 0 if a=b and <0 if a<b */
-typedef int (*melfunc)(void *a, void *b);
+/* greater/equal/less-function returns >0 if a>b, 0 if a=b and <0 if a<b */
+typedef int (*gelfunc)(void *a, void *b);
 
 /* sorts the given NodeList */
-void SortNodeList(NodeList *list, melfunc mel);
+void SortNodeList(NodeList *list, gelfunc order);
 
 #endif

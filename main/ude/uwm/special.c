@@ -189,6 +189,15 @@ void *MyCalloc(size_t n,size_t s)
   return(ret);
 }
 
+/* MyStrdup replaces strdup also for those systems where it exists */
+/* and quits on error */
+char *MyStrdup(char *s)
+{
+  char *c;
+  c = MyCalloc(strlen(s) + 1, sizeof(char));
+  strcpy(c, s);
+  return(c);
+}
 
 /*** MyOpen will open a file like fopen(...,"r") with regard to the ude  ***
  *** configuration search paths. the file will be passed through the c   ***

@@ -22,6 +22,7 @@ void UngrabServer();
 void RaiseWin(UltimateContext *uc);
 void LowerWin(UltimateContext *uc);
 pid_t MySystem(char *command);
+char *MyStrdup(char *s);
 void *MyCalloc(size_t n,size_t s);
 FILE *MyOpen(char *name, char *ppopts);
 int CheckCPP();

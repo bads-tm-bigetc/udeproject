@@ -264,14 +264,14 @@ void Node2Start(NodeList *list,Node *node)
 
 /*******************************************************************************
  *
- * SortNodeList - Sort a list following a criteria given by mel
+ * SortNodeList - Sort a list following a criteria given by order
  *                This is written to put a completely unsorted list into order
  *                once and forever in its lifetime. it's not optimized for
  *                resorting or similar stuff!
  *
  *******************************************************************************/
 
-void SortNodeList(NodeList *list, melfunc mel)
+void SortNodeList(NodeList *list, gelfunc order)
 {
   NodeList origlist;
   Node *next;
@@ -290,7 +290,7 @@ void SortNodeList(NodeList *list, melfunc mel)
     } else {             /* the list is not empty */
       Node *scan;
       scan = NULL;
-      while((scan = NodeNext(list, scan)) && (mel(scan->data, n->data) < 0));
+      while((scan = NodeNext(list, scan)) && (order(scan->data, n->data) < 0));
       if(scan) {
 	n->prev = scan->prev;
         n->next = scan;
