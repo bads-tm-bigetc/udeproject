@@ -15,16 +15,22 @@ typedef struct _cf_func_call cf_func_call;
 typedef union _cf_args cf_args;
 typedef int (*cf_func)(cf_args *args, NodeList *wins);
 
+#define CF_MODE_WIN_LIMIT 0
+#define CF_MODE_WIN_FIND  1
+
 union _cf_args {
   char *shell;
-  NodeList *AnyWindow;  /* list of functions to execute */
   struct {
-    char *name;
-    NodeList *functions;  /* list of functions to execute */
-  } NameWindow;
+    NodeList *functions;		/* list of functions to execute */
+    cf_func_call *else_function;	/* function to execute if no match */
+    int mode;				/* CF_MODE_WIN_... */
+    union {
+      char *name, *application;
+    } args;
+  } LimitWin;
   struct {
     int x, y;
-  } resize, SetSize, reposition, SetPosition;
+  } Resize, SetSize, Repos, SetPos;
 };
 
 struct _cf_func_call {
@@ -49,5 +55,24 @@ extern cf_function(cf_VisibleWindow);
 extern cf_function(cf_UniconicWindow);
 extern cf_function(cf_IconicWindow);
 extern cf_function(cf_NoneWindow);
+extern cf_function(cf_DragPos);
+extern cf_function(cf_DragSize);
+extern cf_function(cf_HexMenu);
+extern cf_function(cf_SetFocus);
+extern cf_function(cf_Show);
+extern cf_function(cf_Raise);
+extern cf_function(cf_Lower);
+extern cf_function(cf_Max);
+extern cf_function(cf_VMax);
+extern cf_function(cf_HMax);
+extern cf_function(cf_Demax);
+extern cf_function(cf_Resize);
+extern cf_function(cf_SetSize);
+extern cf_function(cf_Repos);
+extern cf_function(cf_SetPos);
+extern cf_function(cf_Close);
+extern cf_function(cf_Iconify);
+extern cf_function(cf_Kill);
+extern cf_function(cf_WorkspaceWin);
 
 #endif /* UWM_CONF_FUNC_H */

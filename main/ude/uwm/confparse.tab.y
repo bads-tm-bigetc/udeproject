@@ -48,8 +48,8 @@
 /*** end of config file data types ***/
 #define UWM_YY_TYPENO 3
 /*** what follows are internal data types ***/
-  cf_func rawfunction;
   cf_func_call *function;
+  NodeList *funclist;
 /*  struct uwm_yy_ContextStackStruct *uwm_yy_Context;
 ***/
 }
@@ -82,8 +82,10 @@
 %type <floatval> FloatVal
 /*%type <uwm_yy_Context> FunctionBlock Menu WorkspaceSetting EventSettings*/
 %type <string> String
-%type <function> AnyFunction
-%type <rawfunction> WinSpecifier
+%type <function> AnyFunction WinFunction AnyWinAction
+%type <function> WinSpecifier WinLimit WinLimitBlocks
+%type <function> WinFind WinFindBlocks WinFindDefault
+%type <funclist> FunctionBlock WinActionBlock
 
 %{
 #define UWM_CONFPARSE_TAB_H
@@ -151,25 +153,22 @@ AnyTop: MenuBlock
 
 String : StringAtom
        | LightOfAtom '(' String ',' FloatVal ')' {
-			  $$ = MultiplyColor($3, $5);
-			  free($3);
-			}
+				$$ = MultiplyColor($3, $5);
+				free($3); }
        | ShadowOfAtom '(' String ',' FloatVal ')' {
-			  $$ = MultiplyColor($3, ((double)1.0)/$5);
-			  free($3);
-			} ;
+				$$ = MultiplyColor($3, ((double)1.0)/$5);
+				free($3); } ;
 
 /* Deal with linenumber and filename information we get from C preprocessor */
 PreProc : PreprocessorAtom Integer StringAtom IntegerGarbage '\n' {
-				  uwm_yyParseLineStack->linenumber = $2;
-				  if(uwm_yyParseLineStack->topfilename
-				     != uwm_yyParseLineStack->filename) {
-				    free(uwm_yyParseLineStack->filename);
-				  }
-				  uwm_yyParseLineStack->filename
-				    = (strlen($3) && strcmp($3, "<stdin>"))
-				      ? $3 : uwm_yyParseLineStack->topfilename;
-				} ;
+				uwm_yyParseLineStack->linenumber = $2;
+				if(uwm_yyParseLineStack->topfilename
+				   != uwm_yyParseLineStack->filename) {
+				  free(uwm_yyParseLineStack->filename);
+				}
+				uwm_yyParseLineStack->filename
+				  = (strlen($3) && strcmp($3, "<stdin>"))
+				    ? $3 : uwm_yyParseLineStack->topfilename; } ;
 
 IntegerGarbage : IntegerAtom { }
 	       | IntegerGarbage IntegerAtom { }
@@ -213,7 +212,8 @@ EventDescriptor : KeystrokeAtom Integer ',' Integer
 		| ButtonAtom Integer ',' Integer ;
 
 FunctionBlock : { uwm_yy_PushContext(UWM_YY_FUNCTION_CONTEXT, NULL); }
-		FunctionBlock_ { uwm_yy_PopContext(); } ;
+		FunctionBlock_ { $$ = uwm_yy_PeekContext()->context_data;
+				 uwm_yy_PopContext(); } ;
 
 FunctionBlock_ : AnyFunction {
 		 NodeAppend(uwm_yy_PeekContext()->context_data, $1); }
@@ -227,7 +227,7 @@ Function : GenericLine
 		 NodeAppend(uwm_yy_PeekContext()->context_data, $1); } ;
 
 AnyFunction : WorkspaceFunction { $$ = NULL; }
-	    | WinFunction { $$ = NULL; }
+	    | WinFunction { $$ = $1; }
 	    | String {		/* shell command */
 		$$ = MyCalloc(1, sizeof(cf_func_call));
 		$$->args.shell = $1;
@@ -249,67 +249,173 @@ WorkspaceFunction : WorkspaceAtom WorkspaceSpecifier { } ;
 
 AnySpecifier : AnyAtom | { } ; /* No specifier is the same as ANY */
 
-WinSpecifier : AnySpecifier { $$ = cf_AnyWindow; }
-	     | String { $$ = cf_NameWindow; }
-	     | AppAtom String { $$ = cf_AppWindow; }
-	     | NextAtom AnyAtom { $$ = cf_NextWindow; }
-	     | PrevAtom AnyAtom { $$ = cf_PrevWindow; }
-	     | NextAtom VisibleAtom { $$ = cf_NextVisibleWindow; }
-	     | PrevAtom VisibleAtom { $$ = cf_PrevVisibleWindow; }
-	     | NextAtom { $$ = cf_NextWSWindow; }
-	     | PrevAtom { $$ = cf_PrevWSWindow; }
-	     | UniconicAtom { $$ = cf_UniconicWindow; }
-	     | IconicAtom { $$ = cf_IconicWindow; }
-	     | VisibleAtom { $$ = cf_VisibleWindow; }
-	     | NoneAtom { $$ = cf_NoneWindow; } ;
+WinSpecifier : AnySpecifier {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_AnyWindow; }
+	     | String {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->args.LimitWin.args.name = $1;
+				$$->func = cf_NameWindow; }
+	     | AppAtom String {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->args.LimitWin.args.application = $2;
+				$$->func = cf_AppWindow; }
+	     | NextAtom AnyAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_NextWindow; }
+	     | PrevAtom AnyAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_PrevWindow; }
+	     | NextAtom VisibleAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_NextVisibleWindow; }
+	     | PrevAtom VisibleAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_PrevVisibleWindow; }
+	     | NextAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_NextWSWindow; }
+	     | PrevAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_PrevWSWindow; }
+	     | UniconicAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_UniconicWindow; }
+	     | IconicAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_IconicWindow; }
+	     | VisibleAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_VisibleWindow; }
+	     | NoneAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_NoneWindow; } ;
 
-AnyWinAction : DragPosAtom { }
-	     | DragSizeAtom { }
-	     | HexMenuAtom { }
-	     | SetFocusAtom { }
-	     | ShowAtom { }
-	     | RaiseAtom { }
-	     | LowerAtom { }
-	     | MaxAtom { }
-	     | VMaxAtom { }
-	     | HMaxAtom { }
-	     | DemaxAtom { }
-	     | ResizeAtom '(' Integer ',' Integer ')' { }
-	     | SetSizeAtom '(' Integer ',' Integer ')' { }
-	     | ReposAtom '(' Integer ',' Integer ')' { }
-	     | SetPosAtom '(' Integer ',' Integer ')' { } 
-	     | CloseAtom { }
-	     | IconifyAtom { }
-	     | KillAtom { } 
-	     | WorkspaceFunction { } ;
+AnyWinAction : DragPosAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_DragPos; }
+	     | DragSizeAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_DragSize; }
+	     | HexMenuAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_HexMenu; }
+	     | SetFocusAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_SetFocus; }
+	     | ShowAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_Show; }
+	     | RaiseAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_Raise; }
+	     | LowerAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_Lower; }
+	     | MaxAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_Max; }
+	     | VMaxAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_VMax; }
+	     | HMaxAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_HMax; }
+	     | DemaxAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_Demax; }
+	     | ResizeAtom '(' Integer ',' Integer ')' {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->args.Resize.x = $3;
+				$$->args.Resize.y = $5;
+				$$->func = cf_Resize; }
+	     | SetSizeAtom '(' Integer ',' Integer ')' {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->args.SetSize.x = $3;
+				$$->args.SetSize.y = $5;
+				$$->func = cf_SetSize; }
+	     | ReposAtom '(' Integer ',' Integer ')' {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->args.Repos.x = $3;
+				$$->args.Repos.y = $5;
+				$$->func = cf_Repos; }
+	     | SetPosAtom '(' Integer ',' Integer ')' {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->args.SetPos.x = $3;
+				$$->args.SetPos.y = $5;
+				$$->func = cf_SetPos; }
+	     | CloseAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_Close; }
+	     | IconifyAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_Iconify; }
+	     | KillAtom {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_Kill; }
+	     | WorkspaceFunction {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_WorkspaceWin; } ;
 
 WinAction : GenericLine
-	  | AnyWinAction ';' ;
+	  | AnyWinAction ';' {
+		 NodeAppend(uwm_yy_PeekContext()->context_data, $1); } ;
 
 WinActions : WinAction
 	   | WinActions WinAction ;
 
 WinActionBlock : { uwm_yy_PushContext(UWM_YY_FUNCTION_CONTEXT, NULL); }
-		WinActionBlock_ { uwm_yy_PopContext(); } ;
+		WinActionBlock_ { $$ = uwm_yy_PeekContext()->context_data;
+				  uwm_yy_PopContext(); } ;
 
-WinActionBlock_ : AnyWinAction
+WinActionBlock_ : AnyWinAction {
+		 	NodeAppend(uwm_yy_PeekContext()->context_data, $1); }
 		 | '{' WinActions '}' ;
 
-WinLimitBlocks : WinLimit
-	       | WinLimitBlocks OrAtom WinLimit ;
+WinLimitBlocks : WinLimit { $$ = $1; }
+	       | WinLimitBlocks OrAtom WinLimit {
+				cf_func_call *t;
+				$$ = $1;
+				t = $$;
+				while(t->args.LimitWin.else_function)
+				  t = t->args.LimitWin.else_function;
+				t->args.LimitWin.else_function = $3; } ;
 
-WinLimit : WinSpecifier WinActionBlock { } ;
+WinLimit : WinSpecifier WinActionBlock {
+				$$ = $1;
+				$$->args.LimitWin.functions = $2;
+				$$->args.LimitWin.mode = CF_MODE_WIN_LIMIT;
+				$$->args.LimitWin.else_function = NULL; } ;
 
-WinFindDefault : /* no default action */
-	       | OrAtom FunctionBlock ;
+WinFindDefault : /* no default action */ { $$ = NULL; }
+	       | OrAtom FunctionBlock {
+				$$ = MyCalloc(1, sizeof(cf_func_call));
+				$$->func = cf_AnyWindow;
+				$$->args.LimitWin.functions = $2; } ;
 
-WinFindBlocks : WinFind
-	      | WinFindBlocks OrAtom WinFind ;
+WinFindBlocks : WinFind { $$ = $1; }
+	      | WinFindBlocks OrAtom WinFind {
+				cf_func_call *t;
+				$$ = $1;
+				t = $$;
+				while(t->args.LimitWin.else_function)
+				  t = t->args.LimitWin.else_function;
+				t->args.LimitWin.else_function = $3; } ;
 
-WinFind : FindAtom WinSpecifier WinActionBlock { } ;
+WinFind : FindAtom WinSpecifier WinActionBlock {
+				$$ = $2;
+				$$->args.LimitWin.functions = $3;
+				$$->args.LimitWin.mode = CF_MODE_WIN_FIND;
+				$$->args.LimitWin.else_function = NULL; } ;
 
-WinFunction : WindowAtom WinLimitBlocks { }
-	    | WindowAtom WinFindBlocks WinFindDefault { } ;
+WinFunction : WindowAtom WinLimitBlocks { $$ = $2; }
+	    | WindowAtom WinFindBlocks WinFindDefault {
+				cf_func_call *t;
+				$$ = $2;
+				t = $$;
+				while(t->args.LimitWin.else_function)
+				  t = t->args.LimitWin.else_function;
+				t->args.LimitWin.else_function = $3; } ;
 
 MenuBlock : MenuAtom Integer Menu ;
 

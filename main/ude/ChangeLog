@@ -1,3 +1,11 @@
+2004-12-07  Christian Ruppert <arc@users.sf.net>
+	* uwm/confparse.tab.y: implemented initialisation of
+	  WINDOW-limit-functions
+	* uwm/confparse.tab.y, uwm/conf_func.c, uwm/conf_func.h: added
+	  initialisation of WINDOW-functions, still need to be implemented.
+	* uwm/conf_func.h: changed names of cf_args elements to match function
+	  names.
+
 2004-12-04  Christian Ruppert <arc@users.sf.net>
 	* uwm/conf_func.c, uwm/conf_func.h, uwm/confparse.tab.y: implemented
 	  and extended WINDOW NEXT in new config file/event processor.

@@ -51,7 +51,7 @@ cf_function(cf_Quit)
 
 cf_function(cf_AnyWindow)
 {
-  cf_execute(args->AnyWindow, wins);
+  cf_execute(args->LimitWin.functions, wins);
 }
 
 cf_function(cf_NameWindow)
@@ -64,18 +64,18 @@ cf_function(cf_NameWindow)
   while(current = NodeNext(wins, current)) {
     UltimateContext *uc;
     uc = current->data;
-    if(!strcmp(uc->title.name, args->NameWindow.name)) {
+    if(!strcmp(uc->title.name, args->LimitWin.args.name)) {
       NodeAppend(FoundWins, uc);
     }
   }
-  cf_execute(args->NameWindow.functions, FoundWins);
+  cf_execute(args->LimitWin.functions, FoundWins);
   NodeListDelete(&FoundWins);
 }
 
 cf_function(cf_AppWindow)
 {
-/***/printf(TheScreen.errout,
-/***/	    "WINDOW FIND APPLICATION (cf_AppWindow) not yet implemented!\n");
+/***/fprintf(TheScreen.errout,
+/***/	     "WINDOW FIND APPLICATION (cf_AppWindow) not yet implemented!\n");
 }
 
 cf_function(cf_NextWindow)
@@ -93,7 +93,7 @@ cf_function(cf_NextWindow)
     } while(n != n2);
     if(n2) NodeAppend(FoundWins, n2->data);
   }
-  cf_execute(args->NameWindow.functions, FoundWins);
+  cf_execute(args->LimitWin.functions, FoundWins);
   NodeListDelete(&FoundWins);
 }
 
@@ -112,7 +112,7 @@ cf_function(cf_PrevWindow)
     } while(n != n2);
     if(n2) NodeAppend(FoundWins, n2->data);
   }
-  cf_execute(args->NameWindow.functions, FoundWins);
+  cf_execute(args->LimitWin.functions, FoundWins);
   NodeListDelete(&FoundWins);
 }
 
@@ -132,7 +132,7 @@ cf_function(cf_NextVisibleWindow)
     } while(n != n2);
     if(n2) NodeAppend(FoundWins, n2->data);
   }
-  cf_execute(args->NameWindow.functions, FoundWins);
+  cf_execute(args->LimitWin.functions, FoundWins);
   NodeListDelete(&FoundWins);
 }
 
@@ -152,7 +152,7 @@ cf_function(cf_PrevVisibleWindow)
     } while(n != n2);
     if(n2) NodeAppend(FoundWins, n2->data);
   }
-  cf_execute(args->NameWindow.functions, FoundWins);
+  cf_execute(args->LimitWin.functions, FoundWins);
   NodeListDelete(&FoundWins);
 }
 
@@ -172,7 +172,7 @@ cf_function(cf_NextWSWindow)
     } while(n != n2);
     if(n2) NodeAppend(FoundWins, n2->data);
   }
-  cf_execute(args->NameWindow.functions, FoundWins);
+  cf_execute(args->LimitWin.functions, FoundWins);
   NodeListDelete(&FoundWins);
 }
 
@@ -192,7 +192,7 @@ cf_function(cf_PrevWSWindow)
     } while(n != n2);
     if(n2) NodeAppend(FoundWins, n2->data);
   }
-  cf_execute(args->NameWindow.functions, FoundWins);
+  cf_execute(args->LimitWin.functions, FoundWins);
   NodeListDelete(&FoundWins);
 }
 
@@ -210,7 +210,7 @@ cf_function(cf_VisibleWindow)
       NodeAppend(FoundWins, uc);
     }
   }
-  cf_execute(args->NameWindow.functions, FoundWins);
+  cf_execute(args->LimitWin.functions, FoundWins);
   NodeListDelete(&FoundWins);
 }
 
@@ -228,7 +228,7 @@ cf_function(cf_UniconicWindow)
       NodeAppend(FoundWins, uc);
     }
   }
-  cf_execute(args->NameWindow.functions, FoundWins);
+  cf_execute(args->LimitWin.functions, FoundWins);
   NodeListDelete(&FoundWins);
 }
 
@@ -246,7 +246,7 @@ cf_function(cf_IconicWindow)
       NodeAppend(FoundWins, uc);
     }
   }
-  cf_execute(args->NameWindow.functions, FoundWins);
+  cf_execute(args->LimitWin.functions, FoundWins);
   NodeListDelete(&FoundWins);
 }
 
@@ -254,7 +254,82 @@ cf_function(cf_NoneWindow)
 {
   NodeList *FoundWins;
   FoundWins = NodeListCreate();
-  cf_execute(args->NameWindow.functions, FoundWins);
+  cf_execute(args->LimitWin.functions, FoundWins);
   NodeListDelete(&FoundWins);
 }
 
+cf_function(cf_DragPos)
+{
+}
+
+cf_function(cf_DragSize)
+{
+}
+
+cf_function(cf_HexMenu)
+{
+}
+
+cf_function(cf_SetFocus)
+{
+}
+
+cf_function(cf_Show)
+{
+}
+
+cf_function(cf_Raise)
+{
+}
+
+cf_function(cf_Lower)
+{
+}
+
+cf_function(cf_Max)
+{
+}
+
+cf_function(cf_VMax)
+{
+}
+
+cf_function(cf_HMax)
+{
+}
+
+cf_function(cf_Demax)
+{
+}
+
+cf_function(cf_Resize)
+{
+}
+
+cf_function(cf_SetSize)
+{
+}
+
+cf_function(cf_Repos)
+{
+}
+
+cf_function(cf_SetPos)
+{
+}
+
+cf_function(cf_Close)
+{
+}
+
+cf_function(cf_Iconify)
+{
+}
+
+cf_function(cf_Kill)
+{
+}
+
+cf_function(cf_WorkspaceWin)
+{
+}
