@@ -75,13 +75,10 @@ void DrawWinBorder(UltimateContext *uc)
   unsigned long winbg;
 
   if(uc->frame == None) return;
-/***/printf("uc: %X, FocusWin: %X\n", uc, FocusWin);
   if(active = (uc == FocusWin)) {
     uc->flags |= ACTIVE_BORDER;
-/***/printf("Active\n");
   } else {
     uc->flags &= ~ACTIVE_BORDER;
-/***/printf("Inactive\n");
   }
 
   winbg = active ? TheScreen.ActiveBorder[TheScreen.desktop.ActiveWorkSpace]
@@ -380,11 +377,9 @@ void ActivateWin(UltimateContext *uc)
 
   if((Handle==MoveHandle)||(Handle==ResizeHandle)) return;
                        /* Don't confuse window moving or resizing routines!!! */
-/***/printf("puh\n");
   if(!uc) {
     Window dummywin, win;
     int dummy;
-/***/printf("boo: %x\n", ActiveWin);
     XQueryPointer(disp, TheScreen.root, &dummywin, &win, &dummy, &dummy,
                   &dummy, &dummy, &dummy);
     if(XFindContext(disp, win, UWMContext, (XPointer *)&uc)) uc = NULL;
@@ -417,7 +412,6 @@ void ActivateWin(UltimateContext *uc)
   } else if(OldActive) {
     XSetInputFocus(disp, PointerRoot, RevertToPointerRoot, TimeStamp);
   }
-/***/printf("zoo: %x\n", ActiveWin);
 }
 
 void DisenborderWin(UltimateContext *uc, Bool alive)
