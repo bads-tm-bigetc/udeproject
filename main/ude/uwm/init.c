@@ -1641,6 +1641,8 @@ UWM ");
            TheScreen.root, True, GrabModeAsync, GrabModeAsync);
   XGrabKey(disp, XKeysymToKeycode(disp,XK_Page_Up), UWM_MODIFIERS,
            TheScreen.root, True, GrabModeAsync, GrabModeAsync);
+  XGrabKey(disp, XKeysymToKeycode(disp,XK_End), UWM_MODIFIERS,
+           TheScreen.root, True, GrabModeAsync, GrabModeAsync);
   XGrabButton(disp, AnyButton, UWM_MODIFIERS, TheScreen.root,
               True, ButtonPressMask | ButtonReleaseMask, GrabModeAsync,
 	      GrabModeAsync, None, None);

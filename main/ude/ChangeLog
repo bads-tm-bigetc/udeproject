@@ -1,3 +1,8 @@
+2002-09-04  Christian Ruppert <arc@gmx.li>
+	* uwm/init.c: added grabbing of UWM_MODIFIERS/End which must either
+	  have been forgotten when keyboard stuff was implemented or gotten
+	  accidentally deleted sometime.
+
 2002-09-03  Christian Ruppert <arc@gmx.li>
 	* uwm/Makefile.am: added define UDE_BIN_PATH for more reliable.
 	  restart.
