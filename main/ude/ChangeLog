@@ -1,3 +1,18 @@
+2002-02-11  Christian Ruppert <arc@gmx.li>
+
+	* README: rewritten for release 0.2.8
+	* config/Makefile.am: removed StartScript and StopScript from DATA
+	  variable so that x flag is set.
+	* config/uwmrc-behaviour.hook: removed tick to avoid preprocessor
+	  warning parsing the file.
+	* configure.in: changed version number to 2.8 and added
+	  config/StartScript to output file list.
+	* doc/Makefile.am: added the README file to installed documentation.
+	* config/StartScript moved to config/StartScript.in: now using autoconf
+	  macro for less to find installed README file.
+	* uwm/init.c: uwm now sets UDEdir environment on system installation
+	  directory on startup if UDEdir has not yet been set.
+
 2002-02-10  Christian Ruppert <arc@gmx.li>
 
 	* uwm/init.h: added InitStruct.BehaviourFlags and BF_IN_WIN_CTRL

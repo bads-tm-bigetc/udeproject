@@ -7,7 +7,7 @@
 % BehaviourFlags = <nr>
 %       Default: 0
 %
-%       Specifies parts of uwm's behaviour. Expects a sum of the
+%       Specifies parts of uwm´s behaviour. Expects a sum of the
 %       following values:
 %
 %       1    AllMouse      do not ignore mouse events passed on to uwm by

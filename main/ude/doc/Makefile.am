@@ -9,7 +9,7 @@ TEXOUTPUT= \
 SUBDIRS= html
 DIR_CONTENTS= ${TEXSOURCES} ${TEXOUTPUT}
 udedocdir= ${prefix}/doc/${PACKAGE}-${VERSION}
-udedoc_DATA= ${DIR_CONTENTS}
+udedoc_DATA= ${DIR_CONTENTS} ../README
 EXTRA_DIST= ${DIR_CONTENTS}
 
 manual.dvi: manual.tex

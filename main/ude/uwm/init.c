@@ -1501,13 +1501,18 @@ UWM ");
 
   /*** find out where ude is installed. ***/
   env= getenv("UDEdir");
-  if(!env)
+  if(!env) {
     /* UDE_DIR is a macro that is defined in the Makefile (by automake) and
        it will contain the default ude directory which is the same pkgdatadir
        it will usually be /usr/local/share/ude */
+    char *e;
     sprintf(TheScreen.udedir, "%s/", UDE_DIR);
-  else
-    {
+    e = MyCalloc(strlen(TheScreen.udedir) + strlen("UDEdir="), sizeof(char));
+    if(e) {
+      sprintf(e,"UDEdir=%s", TheScreen.udedir);
+      putenv(e);
+    } /* errors setting UDEdir are not fatal, so we ignore them. */
+  } else {
       char *e;
       
       e= RLSpace(env);

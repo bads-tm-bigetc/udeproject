@@ -1,46 +1,36 @@
-Hello, everyone!                                            SNAPSHOT JUN 26 2000
+Hello, everyone!                                                           0.2.8
 
-This is uwm, the ultimate window manager, which will be one day part of ude, the
-unix desktop environment.
+This is uwm, the ultimate window manager, which will be one day part of ude,
+the unix desktop environment.
 
-********************************************************************************
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ATTENTION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+The first thing you might wonder about is where the BETA in the version number
+has gone, and yes, you're right: this is no longer a beta release. Although
+uwm has by far not yet all the features i'ld like it to have i decided that
+the time has come now to face it: uwm's reached a state of very high stability
+and reliability. Nothing to worry about, just a natural step ;) The fact that
+there's still a whole bunch of features missing is indicated by the major
+versoin number 0.
 
-This is just a development snapshot. it should *theoretically* be running stable
-but it's not completely tested.
-
-This snapshot was released since a major bug was discovered (nothing to worry
-about yet if you don't change workspaces really fast (about 10 times a second
-on a modern machine with several apps running)) but it could become a problem
-in future versions and it needs to be fixed. Unluckily fixing the bug
-requires rewriting parts of the main wm and handler functions. I'll use this
-opportunity to also finish icccm2.0 compliance and clean up the code a little
-bit. So the next version will probably be 0.3.0, release date unknown (don't
-expext it too soon, i'll probably release some more snapshots as soon as the
-wm-functions work again so that the new routines can be tested).
-
-thanx to shawn for reporting the bug.
-
-********************************************************************************
-
-For info on how to compile uwm, please check out the INSTALL and INSTALL.UDE
-files.
+As always, for info on how to compile uwm, please check out the INSTALL and
+INSTALL.UDE files.
 For questions on how to use and configure uwm, please check out the file
-manual.dvi in the docs directory. If you have further questions also check the
-old manual uwm_manual.dvi in the same directory.
+manual.dvi in the docs directory.
 
-Please also note that our url at ude.org is currently not available due
-to DNS problems. The web page can be reached at
+Please also note that our url at ude.org is no longer available, the project
+has migrated to sourceforge and can be reached at
 
-http://udeproject.sourceforge.net
+                       http://udeproject.sourceforge.net.
 
-meanwhile. Mirror pages also might be down or outaged due to this problem.
+Mirror pages also might be down or outaged due to some problems with the
+migration.
 
-For bug reports, suggestions etc. please write to Christian Ruppert <arc@gmx.li>
+For bug reports, suggestions etc. please contact Christian Ruppert <arc@gmx.li>
 
-Have fun with this snapshot.
+Have fun with this first officially stable release.
 
-oh, and don't forget: we're still looking for developers, designers etc. 
+oh, and don't forget: we're still looking for developers, designers etc. The
+more people work on this project the higher the chances are that one day we'll
+reach a major version number of 1.
 contact us if you're interested.
 
 ude - get used to it.
