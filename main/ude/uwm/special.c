@@ -44,6 +44,7 @@
 #include <sys/wait.h>
 
 #include "uwm.h"
+#include "special.h"
 #ifdef HAVE_TIME_H
   #include "time.h"
 #endif
@@ -83,7 +84,7 @@ void LowerWin(UltimateContext *uc)
   else XLowerWindow(disp,uc->win);
 }
 
-void SendWMProtocols(UltimateContext *uc, Atom prot, Time stamp)
+void SendWMProtocols(UltimateContext *uc, Atom prot)
 {
   XEvent event;
 
@@ -93,7 +94,7 @@ void SendWMProtocols(UltimateContext *uc, Atom prot, Time stamp)
   event.xclient.message_type = WM_PROTOCOLS;
   event.xclient.format = 32;
   event.xclient.data.l[0] = prot;
-  event.xclient.data.l[1] = stamp;
+  event.xclient.data.l[1] = TimeStamp;
   if(!XSendEvent(disp,uc->win,False,0L,&event))
     fprintf(TheScreen.errout,"UWM: Couldn't send message to client.\n");
 }
