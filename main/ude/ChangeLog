@@ -1,3 +1,7 @@
+2004-01-14  Christian Ruppert <arc@users.sf.net>
+	* uwm/special.c (CheckCPP): fixed a bug in the new cpp check.
+	* uwm/settings.h: defined some types (still empty).
+
 2004-12-07  Christian Ruppert <arc@users.sf.net>
 	* uwm/confparse.tab.y: implemented initialisation of
 	  WINDOW-limit-functions

@@ -32,6 +32,15 @@ typedef struct _uwm_workspace_settings {
 #include "settings_workspace_list.h"
 } uwm_workspace_settings;
 
+typedef struct _uwm_button_event {
+} uwm_button_event;
+
+typedef struct _uwm_key_event {
+} uwm_key_event;
+
+typedef struct _uwm_user_events {
+} uwm_user_events;
+
 typedef struct _uwm_settings {
   uwm_global_settings *global_settings;
   int workspace_settings_count;
