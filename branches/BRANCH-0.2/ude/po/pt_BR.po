@@ -1,0 +1,84 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 1999 Free Software Foundation, Inc.
+# Isaías V. Prestes <rmc@logic.com.br>, 1999.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2002-12-09 22:12+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Isaias V. Prestes <rmc@logic.com.br>\n"
+"Language-Team: pt_BR <pt_BR@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: uwm/windows.c:566
+msgid "Windows Menu"
+msgstr "Menu Janela"
+
+#: uwm/windows.c:577 uwm/windows.c:578
+msgid "Sticky Windows"
+msgstr ""
+
+#: uwm/windows.c:594
+msgid ">nameless window<"
+msgstr ""
+
+#: uwm/winmenumenu.c:77
+msgid "Sticky window"
+msgstr ""
+
+#: uwm/winmenumenu.c:88
+msgid "Move to WorkSpace"
+msgstr "Mover para Área de Trabalho"
+
+#: uwm/init.c:442
+msgid "Application Menu"
+msgstr "Menu Aplicações"
+
+#: uwm/init.c:797 uwm/init.c:824 uwm/init.c:844 uwm/init.c:875 uwm/init.c:895
+#: uwm/init.c:921 uwm/init.c:966 uwm/init.c:980 uwm/init.c:988 uwm/init.c:1001
+#: uwm/init.c:1009 uwm/init.c:1082 uwm/init.c:1093 uwm/init.c:1147
+#: uwm/init.c:1158 uwm/init.c:1169 uwm/init.c:1180 uwm/init.c:1191
+msgid "UWM: error in config-file. Ignored.\n"
+msgstr "UWM: erro no arquivo de configuração. Ignorado.\n"
+
+#: uwm/uwmmenu.c:134
+msgid "Really?!"
+msgstr "Realmente?!"
+
+#: uwm/uwmmenu.c:137
+msgid "UWM Menu"
+msgstr "UWM Menu"
+
+#. quit ude
+#: uwm/uwmmenu.c:142
+msgid "No!"
+msgstr "Não!"
+
+#: uwm/uwmmenu.c:143
+msgid "Yes!"
+msgstr "Sim!"
+
+#: uwm/uwmmenu.c:145
+msgid "Quit UDE"
+msgstr "Sair do UDE"
+
+#. restart
+#: uwm/uwmmenu.c:148 uwm/uwmmenu.c:154
+msgid "Restart UDE"
+msgstr "Reiniciar UDE"
+
+#: uwm/uwmmenu.c:151
+msgid "Reexecute StartScript"
+msgstr "Executar Script de início"
+
+#: uwm/uwmmenu.c:152
+msgid "No execute StartScript"
+msgstr "Não executar Script de início"
+
+#: uwm/uwmmenu.c:159 uwm/uwmmenu.c:166
+msgid "Launch another WM"
+msgstr "Iniciar outro WM"
