@@ -15,7 +15,6 @@
 
 #include "nodes.h"
 #include "menu.h"
-#include "lib/ude-desktop.h"
 #include "MwmUtil.h"
 
 /*** some debugging and developement settings ***/
@@ -101,10 +100,11 @@ typedef struct {
   char *cppcall, *cppincpaths, *urdbcppopts;
   char *Home;
 
-  Atom UDE_WORKSPACES_PROPERTY, UDE_SETTINGS_PROPERTY, UDE_WINDOW_PROPERTY;
   Atom WM_Sx, VERSION_ATOM, ATOM_PAIR, TARGETS, MULTIPLE, TIMESTAMP;
   Time start_tstamp;
   Time now;
+
+  unsigned int ActiveWorkspace;
 
   FILE *errout;
 /*******************************************************************/
@@ -119,14 +119,8 @@ typedef struct {
 
   Menu *AppsMenu;
   Menu *UWMMenu;
-  /* if SetBackground[ws#] is set to 0 the background of that ws is not
-     changed unless BackPixmap[ws#] is not NULL */
   unsigned char *SetBackground;
-  unsigned long *Background;
   char **BackCommand;
-//  Pixmap *BackPixmap;
-//  XpmAttributes *BackPixmapAttributes;
-  UDEDesktop desktop;
 } UDEScreen;
 
 extern UDEScreen TheScreen;

@@ -38,7 +38,8 @@
 #include "init.h"
 #include "workspaces.h"
 #include "menu.h"
-#include "ude-i18n.h"
+#include "settings.h"
+#include "uwm_intl.h"
 
 extern UDEScreen TheScreen;
 extern InitStruct InitS;
@@ -105,22 +106,19 @@ void RestartProc3(MenuItem *item)
 void ZapWS(XEvent *event,MenuItem *selected)
 {
   if(selected) return; /* only react if no item is selected */
-  switch(event->xbutton.button){
+  switch(event->xbutton.button) {
     case Button1:
-         ChangeWS((TheScreen.desktop.ActiveWorkSpace 
-                  + TheScreen.desktop.WorkSpaces - 1)
-                  % TheScreen.desktop.WorkSpaces);
+         ChangeWS((ActiveWS + NUMBER_OF_WORKSPACES - 1)
+                  % NUMBER_OF_WORKSPACES);
          break;
     case Button2:
          if(InitS.menuType[0]=='U') { 
-           ChangeWS((TheScreen.desktop.ActiveWorkSpace
-                    + TheScreen.desktop.WorkSpaces - 1)
-                    % TheScreen.desktop.WorkSpaces);
+           ChangeWS((ActiveWS + NUMBER_OF_WORKSPACES - 1)
+                    % NUMBER_OF_WORKSPACES);
            break;
          }
     case Button3:
-         ChangeWS((TheScreen.desktop.ActiveWorkSpace+1)
-                  % TheScreen.desktop.WorkSpaces);
+         ChangeWS((ActiveWS + 1) % NUMBER_OF_WORKSPACES);
          break;
   }
 }
@@ -129,9 +127,9 @@ void CreateUWMMenu()
 {
   Menu *really,*others;
   int j;
-  short useTitle = (TheScreen.desktop.flags & UDESubMenuTitles);
+  short useTitle = (settings.global_settings->LayoutFlags & SUBMENU_TITLES);
 
-  really= MenuCreate (_("Really?!"));
+  really = MenuCreate (_("Really?!"));
   if(!really)
     SeeYa(1,"FATAL: out of memory!");
   TheScreen.UWMMenu= MenuCreate (_("UWM Menu"));

@@ -70,7 +70,6 @@ struct uwm_yy_ContextStackStruct *uwm_yy_PeekContext();
 void uwm_init_set_option(char *name, int type, YYSTYPE *value);
 
 #define OFFSET_OF(STRUCTURE, NAME) ((long)(&(((struct STRUCTURE *)(0L))->NAME)))
-
 /* offsets for global settings */
 #define GLOBAL_OPTION_STRUCT_LINE(NAME, TYPE, DEFAULT) \
         {#NAME,    OFFSET_OF(_uwm_global_settings, NAME),    TYPE,   DEFAULT}
@@ -88,6 +87,7 @@ const uwm_init_index uwm_global_index[UWM_GLOBAL_OPTION_NR] = {
   GLOBAL_OPTION_STRUCT_LINE(MonoFont, UWM_S_FONT, "fixed"),
   GLOBAL_OPTION_STRUCT_LINE(HighlightFont, UWM_S_FONT, "fixed"),
   GLOBAL_OPTION_STRUCT_LINE(InactiveFont, UWM_S_FONT, "fixed"),
+  GLOBAL_OPTION_STRUCT_LINE(LayoutFlags, UWM_S_INT, NULL),
   GLOBAL_OPTION_STRUCT_LINE(StartScript, UWM_S_STRING, NULL),
   GLOBAL_OPTION_STRUCT_LINE(StopScript, UWM_S_STRING, NULL),
   GLOBAL_OPTION_STRUCT_LINE(ResourceFile, UWM_S_STRING, NULL),

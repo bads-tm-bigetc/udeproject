@@ -41,6 +41,7 @@
 #include "widgets.h"
 #include "special.h"
 #include "settings.h"
+#include "workspaces.h"
 
 #define MENUBORDERW InitS.MenuBorderWidth
 #define MENUXOFS InitS.MenuXOffset
@@ -120,9 +121,7 @@ Menu *MenuCreate(char *name)
 
   menu->height = (menu->name ? menu->ItemHeight : 0) + 2 * MENUBORDERW;
 
-  wattr.background_pixel=settings.workspace_settings
-                                  [TheScreen.desktop.ActiveWorkSpace]
-                                  ->BackgroundColor->pixel;
+  wattr.background_pixel=ActiveWSSettings->BackgroundColor->pixel;
   wattr.backing_store=WhenMapped;
   wattr.override_redirect=True;
   wattr.save_under=True;
@@ -191,9 +190,7 @@ void AppendMenuItem(Menu *menu,char *name,void *data,short type)
                 menu->width-2*MENUBORDERW,menu->ItemHeight);
     }
 
-    wattr.background_pixel=settings.workspace_settings
-                                    [TheScreen.desktop.ActiveWorkSpace]
-                                    ->BackgroundColor->pixel;
+    wattr.background_pixel=ActiveWSSettings->BackgroundColor->pixel;
     wattr.backing_store=WhenMapped;
     wattr.override_redirect=True;
     item->win=XCreateWindow(disp,menu->win,MENUBORDERW,menu->height-MENUBORDERW\
@@ -366,7 +363,7 @@ MenuItem *StartMenu(Menu *menu, int x, int y, Bool q,
 {
   selectedMenuItem=NULL;
   quittable = q;
-  keepIt = ((TheScreen.desktop.flags & UDETransientMenus) 
+  keepIt = ((settings.global_settings->BehaviourFlags & TRANSIENT_MENUS) 
             ? 0 : KeepNonTransMenu) | KeepMenuActive;
   SpecialProc = prc;
 
@@ -375,7 +372,7 @@ MenuItem *StartMenu(Menu *menu, int x, int y, Bool q,
   if(y>(TheScreen.height-menu->height-1))
     y=TheScreen.height-menu->height-1;
 
-  Menu2ws(menu,TheScreen.desktop.ActiveWorkSpace);
+  Menu2ws(menu, ActiveWS);
   InstallMenuHandle();
   GrabPointer(TheScreen.root,ButtonPressMask|ButtonReleaseMask|LeaveWindowMask|\
                                      EnterWindowMask,TheScreen.Mice[C_DEFAULT]);

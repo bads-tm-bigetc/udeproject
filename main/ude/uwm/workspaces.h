@@ -2,13 +2,16 @@
 #define UWM_WORKSPACES_H
 
 // BEGIN: New includes for new workspace/layer definitions
-#include <X11/Xcms.h>
+// #include <X11/Xcms.h>
 
-#include "nodes.h"
+// #include "nodes.h"
 // END: New includes for new workspace/layer definition
 
 //BEGIN: Old workspace function definitions
-#define OnActiveWS(A) (((A)==TheScreen.desktop.ActiveWorkSpace)||((A)==(-1)))
+#define SetActiveWS(A) (TheScreen.ActiveWorkspace=(A))
+#define ActiveWS      (TheScreen.ActiveWorkspace)
+#define OnActiveWS(A) (((A) == ActiveWS) || ((A) == (-1)))
+#define ActiveWSSettings (settings.workspace_settings[ActiveWS])
 
 void BroadcastWorkSpacesInfo();
 void ChangeWS(short WS);
@@ -16,45 +19,48 @@ void StickyWin(UltimateContext *uc);
 void WithWin2WS(UltimateContext *uc,short ws);
 void Win2WS(UltimateContext *uc,short ws);
 void SetWSBackground();
+
+#define NUMBER_OF_WORKSPACES (settings.workspace_settings_count)
+
 // END: Old workspace function definitions
 
 // BEGIN: New Workspace/Layer Definitions
 // New Structure Information
 // New Workspace Structure Information Flags
-#define UDE_LWS_WS_WorkspaceNumber		0x00000001
-#define UDE_LWS_WS_WorkspaceName		0x00000002
-#define UDE_LWS_WS_ScreenCommand		0x00000004
-#define UDE_LWS_WS_ScreenPixmap			0x00000008
-#define UDE_LWS_WS_InactiveBorder		0x00000010
-#define UDE_LWS_WS_ActiveBorder			0x00000020
-#define	UDE_LWS_WS_InactiveLight		0x00000040
-#define UDE_LWS_WS_InactiveShadow		0x00000080
-#define UDE_LWS_WS_ActiveLight			0x00000100
-#define UDE_LWS_WS_ActiveShadow			0x00000200
-#define UDE_LWS_WS_ActiveTitleFont		0x00000400
-#define	UDE_LWS_WS_InactiveTitleFont    0x00000800
-#define UDE_LWS_WS_LayersList			0x00001000
-#define UDE_LWS_WS_WindowsList			0x00002000
+// #define UDE_LWS_WS_WorkspaceNumber		0x00000001
+// #define UDE_LWS_WS_WorkspaceName		0x00000002
+// #define UDE_LWS_WS_ScreenCommand		0x00000004
+// #define UDE_LWS_WS_ScreenPixmap			0x00000008
+// #define UDE_LWS_WS_InactiveBorder		0x00000010
+// #define UDE_LWS_WS_ActiveBorder			0x00000020
+// #define	UDE_LWS_WS_InactiveLight		0x00000040
+// #define UDE_LWS_WS_InactiveShadow		0x00000080
+// #define UDE_LWS_WS_ActiveLight			0x00000100
+// #define UDE_LWS_WS_ActiveShadow			0x00000200
+// #define UDE_LWS_WS_ActiveTitleFont		0x00000400
+// #define	UDE_LWS_WS_InactiveTitleFont    0x00000800
+// #define UDE_LWS_WS_LayersList			0x00001000
+// #define UDE_LWS_WS_WindowsList			0x00002000
 
 // New Layer Structure Information Flags
-#define UDE_LWS_LY_LayerNumber			0x00000001
-#define UDE_LWS_LY_LayerName			0x00000002
-#define UDE_LWS_LY_LayerCommand			0x00000004
-#define UDE_LWS_LY_LayerPixmap			0x00000008
-#define UDE_LWS_LY_InactiveBorder		0x00000010
-#define UDE_LWS_LY_ActiveBorder			0x00000020
-#define	UDE_LWS_LY_InactiveLight		0x00000040
-#define UDE_LWS_LY_InactiveShadow		0x00000080
-#define UDE_LWS_LY_ActiveLight			0x00000100
-#define UDE_LWS_LY_ActiveShadow			0x00000200
-#define UDE_LWS_LY_ActiveTitleFont		0x00000400
-#define	UDE_LWS_LY_InactiveTitleFont	        0x00000800
-#define UDE_LWS_LY_LayersList			0x00001000
-#define UDE_LWS_LY_WindowsList			0x00002000
-#define UDE_LWS_LY_Sticky		       	0x00004000
+// #define UDE_LWS_LY_LayerNumber			0x00000001
+// #define UDE_LWS_LY_LayerName			0x00000002
+// #define UDE_LWS_LY_LayerCommand			0x00000004
+// #define UDE_LWS_LY_LayerPixmap			0x00000008
+// #define UDE_LWS_LY_InactiveBorder		0x00000010
+// #define UDE_LWS_LY_ActiveBorder			0x00000020
+// #define	UDE_LWS_LY_InactiveLight		0x00000040
+// #define UDE_LWS_LY_InactiveShadow		0x00000080
+// #define UDE_LWS_LY_ActiveLight			0x00000100
+// #define UDE_LWS_LY_ActiveShadow			0x00000200
+// #define UDE_LWS_LY_ActiveTitleFont		0x00000400
+// #define	UDE_LWS_LY_InactiveTitleFont	        0x00000800
+// #define UDE_LWS_LY_LayersList			0x00001000
+// #define UDE_LWS_LY_WindowsList			0x00002000
+// #define UDE_LWS_LY_Sticky		       	0x00004000
 
 // New Workspace Structure Information
-typedef struct {
+/* typedef struct {
 	int 		WorkSpaceNumber;
 	char 		WorkSpaceName[32];
 	char		*ScreenCommand;
@@ -95,8 +101,8 @@ typedef struct {
 // These three lists will be declared in workspaces.c, and declared static
 // so that no other module has direct access to them
 NodeList Workspaces;
-NodeList Layers;
-NodeList WS_Layer_Defaults; // This will be the list which handles setting up
+// NodeList Layers;
+//NodeList WS_Layer_Defaults; // This will be the list which handles setting up
 							// defaults for where windows will be mapped to.
 // End three listings
 
@@ -126,5 +132,5 @@ Bool UDE_LWS_LayerToFront(UDE_LWS_Layer *);
 Bool UDE_LWS_LayerToBack(UDE_LWS_Layer *);
 Bool UDE_LWS_RefreshDisplay(void);
 // END: New Workspace/Layer Definitions
-
+*/
 #endif

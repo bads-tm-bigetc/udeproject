@@ -56,7 +56,6 @@
 #include <string.h>
 #endif
 
-#include "ude-i18n.h"
 #include "uwm.h"
 #include "init.h"
 #include "windows.h"

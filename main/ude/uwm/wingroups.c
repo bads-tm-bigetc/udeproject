@@ -57,7 +57,7 @@ WinGroup *CreateWinGroup(Window leader)
   if(!(group->members = NodeListCreate()))
     SeeYa(1, "FATAL: out of memory!");
 
-  group->WorkSpace = TheScreen.desktop.ActiveWorkSpace;
+  group->WorkSpace = ActiveWS;
   if(!XFindContext(disp, leader, UWMContext, (XPointer *)&uc)) {
     group->WorkSpace = uc->WorkSpace;
     RemoveWinFromGroup(uc);

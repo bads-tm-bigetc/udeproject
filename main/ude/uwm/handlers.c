@@ -41,6 +41,7 @@
 #include "uwm.h"
 #include "init.h"
 #include "windows.h"
+#include "workspaces.h"
 #include "special.h"
 #include "properties.h"
 #include "selection.h"
@@ -448,12 +449,10 @@ void HandleKeyRelease(XEvent *event)
   if(event->xkey.state==UWM_MODIFIERS){
     Node *n,*n2;
     switch(XKeycodeToKeysym(disp,event->xkey.keycode,0)){
-      case XK_Right: ChangeWS((TheScreen.desktop.ActiveWorkSpace +1)\
-                                     % TheScreen.desktop.WorkSpaces);
+      case XK_Right: ChangeWS((ActiveWS + 1) % NUMBER_OF_WORKSPACES);
                      break;
-      case XK_Left:  ChangeWS((TheScreen.desktop.ActiveWorkSpace
-                              + TheScreen.desktop.WorkSpaces
-                              - 1) % TheScreen.desktop.WorkSpaces);
+      case XK_Left:  ChangeWS((ActiveWS + NUMBER_OF_WORKSPACES - 1)
+                              % NUMBER_OF_WORKSPACES);
                      break;
       case XK_Up:    n=n2=InNodeList(TheScreen.UltimateList, ActiveWin);{
                        do {

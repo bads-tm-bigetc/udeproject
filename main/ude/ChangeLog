@@ -1,3 +1,21 @@
+2003-12-26  Christian Ruppert <arc@users.sf.net>
+	* uwm/init.c: removed dead/defined out code from old configuration
+	  system.
+	* uwm/configure.in: added -Werror cc flag.
+	* uwm/confparse.h, uwm/confparse.tab.y, uwm/settings.h: added global
+	  configuration option "LayoutFlags".
+	* uwm/handlers.c, uwm/init.c, uwm/menu.c, uwm/special.c
+	  uwm/special.c, uwm/urm.c, uwm/uwm.c, uwm/uwm.h uwm/uwmmenu.c,
+	  uwm/widgets.c, uwm/windows.c, uwm/winmenu.c, uwm/wingroups.c,
+	  uwm/winmenumenu.c, uwm/workspaces.c: removed all includes from lib
+	  directory as well as references to TheScreen.desktop.
+	* uwm/settings.h, uwm/ude_config_consts.h: added file
+	  ude_config_consts.h which contains flags for configuration options.
+	* uwm/urm.h, uwm/urm.c: changed urm flags. now BEH_FLAGS and LAY_FLAGS.
+	* uwm/workspaces.h: cleaned up.
+	* uwm/uwm_intl.h: added header file for internationalisation wrapper
+	  stuff.
+
 2003-11-25  Christian Ruppert <arc@users.sf.net>
 	* uwm/windows.c: fixed a bug in focus management (ActivateWin now no
 	  longer gives focus to root before setting focus to destination

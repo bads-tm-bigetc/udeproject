@@ -33,6 +33,7 @@
 #include "uwm.h"
 #include "init.h"
 #include "settings.h"
+#include "workspaces.h"
 
 extern Display *disp;
 extern InitStruct InitS;
@@ -66,10 +67,8 @@ void DrawFrameBevel(UltimateContext *uc)
 
   xgcv.function=GXcopy;
   xgcv.foreground = Active
-                    ? settings.workspace_settings
-		      [TheScreen.desktop.ActiveWorkSpace]->ActiveLight->pixel
-                    : settings.workspace_settings
-                      [TheScreen.desktop.ActiveWorkSpace]->InactiveLight->pixel;
+                    ? ActiveWSSettings->ActiveLight->pixel
+                    : ActiveWSSettings->InactiveLight->pixel;
   xgcv.line_width=0;
   xgcv.line_style=LineSolid;
   xgcv.cap_style=CapButt;
@@ -78,10 +77,8 @@ void DrawFrameBevel(UltimateContext *uc)
 
   xgcv.function=GXcopy;
   xgcv.foreground=Active
-                  ? settings.workspace_settings
-		    [TheScreen.desktop.ActiveWorkSpace]->ActiveShadow->pixel
-                  : settings.workspace_settings
-		    [TheScreen.desktop.ActiveWorkSpace]->InactiveShadow->pixel;
+                  ? ActiveWSSettings->ActiveShadow->pixel
+                  : ActiveWSSettings->InactiveShadow->pixel;
   xgcv.line_width=0;
   xgcv.line_style=LineSolid;
   xgcv.cap_style=CapButt;
@@ -146,10 +143,8 @@ void DrawTitle(UltimateContext *uc)
 
   xgcv.function=GXcopy;
   xgcv.foreground = Active
-                    ? settings.workspace_settings
-		      [TheScreen.desktop.ActiveWorkSpace]->ActiveLight->pixel
-                    : settings.workspace_settings
-                      [TheScreen.desktop.ActiveWorkSpace]->InactiveLight->pixel;
+                    ? ActiveWSSettings->ActiveLight->pixel
+                    : ActiveWSSettings->InactiveLight->pixel;
   xgcv.line_width=0;
   xgcv.line_style=LineSolid;
   xgcv.cap_style=CapButt;
@@ -158,10 +153,8 @@ void DrawTitle(UltimateContext *uc)
 
   xgcv.function=GXcopy;
   xgcv.foreground = Active
-                    ? settings.workspace_settings
-		      [TheScreen.desktop.ActiveWorkSpace]->ActiveShadow->pixel
-                    : settings.workspace_settings
-		     [TheScreen.desktop.ActiveWorkSpace]->InactiveShadow->pixel;
+                    ? ActiveWSSettings->ActiveShadow->pixel
+                    : ActiveWSSettings->InactiveShadow->pixel;
   xgcv.line_width=0;
   xgcv.line_style=LineSolid;
   xgcv.cap_style=CapButt;
@@ -170,10 +163,8 @@ void DrawTitle(UltimateContext *uc)
  
   xgcv.function=GXcopy;
   xgcv.foreground=Active
-                  ? settings.workspace_settings
-		    [TheScreen.desktop.ActiveWorkSpace]->ActiveTitle->pixel
-                  : settings.workspace_settings
-                    [TheScreen.desktop.ActiveWorkSpace]->InactiveTitle->pixel;
+                  ? ActiveWSSettings->ActiveTitle->pixel
+                  : ActiveWSSettings->InactiveTitle->pixel;
   xgcv.font = settings.global_settings->TitleFont.xfs->fid;
   TextGC=XCreateGC(disp,uc->frame,GCFunction|GCForeground|GCFont,&xgcv);
  

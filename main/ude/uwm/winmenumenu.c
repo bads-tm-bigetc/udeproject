@@ -34,8 +34,8 @@
 #include "special.h"
 #include "menu.h"
 #include "workspaces.h"
-#include "ude-i18n.h"
 #include "settings.h"
+#include "uwm_intl.h"
 
 extern UDEScreen TheScreen;
 
@@ -50,8 +50,8 @@ void InitWSProcs()
 {
   int a;
 
-  wsprocs=MyCalloc(TheScreen.desktop.WorkSpaces,sizeof(Procs));
-  for(a=0;a<TheScreen.desktop.WorkSpaces;a++) {
+  wsprocs = MyCalloc(NUMBER_OF_WORKSPACES, sizeof(Procs));
+  for(a = 0; a < NUMBER_OF_WORKSPACES; a++) {
     wsprocs[a].Proc = WithWin2WS;
     wsprocs[a].arg = a;
   }
@@ -68,22 +68,21 @@ void WinMenuMenu(UltimateContext *TheWin,int x, int y)
   int a;
   Menu *men,*wsmen;
   MenuItem *item;
-  short useTitle = (TheScreen.desktop.flags & UDESubMenuTitles);
+  short useTitle = (settings.global_settings->BehaviourFlags & SUBMENU_TITLES);
 
   if(!(men = TheWin->title.name ? MenuCreate(TheWin->title.name) : MenuCreate("")))
     SeeYa(1,"FATAL: out of memory!");
 
-  if(TheScreen.desktop.WorkSpaces > 1)
+  if(NUMBER_OF_WORKSPACES > 1)
     {
       AppendMenuItem(men, _("Sticky window"), &sticky,\
-		     (TheWin->WorkSpace==-1) ? I_SWITCH_ON: I_SWITCH_OFF);
+		     (TheWin->WorkSpace == -1) ? I_SWITCH_ON : I_SWITCH_OFF);
 
       wsmen = MenuCreate((TheWin->title.name && useTitle)
                          ? TheWin->title.name : NULL);
       if(!wsmen)
 	SeeYa(1,"FATAL: out of memory!");
-      for (a=0; a<TheScreen.desktop.WorkSpaces; a++)
-	 if (a != TheScreen.desktop.ActiveWorkSpace)
+      for (a=0; a < NUMBER_OF_WORKSPACES; a++)
 	   AppendMenuItem (wsmen, settings.workspace_settings[a]->Name,
 			   &wsprocs[a], I_SELECT);
       AppendMenuItem (men, _("Move to WorkSpace"), wsmen, I_SUBMENU);

@@ -2,6 +2,7 @@
 #define UWM_SETTINGS_H
 
 #include <X11/xpm.h>
+#include "ude_config_consts.h"
 
 typedef struct _FontStruct {
   XFontStruct *xfs;
@@ -15,10 +16,12 @@ typedef struct _uwm_global_settings {
   int TransientBorderWidth;
   int TitleHeight;
   int FrameBevelWidth;
+  int FrameFlags;
 
+/*** general layout */
+  int LayoutFlags;
   int BevelWidth;
   int MenuXOffset, MenuYOffset;
-  int FrameFlags;
 
 /*** fonts */
   FontStruct TitleFont;

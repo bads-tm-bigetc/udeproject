@@ -45,10 +45,10 @@
 #include "widgets.h"
 #include "placement.h"
 #include "special.h"
-#include "ude-i18n.h"
 #include "wingroups.h"
 #include "windows.h"
 #include "settings.h"
+#include "uwm_intl.h"
 
 extern Display *disp;
 extern UDEScreen TheScreen;
@@ -84,10 +84,8 @@ void DrawWinBorder(UltimateContext *uc)
   }
 
   winbg = active
-          ? settings.workspace_settings
-	    [TheScreen.desktop.ActiveWorkSpace]->ActiveColor->pixel
-          : settings.workspace_settings
-            [TheScreen.desktop.ActiveWorkSpace]->InactiveColor->pixel;
+          ? ActiveWSSettings->ActiveColor->pixel
+          : ActiveWSSettings->InactiveColor->pixel;
   XSetWindowBackground(disp, uc->border, winbg);
   XClearWindow(disp, uc->border);
   if(uc->title.win != None) {
@@ -280,9 +278,7 @@ DBG(fprintf(TheScreen.errout,"reparenting: %d\n",uc->win);)
 
   /*** create an independent border-window ***/
   SAttr.override_redirect=True;
-  SAttr.background_pixel = settings.workspace_settings
-                           [TheScreen.desktop.ActiveWorkSpace]->InactiveColor
-							      ->pixel;
+  SAttr.background_pixel = ActiveWSSettings->InactiveColor->pixel;
   SAttr.cursor=TheScreen.Mice[C_BORDER];
   uc->border = XCreateWindow(disp, uc->frame, 0, 0,
                              uc->Attributes.width + 2 * uc->BorderWidth,
@@ -300,9 +296,7 @@ DBG(fprintf(TheScreen.errout,"reparenting: %d\n",uc->win);)
   if((InitS.BorderTitleFlags & (BT_INACTIVE_TITLE|BT_ACTIVE_TITLE)) && HasTitle)
   {
     SAttr.override_redirect=True;
-    SAttr.background_pixel = settings.workspace_settings
-                           [TheScreen.desktop.ActiveWorkSpace]->InactiveColor
-							      ->pixel;
+    SAttr.background_pixel = ActiveWSSettings->InactiveColor->pixel;
     SAttr.cursor=TheScreen.Mice[C_BORDER];
     a = (uc->BorderWidth - settings.global_settings->FrameBevelWidth - 1) / 2
         + settings.global_settings->FrameBevelWidth;
@@ -510,7 +504,7 @@ DBG(fprintf(TheScreen.errout,"ULTIMIZING WIN #%d: no override redirect.\n",win);
   uc->title.name=NULL;
   uc->title.iconname=NULL;
 
-  uc->WorkSpace = TheScreen.desktop.ActiveWorkSpace;
+  uc->WorkSpace = ActiveWS;
 
   uc->WMHints=NULL;
   uc->group=NULL;
@@ -582,15 +576,15 @@ void DeiconifyMenu(int x, int y)
   Node *ucn;
   Menu *men, **wspaces=NULL, *sticky;
   MenuItem *item;
-  short useTitle = (TheScreen.desktop.flags & UDESubMenuTitles);
+  short useTitle = (settings.global_settings->LayoutFlags & SUBMENU_TITLES);
 
   men=MenuCreate(_("Windows Menu"));
   if(!men)
     SeeYa(1, "FATAL: out of memory!");
 
-  wspaces=MyCalloc(TheScreen.desktop.WorkSpaces,sizeof(Menu *));
-  if(TheScreen.desktop.WorkSpaces>1){
-    for(a=0;a<TheScreen.desktop.WorkSpaces;a++){
+  wspaces = MyCalloc(NUMBER_OF_WORKSPACES, sizeof(Menu *));
+  if(NUMBER_OF_WORKSPACES > 1) {
+    for(a = 0; a < NUMBER_OF_WORKSPACES; a++) {
       wspaces[a] = MenuCreate(useTitle ? settings.workspace_settings[a]->Name
 				       : NULL);
       AppendMenuItem(men, settings.workspace_settings[a]->Name,
@@ -636,7 +630,7 @@ void DeiconifyMenu(int x, int y)
       }
     }
     if(item->type==I_SUBMENU) {
-      for(a=0;a<TheScreen.desktop.WorkSpaces;a++)
+      for(a = 0; a < NUMBER_OF_WORKSPACES; a++)
         if(wspaces[a]==item->data) { ChangeWS(a);break;}
     }
   }

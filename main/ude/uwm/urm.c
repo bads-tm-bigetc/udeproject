@@ -46,11 +46,11 @@
 #include <X11/Xmu/SysUtil.h>
 
 #include "uwm.h"
-#include "lib/ude-desktop.h"
 #include "init.h"
 #include "special.h"
 #include "urm.h"
 #include "settings.h"
+#include "workspaces.h"
 
 extern Display *disp;
 extern UDEScreen TheScreen;
@@ -292,7 +292,8 @@ const char *xtranames[MAXEXTRAS] = { "@BACKGROUND@",
                                      "@TEXTCOLOR@",
                                      "@TEXTBGR@",
                                      "@BEVELWIDTH@",
-                                     "@FLAGS@",
+                                     "@BEH_FLAGS@",
+                                     "@LAY_FLAGS@",
                                      "@STANDARDFONT@",
                                      "@INACTIVEFONT@",
                                      "@HIGHLIGHTFONT@",
@@ -308,7 +309,8 @@ char *uderesources[MAXEXTRAS] = {"ude.background",
                                  "ude.textcolor",
                                  "ude.textbgr",
                                  "ude.bevelwidth",
-                                 "ude.flags",
+                                 "ude.beh_flags",
+                                 "ude.lay_flags",
                                  "ude.standardfont",
                                  "ude.inactivefont",
                                  "ude.highlightfont",
@@ -406,29 +408,35 @@ void SetResourceDB()
 
   if(!resource) return;
 
-#define COLOR(COL) settings.workspace_settings\
-                          [TheScreen.desktop.ActiveWorkSpace]->COL->red,\
-                 settings.workspace_settings\
-                          [TheScreen.desktop.ActiveWorkSpace]->COL->green,\
-                 settings.workspace_settings\
-                          [TheScreen.desktop.ActiveWorkSpace]->COL->blue
+#define COLOR(COL) ActiveWSSettings->COL->red,\
+                 ActiveWSSettings->COL->green,\
+                 ActiveWSSettings->COL->blue
 
-  sprintf(xtras[BACKGROUND],"#%.4X%.4X%.4X",COLOR(BackgroundColor));
-  sprintf(xtras[LIGHTCOLOR],"#%.4X%.4X%.4X",COLOR(BackgroundLight));
-  sprintf(xtras[SHADOWCOLOR],"#%.4X%.4X%.4X",COLOR(BackgroundShadow));
-  sprintf(xtras[STANDARDTEXT],"#%.4X%.4X%.4X",COLOR(ForegroundColor));
-  sprintf(xtras[INACTIVETEXT],"#%.4X%.4X%.4X",COLOR(InactiveForeground));
-  sprintf(xtras[INACTIVEBGR],"#%.4X%.4X%.4X",COLOR(InactiveBackground));
-  sprintf(xtras[HIGHLIGHTEDTEXT],"#%.4X%.4X%.4X",COLOR(HighlightedForeground));
-  sprintf(xtras[HIGHLIGHTEDBGR],"#%.4X%.4X%.4X",COLOR(HighlightedBackground));
-  sprintf(xtras[TEXTCOLOR],"#%.4X%.4X%.4X",COLOR(TextForeground));
-  sprintf(xtras[TEXTBGR],"#%.4X%.4X%.4X",COLOR(TextBackground));
-  sprintf(xtras[BEVELWIDTH],"%d",TheScreen.desktop.BevelWidth);
-  sprintf(xtras[FLAGS],"%X",TheScreen.desktop.flags);
-  sprintf(xtras[STANDARDFONT],"%s",TheScreen.desktop.StandardFont);
-  sprintf(xtras[INACTIVEFONT],"%s",TheScreen.desktop.InactiveFont);
-  sprintf(xtras[HIGHLIGHTFONT],"%s",TheScreen.desktop.HighlightFont);
-  sprintf(xtras[TEXTFONT],"%s",TheScreen.desktop.TextFont);
+  sprintf(xtras[BACKGROUND],	 "#%.4X%.4X%.4X", COLOR(BackgroundColor));
+  sprintf(xtras[LIGHTCOLOR],	 "#%.4X%.4X%.4X", COLOR(BackgroundLight));
+  sprintf(xtras[SHADOWCOLOR],	 "#%.4X%.4X%.4X", COLOR(BackgroundShadow));
+  sprintf(xtras[STANDARDTEXT],	 "#%.4X%.4X%.4X", COLOR(ForegroundColor));
+  sprintf(xtras[INACTIVETEXT],	 "#%.4X%.4X%.4X", COLOR(InactiveForeground));
+  sprintf(xtras[INACTIVEBGR],	 "#%.4X%.4X%.4X", COLOR(InactiveBackground));
+  sprintf(xtras[HIGHLIGHTEDTEXT],"#%.4X%.4X%.4X",
+          COLOR(HighlightedForeground));
+  sprintf(xtras[HIGHLIGHTEDBGR], "#%.4X%.4X%.4X",
+          COLOR(HighlightedBackground));
+  sprintf(xtras[TEXTCOLOR],	 "#%.4X%.4X%.4X", COLOR(TextForeground));
+  sprintf(xtras[TEXTBGR],	 "#%.4X%.4X%.4X", COLOR(TextBackground));
+  sprintf(xtras[BEVELWIDTH],	 "%.8d", settings.global_settings->BevelWidth);
+  sprintf(xtras[BEH_FLAGS],	 "%.8X",
+          settings.global_settings->BehaviourFlags);
+  sprintf(xtras[LAY_FLAGS],	 "%.8X",
+          settings.global_settings->LayoutFlags);
+  sprintf(xtras[STANDARDFONT],	 "%.255s",
+          settings.global_settings->Font);
+  sprintf(xtras[INACTIVEFONT],	 "%.255s",
+          settings.global_settings->InactiveFont);
+  sprintf(xtras[HIGHLIGHTFONT],	 "%.255s",
+          settings.global_settings->HighlightFont);
+  sprintf(xtras[TEXTFONT],	 "%.255s",
+          settings.global_settings->MonoFont);
 
 #undef COLOR
 

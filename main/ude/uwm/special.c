@@ -56,7 +56,6 @@
 #include "applications.h"
 #include "move.h"
 #include "resize.h"
-#include "ude-desktop.h"
 #include "urm.h"
 #include "settings.h"
 
@@ -163,9 +162,8 @@ void SendConfigureEvent(UltimateContext *uc)
 /* needs to be called after each writing access to TheScreen.desktop */
 void UpdateDesktop()
 {
-  XChangeProperty(disp, TheScreen.root, TheScreen.UDE_SETTINGS_PROPERTY,
-                  TheScreen.UDE_SETTINGS_PROPERTY, 8, PropModeReplace,
-                  (unsigned char *) &TheScreen.desktop, sizeof(UDEDesktop));
+  /*** set further resources for ude clients here. this is also the place ***
+   *** to set some of the freedesktop.org information                     ***/
   SetResourceDB();
 }
 

@@ -66,8 +66,7 @@ void SetWSBackground()
 {
   unsigned char back_changed= 0;
   
-  if(settings.workspace_settings[TheScreen.desktop.ActiveWorkSpace]
-	     ->Wallpaper.image != None) {
+  if(ActiveWSSettings->Wallpaper.image != None) {
       /* To set the root pixmap and properties pointing to it XGrabServer
 	 must be called to make sure that we don't leak the pixmap if
 	 somebody else is setting it at the same time. */
@@ -101,29 +100,22 @@ void SetWSBackground()
 		       XInternAtom (disp, "ESETROOT_PMAP_ID", 0), XA_PIXMAP,
 		       32, PropModeReplace,
 		       (unsigned char *)
-			settings.workspace_settings
-				[TheScreen.desktop.ActiveWorkSpace]
-				->Wallpaper.image, 1);
+			ActiveWSSettings->Wallpaper.image, 1);
       XChangeProperty (disp, TheScreen.root,
 		       XInternAtom (disp, "_XROOTPMAP_ID", 0), XA_PIXMAP,
 		       32, PropModeReplace,
 		       (unsigned char *)
-			settings.workspace_settings
-				[TheScreen.desktop.ActiveWorkSpace]
-				->Wallpaper.image, 1);
+			ActiveWSSettings->Wallpaper.image, 1);
       XSetWindowBackgroundPixmap(disp, TheScreen.root,
-				 settings.workspace_settings
-					 [TheScreen.desktop.ActiveWorkSpace]
-					 ->Wallpaper.image);
+				 ActiveWSSettings->Wallpaper.image);
       back_changed= 1;
       UngrabServer (disp);
       XFlush (disp);
     }
-  else if (TheScreen.SetBackground [TheScreen.desktop.ActiveWorkSpace])
+  else if (TheScreen.SetBackground[ActiveWS])
     {
-      XSetWindowBackground(disp,TheScreen.root,
-			   TheScreen.Background\
-                           [TheScreen.desktop.ActiveWorkSpace]);
+      XSetWindowBackground(disp, TheScreen.root,
+                           ActiveWSSettings->Wallpaper.image);
       back_changed= 1;
     }
   if (back_changed)
@@ -133,9 +125,8 @@ void SetWSBackground()
     kill(ScreenCommandPID,SIGTERM);
     ScreenCommandPID=0;
   }
-  if(TheScreen.BackCommand[TheScreen.desktop.ActiveWorkSpace])
-    ScreenCommandPID=MySystem(TheScreen.BackCommand
-                              [TheScreen.desktop.ActiveWorkSpace]);
+  if(TheScreen.BackCommand[ActiveWS])
+    ScreenCommandPID = MySystem(TheScreen.BackCommand[ActiveWS]);
   else ScreenCommandPID=0;
 }
 
@@ -144,11 +135,11 @@ void ChangeWS(short WS)
   Node *n;
   short oldws;
 
-  if(OnActiveWS(WS) || (WS >= TheScreen.desktop.WorkSpaces)
+  if(OnActiveWS(WS) || (WS >= NUMBER_OF_WORKSPACES)
      || (Handle == MoveHandle) || (Handle == ResizeHandle)) return;
 
-  oldws=TheScreen.desktop.ActiveWorkSpace;
-  TheScreen.desktop.ActiveWorkSpace=WS;
+  oldws = ActiveWS;
+  SetActiveWS(WS);
 
   UpdateDesktop();
   SetWSBackground();
@@ -177,7 +168,7 @@ void ChangeWS(short WS)
 
 void StickyWin(UltimateContext *uc)
 {
-  if(uc->WorkSpace==-1) Win2WS(uc, TheScreen.desktop.ActiveWorkSpace);
+  if(uc->WorkSpace==-1) Win2WS(uc, ActiveWS);
   else Win2WS(uc, -1);
   if(uc->group) {
     Node *n = NULL;

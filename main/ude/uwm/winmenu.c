@@ -41,6 +41,7 @@
 #include "winmenumenu.h"
 #include "windows.h"
 #include "special.h"
+#include "settings.h"
 
 extern UDEScreen TheScreen;
 extern Display *disp;
@@ -196,11 +197,11 @@ void ButtonAction(int a)
 {
   switch(InitS.WMMenuButtons[a]){
     case 'X': WithWin2WS(TheWin,(TheWin->WorkSpace + 1) 
-                         % TheScreen.desktop.WorkSpaces);
+                         % NUMBER_OF_WORKSPACES);
               break;
     case 'Z': WithWin2WS(TheWin,(TheWin->WorkSpace 
-                                 + TheScreen.desktop.WorkSpaces -1)
-                                 % TheScreen.desktop.WorkSpaces);
+                                 + NUMBER_OF_WORKSPACES -1)
+                                 % NUMBER_OF_WORKSPACES);
               break;
     case 'M': break;
   }

@@ -1,7 +1,7 @@
 #ifndef UWM_URM_H
 #define UWM_URM_H
 
-#define MAXEXTRAS (16)
+#define MAXEXTRAS (17)
 #define BACKGROUND (0)
 #define LIGHTCOLOR (1)
 #define SHADOWCOLOR (2)
@@ -13,11 +13,12 @@
 #define TEXTCOLOR (8)
 #define TEXTBGR (9)
 #define BEVELWIDTH (10)
-#define FLAGS (11)
-#define STANDARDFONT (12)
-#define INACTIVEFONT (13)
-#define HIGHLIGHTFONT (14)
-#define TEXTFONT (15)
+#define BEH_FLAGS (11)
+#define LAY_FLAGS (12)
+#define STANDARDFONT (13)
+#define INACTIVEFONT (14)
+#define HIGHLIGHTFONT (15)
+#define TEXTFONT (16)
 
 typedef struct _UDEXrdbEntry UDEXrdbEntry;
 
