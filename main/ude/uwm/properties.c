@@ -148,7 +148,7 @@ void UpdateName(UltimateContext *uc)
       if((!((uc->title.width == width) && (uc->title.height == height)
           && (uc->title.x == x) && (uc->title.y == y))) && (uc->flags & SHAPED))
 	 ShapeFrame(uc);
-      DrawTitle(uc, uc == ActiveWin);
+      DrawTitle(uc);
     } else XResizeWindow(disp,uc->title.win,0,0);
   }
   DBG(fprintf(TheScreen.errout,"Window Name: %s\n",uc->title.name);)

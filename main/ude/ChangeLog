@@ -1,3 +1,18 @@
+2003-06-09  Christian Ruppert <arc@users.sf.net>
+	* uwm/windows.c: added FocusWin global.
+	* uwm/handlers.c: added handlers for FocusIn and FocusOut events.
+	* uwm/uwm.h: added FocusChangeMask to FRAME_EVENTS.
+	* uwm/windows.c (DrawWinBorder): changed criteria for border color
+	  from ActiveWin to FocusWin.
+	* uwm/windows.c (ActivateWin): Changed for new focus handling.
+	* uwm/widgets.h, uwm/widgets.c, uwm/windows.c, uwm/properties.c,
+	  uwm/handlers.c: removed 'Active' parameter from DrawFrameBevel and
+          DrawTitle functions.
+	* uwm/handlers.c: no longer reacting on KeyRelease events that are not
+	  on our screen.
+	* uwm/uwm.h, uwm/windows.c: added flag ACTIVE_BORDER to ultimate
+	  context which is set by DrawWinBorder.
+
 2003-06-05  Christian Ruppert <arc@users.sf.net>
 	* autogen.sh: added cleanup code to remove modifications made by
 	  new gettext in case they are accidentally checked into cvs.

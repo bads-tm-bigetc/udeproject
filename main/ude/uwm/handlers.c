@@ -62,6 +62,7 @@ extern UDEScreen TheScreen;
 extern Display *disp;
 extern XContext UWMContext;
 extern UltimateContext *ActiveWin;
+extern UltimateContext *FocusWin;
 extern Atom WM_STATE_PROPERTY;
 extern Atom WM_CHANGE_STATE;
 extern Atom WM_PROTOCOLS;
@@ -137,8 +138,6 @@ void HandleDestroyNotify(XEvent *event)
   if(!XFindContext(disp,event->xdestroywindow.window,UWMContext,\
                                                 (XPointer *)&uc))
     DeUltimizeWin(uc, False);
-          /* icccm says we shouldn't use CurrentTime here, but what else
-             can we use, this *might* be safer at least reverting to root?! */
 }
 
 void HandleEnterNotify(XEvent *event)
@@ -172,9 +171,9 @@ void HandleExpose(XEvent *event)
   if(event->xexpose.count) return;
   if(!XFindContext(disp, event->xexpose.window, UWMContext, (XPointer *)&uc)) {
     if(event->xexpose.window == uc->title.win)
-      DrawTitle(uc, uc == ActiveWin);
+      DrawTitle(uc);
     else if(event->xexpose.window == uc->border) {
-      if(!(uc->flags & SHAPED)) DrawFrameBevel(uc, uc == ActiveWin);
+      if(!(uc->flags & SHAPED)) DrawFrameBevel(uc);
     }
   }
 }
@@ -442,6 +441,8 @@ void HandleKeyRelease(XEvent *event)
   
   StampTime(event->xkey.time);
 
+  if(event->xkey.root != TheScreen.root) return;
+
   if(event->xkey.state==UWM_MODIFIERS){
     Node *n,*n2;
     switch(XKeycodeToKeysym(disp,event->xkey.keycode,0)){
@@ -452,18 +453,18 @@ void HandleKeyRelease(XEvent *event)
                               + TheScreen.desktop.WorkSpaces
                               - 1) % TheScreen.desktop.WorkSpaces);
                      break;
-      case XK_Up:    n=n2=InNodeList(TheScreen.UltimateList,ActiveWin);{
+      case XK_Up:    n=n2=InNodeList(TheScreen.UltimateList, ActiveWin);{
                        do {
-                         if(n2=NodePrev(TheScreen.UltimateList,n2))
+                         if(n2=NodePrev(TheScreen.UltimateList, n2))
                            if(WinVisible(n2->data)) break;
                        } while(n!=n2);
                        if(n2) ActivateWin(n2->data);
 		       else ActivateWin(NULL);
                      }
                      break;
-      case XK_Down:  n=n2=InNodeList(TheScreen.UltimateList,ActiveWin);{
+      case XK_Down:  n=n2=InNodeList(TheScreen.UltimateList, ActiveWin);{
                        do {
-                         if(n2=NodeNext(TheScreen.UltimateList,n2))
+                         if(n2=NodeNext(TheScreen.UltimateList, n2))
                            if(WinVisible(n2->data)) break;
                        } while(n!=n2);
                        if(n2) ActivateWin(n2->data);
@@ -551,90 +552,116 @@ void HandleSelectionRequest(XEvent *event)
   SendSelectionNotify(event, prop);
 }
 
+void HandleFocusIn(XEvent *event)
+{
+  UltimateContext *uc;
+
+  if(!XFindContext(disp, event->xfocus.window, UWMContext, (XPointer *)&uc)){
+    FocusWin = uc;
+    if(event->xfocus.detail != NotifyPointer) FocusWin = uc;
+    if(!(uc->flags & ACTIVE_BORDER)) DrawWinBorder(uc);
+    XInstallColormap(disp, uc->Attributes.colormap);
+  }
+}
+
+void HandleFocusOut(XEvent *event)
+{
+  UltimateContext *uc;
+
+  if(!XFindContext(disp, event->xfocus.window, UWMContext, (XPointer *)&uc)){
+    FocusWin = NULL;
+    DrawWinBorder(uc);
+    if(uc->flags & ACTIVE_BORDER) DrawWinBorder(uc);
+    XInstallColormap(disp, TheScreen.colormap);
+  }
+}
+
 /***********************/
 void InitHandlers()
 {
   int i;
   
-  for(i=0; i < LASTEvent; i++)
-    DefaultHandle[i]= NULL;
-  DefaultHandle[Expose]=HandleExpose;
-/*  DefaultHandle[CreateNotify]=HandleCreateNotify; */
-  DefaultHandle[DestroyNotify]=HandleDestroyNotify;
-  DefaultHandle[UnmapNotify]=HandleUnmapNotify;
-  DefaultHandle[ClientMessage]=HandleClientMsg;
-  DefaultHandle[ConfigureRequest]=HandleConfigureRequest;
-/*  DefaultHandle[ColormapNotify]=HandleColormap; */
-  DefaultHandle[MapRequest]=HandleMapRequest;
-  DefaultHandle[ReparentNotify]=HandleReparentNotify;
-  DefaultHandle[MapNotify]=HandleMapNotify;
-  DefaultHandle[EnterNotify]=HandleEnterNotify;
-  DefaultHandle[LeaveNotify]=HandleLeaveNotify;
-  DefaultHandle[ButtonPress]=HandleButtonPress;
-  DefaultHandle[MotionNotify]=HandleMotionNotify; 
-  DefaultHandle[ButtonRelease]=HandleButtonRelease;
-  DefaultHandle[KeyPress]=HandleKeyPress;
-  DefaultHandle[KeyRelease]=HandleKeyRelease;
-  DefaultHandle[PropertyNotify]=HandlePropertyNotify;
-  DefaultHandle[SelectionClear]=HandleSelectionClear;
-  DefaultHandle[SelectionRequest]=HandleSelectionRequest;
+  for(i = 0; i < LASTEvent; i++)
+    DefaultHandle[i] = NULL;
+  DefaultHandle[Expose] = HandleExpose;
+/*  DefaultHandle[CreateNotify] = HandleCreateNotify; */
+  DefaultHandle[DestroyNotify] = HandleDestroyNotify;
+  DefaultHandle[UnmapNotify] = HandleUnmapNotify;
+  DefaultHandle[ClientMessage] = HandleClientMsg;
+  DefaultHandle[ConfigureRequest] = HandleConfigureRequest;
+/*  DefaultHandle[ColormapNotify] = HandleColormap; */
+  DefaultHandle[MapRequest] = HandleMapRequest;
+  DefaultHandle[ReparentNotify] = HandleReparentNotify;
+  DefaultHandle[MapNotify] = HandleMapNotify;
+  DefaultHandle[EnterNotify] = HandleEnterNotify;
+  DefaultHandle[LeaveNotify] = HandleLeaveNotify;
+  DefaultHandle[ButtonPress] = HandleButtonPress;
+  DefaultHandle[MotionNotify] = HandleMotionNotify; 
+  DefaultHandle[ButtonRelease] = HandleButtonRelease;
+  DefaultHandle[KeyPress] = HandleKeyPress;
+  DefaultHandle[KeyRelease] = HandleKeyRelease;
+  DefaultHandle[PropertyNotify] = HandlePropertyNotify;
+  DefaultHandle[SelectionClear] = HandleSelectionClear;
+  DefaultHandle[SelectionRequest] = HandleSelectionRequest;
+  DefaultHandle[FocusIn] = HandleFocusIn;
+  DefaultHandle[FocusOut] = HandleFocusOut;
 
   XShapeQueryExtension(disp,&ShapeEvent,&i);
   ShapeEvent += ShapeNotify;
 
-  Handle=DefaultHandle;
-  for(i=0;i<LASTEvent;i++) MoveHandle[i]=DefaultHandle[i];
-  MoveHandle[EnterNotify]=NULL;
-  MoveHandle[LeaveNotify]=NULL;
-  MoveHandle[ButtonPress]=MoveButtonPress;
-  MoveHandle[MotionNotify]=MoveMotion;
-  MoveHandle[ButtonRelease]=MoveButtonRelease;
-  MoveHandle[UnmapNotify]=MoveUnmap;
-  for(i=0;i<LASTEvent;i++) ResizeHandle[i]=DefaultHandle[i];
-  ResizeHandle[EnterNotify]=NULL;
-  ResizeHandle[LeaveNotify]=NULL;
-  ResizeHandle[ButtonPress]=ResizeButtonPress;
-  ResizeHandle[MotionNotify]=ResizeMotion;
-  ResizeHandle[ButtonRelease]=ResizeButtonRelease;
-  for(i=0;i<LASTEvent;i++) WinMenuHandle[i]=DefaultHandle[i];
-  WinMenuHandle[EnterNotify]=WinMenuEnterNotify;
-  WinMenuHandle[LeaveNotify]=NULL;
-  WinMenuHandle[ButtonPress]=WinMenuButtonPress;
-  WinMenuHandle[ButtonRelease]=WinMenuButtonRelease;
-  WinMenuHandle[VisibilityNotify]=WinMenuVisibility;
-  WinMenuHandle[UnmapNotify]=WinMenuUnmapNotify;
-  for(i=0;i<LASTEvent;i++) MenuHandle[i]=DefaultHandle[i];
-  MenuHandle[EnterNotify]=MenuEnterNotify;
-  MenuHandle[LeaveNotify]=MenuLeaveNotify;
-  MenuHandle[ButtonPress]=MenuButtonPress;
-  MenuHandle[ButtonRelease]=MenuButtonRelease;
-  MenuHandle[VisibilityNotify]=MenuVisibility;
-  MenuHandle[Expose]=MenuExpose;
+  Handle = DefaultHandle;
+  for(i = 0;i<LASTEvent;i++) MoveHandle[i]=DefaultHandle[i];
+  MoveHandle[EnterNotify] = NULL;
+  MoveHandle[LeaveNotify] = NULL;
+  MoveHandle[ButtonPress] = MoveButtonPress;
+  MoveHandle[MotionNotify] = MoveMotion;
+  MoveHandle[ButtonRelease] = MoveButtonRelease;
+  MoveHandle[UnmapNotify] = MoveUnmap;
+  for(i = 0;i<LASTEvent;i++) ResizeHandle[i]=DefaultHandle[i];
+  ResizeHandle[EnterNotify] = NULL;
+  ResizeHandle[LeaveNotify] = NULL;
+  ResizeHandle[ButtonPress] = ResizeButtonPress;
+  ResizeHandle[MotionNotify] = ResizeMotion;
+  ResizeHandle[ButtonRelease] = ResizeButtonRelease;
+  for(i = 0;i<LASTEvent;i++) WinMenuHandle[i]=DefaultHandle[i];
+  WinMenuHandle[EnterNotify] = WinMenuEnterNotify;
+  WinMenuHandle[LeaveNotify] = NULL;
+  WinMenuHandle[ButtonPress] = WinMenuButtonPress;
+  WinMenuHandle[ButtonRelease] = WinMenuButtonRelease;
+  WinMenuHandle[VisibilityNotify] = WinMenuVisibility;
+  WinMenuHandle[UnmapNotify] = WinMenuUnmapNotify;
+  for(i = 0;i<LASTEvent;i++) MenuHandle[i]=DefaultHandle[i];
+  MenuHandle[EnterNotify] = MenuEnterNotify;
+  MenuHandle[LeaveNotify] = MenuLeaveNotify;
+  MenuHandle[ButtonPress] = MenuButtonPress;
+  MenuHandle[ButtonRelease] = MenuButtonRelease;
+  MenuHandle[VisibilityNotify] = MenuVisibility;
+  MenuHandle[Expose] = MenuExpose;
 }
 
 /**********/
 
 void ReinstallDefaultHandle()
 {
-  Handle=DefaultHandle;
+  Handle = DefaultHandle;
 }
 
 void InstallMoveHandle()
 {
-  Handle=MoveHandle;
+  Handle = MoveHandle;
 }
 
 void InstallResizeHandle()
 {
-  Handle=ResizeHandle;
+  Handle = ResizeHandle;
 }
 
 void InstallWinMenuHandle()
 {
-  Handle=WinMenuHandle;
+  Handle = WinMenuHandle;
 }
 
 void InstallMenuHandle()
 {
-  Handle=MenuHandle;
+  Handle = MenuHandle;
 }
