@@ -119,7 +119,7 @@ Menu *MenuCreate(char *name)
 
   wattr.background_pixel=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]\
                                                             [UDE_Back].pixel;
-  wattr.backing_store=True;
+  wattr.backing_store=WhenMapped;
   wattr.override_redirect=True;
   wattr.save_under=True;
   menu->win=XCreateWindow(disp, TheScreen.root, 0, 0, menu->width, menu->height,
@@ -212,7 +212,7 @@ void AppendMenuItem(Menu *menu,char *name,void *data,short type)
 
     wattr.background_pixel=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]\
                                                               [UDE_Back].pixel;
-    wattr.backing_store=True;
+    wattr.backing_store=WhenMapped;
     wattr.override_redirect=True;
     item->win=XCreateWindow(disp,menu->win,MENUBORDERW,menu->height-MENUBORDERW\
                    ,menu->width-2*MENUBORDERW,menu->ItemHeight,0,CopyFromParent,

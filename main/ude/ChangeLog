@@ -1,4 +1,6 @@
 2002-04-21  Christian Ruppert <arc@gmx.li>
+	* uwm/menu.c: fixed a typo-bug by replacing backing_store=True by
+	  backing_store=WhenMapped
 	* uwm/uwm.c, uwm/init.c: moved sigchld installation from init.c to
 	  uwm.c where it belongs and works properly.
 
