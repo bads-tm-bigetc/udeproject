@@ -9,6 +9,8 @@
 	* uwm/windows.c: group members are now ultimized on workspace of group
 	  leader
         * uwm/workspaces.c: added group support in StickyWin()
+        * uwm/windows.c: moved XSaveContext to an earlier point in UltimizeWin
+	  to fix crash problem with window groups
 
 2001-04-15  Christian Ruppert <arc@gmx.li>
 

@@ -469,6 +469,11 @@ DBG(fprintf(TheScreen.errout,"ULTIMIZING WIN #%d: no override redirect.\n",win);
   uc->frame=None;
   uc->border=None;
 
+/* we need this already here to tell fuctions called from UltimizeWin that
+   window is already being ultimized */
+  if(XSaveContext(disp,uc->win,UWMContext,(XPointer)uc))
+    fprintf(TheScreen.errout,"UWM FATAL: Couldn't save Context\n");
+
   uc->BorderWidth=0;
   uc->OldBorderWidth=Attr.border_width;
   XSetWindowBorderWidth(disp,uc->win,0);
@@ -497,7 +502,6 @@ DBG(fprintf(TheScreen.errout,"ULTIMIZING WIN #%d: no override redirect.\n",win);
   UpdateTransientForHint(uc);
 
   UpdateWMProtocols(uc);
-                                       /* dummy time, window can't be active */
 
   SetWinMapState(uc,WithdrawnState);
 
@@ -506,9 +510,6 @@ DBG(fprintf(TheScreen.errout,"ULTIMIZING WIN #%d: no override redirect.\n",win);
   uc->expected_unmap_events = 0;
   uc->own_unmap_events = 0;
   
-  if(XSaveContext(disp,uc->win,UWMContext,(XPointer)uc))
-    fprintf(TheScreen.errout,"UWM FATAL: Couldn't save Context\n");
-
   XSelectInput(disp, uc->win, WINDOW_EVENTS);
   XShapeSelectInput(disp,uc->win,ShapeNotifyMask);
 
