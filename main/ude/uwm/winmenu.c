@@ -187,14 +187,13 @@ void WinMenuVisibility(XEvent *event)
 {
   XEvent dummy;
 
-  if((event->xvisibility.window==TheScreen.icons.IconParent)&&
-            (event->xvisibility.state!=VisibilityUnobscured)){
-    RaiseWin(TheWin);
-    XRaiseWindow(disp,TheScreen.icons.IconParent);
-  } else {
-    while(XCheckTypedWindowEvent(disp,TheScreen.icons.IconParent,\
-                                        VisibilityNotify,&dummy));
-  }
+  if(event->xvisibility.window==TheScreen.icons.IconParent) {
+    if(event->xvisibility.state!=VisibilityUnobscured){
+      RaiseWin(TheWin);
+      XRaiseWindow(disp,TheScreen.icons.IconParent);
+    } else while(XCheckTypedWindowEvent(disp, TheScreen.icons.IconParent,
+                                        VisibilityNotify, &dummy));
+  } else HandleVisibilityNotify(event);
 }
 
 void ButtonAction(int a)

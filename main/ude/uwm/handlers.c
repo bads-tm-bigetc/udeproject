@@ -476,6 +476,28 @@ void HandlePropertyNotify(XEvent *event)
   UngrabServer();
 }  
 
+void HandleVisibilityNotify(XEvent *event)
+{
+  UltimateContext *uc;
+
+  DBG(fprintf(TheScreen.errout,"HandleShape\n");)
+
+  if(event->xvisibility.state == VisibilityUnobscured) return;
+
+  if(!XFindContext(disp, event->xvisibility.window, UWMContext,
+                   (XPointer *)&uc)) {
+    if(uc->TransientFor != None) {
+      UltimateContext *tc;
+      Window stack[2];
+      if(XFindContext(disp, uc->TransientFor, UWMContext, (XPointer *)&tc)
+         || (tc->frame == None)) stack[1] = uc->TransientFor;
+      else stack[1] = tc->frame;
+      stack[0] = (uc->frame == None) ? uc->win : uc->frame;
+      XRestackWindows(disp, stack, 2);
+    }
+  }
+}
+
 void HandleShape(XEvent *event)
 {
   UltimateContext *uc;
@@ -549,6 +571,7 @@ void InitHandlers()
   DefaultHandle[PropertyNotify]=HandlePropertyNotify;
   DefaultHandle[SelectionClear]=HandleSelectionClear;
   DefaultHandle[SelectionRequest]=HandleSelectionRequest;
+  DefaultHandle[VisibilityNotify]=HandleVisibilityNotify;
 
   XShapeQueryExtension(disp,&ShapeEvent,&i);
   ShapeEvent += ShapeNotify;

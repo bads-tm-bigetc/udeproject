@@ -527,12 +527,12 @@ void MenuVisibility(XEvent *event)
 {
   XEvent dummy;
 
-  if((event->xvisibility.window==activemen->win)&&
-            (event->xvisibility.state!=VisibilityUnobscured)){
-    RaiseMenuNParents(activemen);
-  } else {
-    while(XCheckTypedWindowEvent(disp,activemen->win,VisibilityNotify,&dummy));
-  }
+  if(event->xvisibility.window==activemen->win) {
+    if(event->xvisibility.state!=VisibilityUnobscured)
+      RaiseMenuNParents(activemen);
+    else while(XCheckTypedWindowEvent(disp, activemen->win, VisibilityNotify,
+                                      &dummy));
+  } else HandleVisibilityNotify(event);
 }
 
 void MenuDontKeepItAnymore()

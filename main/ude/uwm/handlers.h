@@ -18,5 +18,6 @@ void InstallWinMenuHandle();
 void InstallMenuHandle();
 void HandleUnmapNotify(XEvent *event);
 void HandleExpose(XEvent *event);
+void HandleVisibilityNotify(XEvent *event);
 
 #endif

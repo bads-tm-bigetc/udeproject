@@ -14,6 +14,7 @@ void BroadcastWorkspacesInfo();
 void ChangeWS(short WS);
 void StickyWin(UltimateContext *uc);
 void WithWin2WS(UltimateContext *uc,short ws);
+void Win2WS(UltimateContext *uc,short ws);
 void SetWSBackground();
 // END: Old workspace function definitions
 

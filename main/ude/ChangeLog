@@ -1,3 +1,21 @@
+2001-04-16  Christian Ruppert <arc@gmx.li>
+
+	* uwm/windows.c: iconified windows in winmenu are now listed using their
+	  iconnames instead of their titles.
+	* uwm/handlers.c: added handler HandleVisibilityNotify
+	* uwm/handlers.h: added prototype HandleVisibilityNotify
+	* uwm/winmenu.c: added default handler call HandleVisibilityNotify to
+	  WinMenuVisibility
+	* uwm/menu.c: added default handler call HandleVisibilityNotify to
+	  MenuVisibility
+	* uwm/uwm.h: added handler VisibilityChangeMask to FRAME_EVENTS
+	* uwm/workspaces.c: added function Win2WS
+	* uwm/workspaces.h: added prototype for Win2WS
+	* uwm/wingroups.c: all group members are now initially placed on the
+	  same workspace.
+	* uwm/windows.c: group members are now ultimized on workspace of group
+	  leader
+
 2001-04-15  Christian Ruppert <arc@gmx.li>
 
 	* uwm/wingroups.c: added some functions

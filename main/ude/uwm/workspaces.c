@@ -100,8 +100,8 @@ void SetWSBackground()
 	 Is necessary in this case to kill the old pixmap or will it
 	 destroy the pixmaps in the TheScreen.BackPixmap array ???
 	 This is how i suppouse the pixmap is removed : */
-/* comment by arc: this seems to agressive to me, if the user starts a program
-   setting this property he probably knows what he is doing.
+/* comment by arc: this seems too agressive to me, if the user starts a 
+   program setting this property he probably knows what he is doing.
    we definitely shouldn't kill clients without user interaction! */
 /*
       XGetWindowProperty (disp, TheScreen.root,
@@ -223,8 +223,15 @@ void WithWin2WS(UltimateContext *uc,short ws)
     while(n = NodeNext(uc->group->members, n)) { 
       ((UltimateContext *)(n->data))->WorkSpace = ws;
     }
-  }
-  uc->WorkSpace = ws;
+  } else uc->WorkSpace = ws;
   ChangeWS(uc->WorkSpace);
-  DrawWinBorder(uc);
+}
+
+void Win2WS(UltimateContext *uc, short ws)
+{
+  if(uc->WorkSpace == ws) return;
+  if(OnActiveWS(uc->WorkSpace)) UnmapWin(uc);
+  uc->WorkSpace = ws;
+  if(OnActiveWS(uc->WorkSpace) && (uc->wmstate == NormalState))
+    MapWin(uc, True);
 }

@@ -485,6 +485,8 @@ DBG(fprintf(TheScreen.errout,"ULTIMIZING WIN #%d: no override redirect.\n",win);
 
   Updatera(uc);
   
+  uc->WorkSpace = TheScreen.desktop.ActiveWorkSpace;
+
   uc->WMHints=NULL;
   uc->group=NULL;
   UpdateWMHints(uc);
@@ -504,8 +506,6 @@ DBG(fprintf(TheScreen.errout,"ULTIMIZING WIN #%d: no override redirect.\n",win);
   uc->expected_unmap_events = 0;
   uc->own_unmap_events = 0;
   
-  uc->WorkSpace=TheScreen.desktop.ActiveWorkSpace;
-
   if(XSaveContext(disp,uc->win,UWMContext,(XPointer)uc))
     fprintf(TheScreen.errout,"UWM FATAL: Couldn't save Context\n");
 
@@ -574,9 +574,12 @@ void DeiconifyMenu(int x, int y)
     UltimateContext *uc;
     uc=ucn->data;
     if(((uc->wmstate == NormalState) || (uc->wmstate == IconicState))
-       && uc->title.name){
+       && (uc->title.name || uc->title.iconname)){
       AppendMenuItem((uc->WorkSpace == -1) ? sticky : wspaces[uc->WorkSpace],
-                     uc->title.name, uc,
+                     ((uc->wmstate == IconicState) && uc->title.iconname)
+		     ? uc->title.iconname
+		     : (uc->title.name ? uc->title.name : uc->title.iconname),
+		     uc,
 	             (uc->wmstate == IconicState) ? I_SWITCH_OFF : I_SWITCH_ON);
     }
   }

@@ -37,6 +37,7 @@
 #include "nodes.h"
 #include "special.h"
 #include "windows.h"
+#include "workspaces.h"
 #include "wingroups.h"
 
 extern Display *disp;
@@ -76,6 +77,7 @@ void AddWinToGroup(UltimateContext *uc)
     if(!NodeAppend(group->members, uc)) SeeYa(1, "FATAL: out of memory");
     uc->group = group;
   }
+  Win2WS(uc,uc->group->leader->WorkSpace);
 }
 
 /* returns -1 if whole group has been deleted, else 0 */
