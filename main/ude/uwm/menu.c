@@ -67,16 +67,16 @@ void Menu2ws(Menu *menu,short ws)
   XGCValues xgcv;
   Node *mi;
 
-  xgcv.foreground=TheScreen.Colors[ws][UDE_Light].pixel;
+  xgcv.foreground=settings.workspace_settings[ws]->BackgroundLight->pixel;
   XChangeGC(disp,TheScreen.MenuLightGC,GCForeground,&xgcv);
-  xgcv.foreground=TheScreen.Colors[ws][UDE_Shadow].pixel;
+  xgcv.foreground=settings.workspace_settings[ws]->BackgroundShadow->pixel;
   XChangeGC(disp,TheScreen.MenuShadowGC,GCForeground,&xgcv);
-  xgcv.foreground=TheScreen.Colors[ws][UDE_Back].pixel;
+  xgcv.foreground=settings.workspace_settings[ws]->BackgroundColor->pixel;
   XChangeGC(disp,TheScreen.MenuBackGC,GCForeground,&xgcv);
-  xgcv.foreground=TheScreen.Colors[ws][UDE_StandardText].pixel;
+  xgcv.foreground=settings.workspace_settings[ws]->ForegroundColor->pixel;
   XChangeGC(disp,TheScreen.MenuTextGC,GCForeground,&xgcv);
 
-  wattr.background_pixel=TheScreen.Colors[ws][UDE_Back].pixel;
+  xgcv.foreground=settings.workspace_settings[ws]->BackgroundColor->pixel;
   XChangeWindowAttributes(disp,menu->win,CWBackPixel,&wattr);
   mi=NULL;
   while(mi=NodeNext(menu->Items,mi)){
@@ -120,8 +120,9 @@ Menu *MenuCreate(char *name)
 
   menu->height = (menu->name ? menu->ItemHeight : 0) + 2 * MENUBORDERW;
 
-  wattr.background_pixel=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]\
-                                                            [UDE_Back].pixel;
+  wattr.background_pixel=settings.workspace_settings
+                                  [TheScreen.desktop.ActiveWorkSpace]
+                                  ->BackgroundColor->pixel;
   wattr.backing_store=WhenMapped;
   wattr.override_redirect=True;
   wattr.save_under=True;
@@ -190,8 +191,9 @@ void AppendMenuItem(Menu *menu,char *name,void *data,short type)
                 menu->width-2*MENUBORDERW,menu->ItemHeight);
     }
 
-    wattr.background_pixel=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]\
-                                                              [UDE_Back].pixel;
+    wattr.background_pixel=settings.workspace_settings
+                                    [TheScreen.desktop.ActiveWorkSpace]
+                                    ->BackgroundColor->pixel;
     wattr.backing_store=WhenMapped;
     wattr.override_redirect=True;
     item->win=XCreateWindow(disp,menu->win,MENUBORDERW,menu->height-MENUBORDERW\

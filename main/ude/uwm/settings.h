@@ -63,12 +63,12 @@ typedef struct _uwm_workspace_settings {
 
 /*** colors */
   XColor *ScreenColor;
-  XColor *InactiveColor, *InactiveShadow, *InactiveLight;
+  XColor *InactiveColor, *InactiveLight, *InactiveShadow;
   XColor *InactiveTitle;
-  XColor *ActiveColor, *ActiveShadow, *ActiveLight;
+  XColor *ActiveColor, *ActiveLight, *ActiveShadow;
   XColor *ActiveTitle;
 
-  XColor *BackgroundColor, *BackgroundShadow, *BackgroundLight;
+  XColor *BackgroundColor, *BackgroundLight, *BackgroundShadow;
   XColor *ForegroundColor;
   XColor *InactiveForeground;
   XColor *InactiveBackground;

@@ -1642,8 +1642,8 @@ UWM ");
             GCCapStyle|GCLineStyle|GCLineWidth|GCForeground,&xgcv);
 
   xgcv.function=GXcopy;
-  xgcv.foreground=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]
-                                  [UDE_Light].pixel;
+  xgcv.foreground=settings.workspace_settings[TheScreen.desktop.ActiveWorkSpace]
+                           ->BackgroundLight->pixel;
   xgcv.line_width=0;
   xgcv.line_style=LineSolid;
   xgcv.cap_style=CapButt;
@@ -1651,8 +1651,8 @@ UWM ");
                                   | GCForeground | GCCapStyle | GCLineWidth
 				  | GCLineStyle, &xgcv);
   xgcv.function=GXcopy;
-  xgcv.foreground=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]
-                                  [UDE_Shadow].pixel;
+  xgcv.foreground=settings.workspace_settings[TheScreen.desktop.ActiveWorkSpace]
+                           ->BackgroundShadow->pixel;
   xgcv.line_width=0;
   xgcv.line_style=LineSolid;
   xgcv.cap_style=CapButt;
@@ -1660,8 +1660,8 @@ UWM ");
                                   | GCForeground | GCCapStyle | GCLineWidth
 				  | GCLineStyle, &xgcv);
   xgcv.function=GXcopy;
-  xgcv.foreground=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]
-                                  [UDE_Back].pixel;
+  xgcv.foreground=settings.workspace_settings[TheScreen.desktop.ActiveWorkSpace]
+                           ->BackgroundColor->pixel;
   xgcv.line_width=0;
   xgcv.line_style=LineSolid;
   xgcv.cap_style=CapButt;
@@ -1669,8 +1669,8 @@ UWM ");
                                  | GCForeground | GCCapStyle | GCLineWidth
 				 | GCLineStyle, &xgcv);
   xgcv.function=GXcopy;
-  xgcv.foreground=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]\
-                                             [UDE_StandardText].pixel;
+  xgcv.foreground=settings.workspace_settings[TheScreen.desktop.ActiveWorkSpace]
+                           ->ForegroundColor->pixel;
   xgcv.fill_style=FillSolid;
   xgcv.font = settings.global_settings->Font.xfs->fid;
   TheScreen.MenuTextGC=XCreateGC(disp,TheScreen.root, GCFunction

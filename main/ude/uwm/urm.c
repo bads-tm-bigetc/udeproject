@@ -50,6 +50,7 @@
 #include "init.h"
 #include "special.h"
 #include "urm.h"
+#include "settings.h"
 
 extern Display *disp;
 extern UDEScreen TheScreen;
@@ -285,6 +286,7 @@ const char *xtranames[MAXEXTRAS] = { "@BACKGROUND@",
                                      "@SHADOWCOLOR@",
                                      "@STANDARDTEXT@",
                                      "@INACTIVETEXT@",
+                                     "@INACTIVEBGR@",
                                      "@HIGHLIGHTEDTEXT@",
                                      "@HIGHLIGHTEDBGR@",
                                      "@TEXTCOLOR@",
@@ -300,6 +302,7 @@ char *uderesources[MAXEXTRAS] = {"ude.background",
                                  "ude.shadowcolor",
                                  "ude.standardtext",
                                  "ude.inactivetext",
+                                 "ude.inactivebgr",
                                  "ude.highlightedtext",
                                  "ude.highlightedbgr",
                                  "ude.textcolor",
@@ -403,19 +406,23 @@ void SetResourceDB()
 
   if(!resource) return;
 
-#define COLOR(I) TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace][I].red,\
-                 TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace][I].green,\
-                 TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace][I].blue
+#define COLOR(COL) settings.workspace_settings\
+                          [TheScreen.desktop.ActiveWorkSpace]->COL->red,\
+                 settings.workspace_settings\
+                          [TheScreen.desktop.ActiveWorkSpace]->COL->green,\
+                 settings.workspace_settings\
+                          [TheScreen.desktop.ActiveWorkSpace]->COL->blue
 
-  sprintf(xtras[BACKGROUND],"#%.4X%.4X%.4X",COLOR(UDE_Back));
-  sprintf(xtras[LIGHTCOLOR],"#%.4X%.4X%.4X",COLOR(UDE_Light));
-  sprintf(xtras[SHADOWCOLOR],"#%.4X%.4X%.4X",COLOR(UDE_Shadow));
-  sprintf(xtras[STANDARDTEXT],"#%.4X%.4X%.4X",COLOR(UDE_StandardText));
-  sprintf(xtras[INACTIVETEXT],"#%.4X%.4X%.4X",COLOR(UDE_InactiveText));
-  sprintf(xtras[HIGHLIGHTEDTEXT],"#%.4X%.4X%.4X",COLOR(UDE_HighlightedText));
-  sprintf(xtras[HIGHLIGHTEDBGR],"#%.4X%.4X%.4X",COLOR(UDE_HighlightedBgr));
-  sprintf(xtras[TEXTCOLOR],"#%.4X%.4X%.4X",COLOR(UDE_TextColor));
-  sprintf(xtras[TEXTBGR],"#%.4X%.4X%.4X",COLOR(UDE_TextBgr));
+  sprintf(xtras[BACKGROUND],"#%.4X%.4X%.4X",COLOR(BackgroundColor));
+  sprintf(xtras[LIGHTCOLOR],"#%.4X%.4X%.4X",COLOR(BackgroundLight));
+  sprintf(xtras[SHADOWCOLOR],"#%.4X%.4X%.4X",COLOR(BackgroundShadow));
+  sprintf(xtras[STANDARDTEXT],"#%.4X%.4X%.4X",COLOR(ForegroundColor));
+  sprintf(xtras[INACTIVETEXT],"#%.4X%.4X%.4X",COLOR(InactiveForeground));
+  sprintf(xtras[INACTIVEBGR],"#%.4X%.4X%.4X",COLOR(InactiveBackground));
+  sprintf(xtras[HIGHLIGHTEDTEXT],"#%.4X%.4X%.4X",COLOR(HighlightedForeground));
+  sprintf(xtras[HIGHLIGHTEDBGR],"#%.4X%.4X%.4X",COLOR(HighlightedBackground));
+  sprintf(xtras[TEXTCOLOR],"#%.4X%.4X%.4X",COLOR(TextForeground));
+  sprintf(xtras[TEXTBGR],"#%.4X%.4X%.4X",COLOR(TextBackground));
   sprintf(xtras[BEVELWIDTH],"%d",TheScreen.desktop.BevelWidth);
   sprintf(xtras[FLAGS],"%X",TheScreen.desktop.flags);
   sprintf(xtras[STANDARDFONT],"%s",TheScreen.desktop.StandardFont);

@@ -1,4 +1,14 @@
 2003-08-29  Christian Ruppert <arc@users.sf.net>
+	* lib/ude-desktop.h: some minor changes, the whole communication will
+	  need to be rewritten, however: the current strategy of putting whole
+	  structures containing data of variable types into properties is
+	  clearly a bug (luckily the lib isn't in use yet).
+	* uwm/menu.c, uwm/init.c, uwm/settings.h, uwm/urm.c, uwm/urm.h,
+	  uwm/uwm.h, uwm/workspaces.c: stiched in some more of the new config,
+	  i.e. replaced the colors array from TheScreen by the new colors in
+	  workspace_settings.
+
+2003-08-29  Christian Ruppert <arc@users.sf.net>
 	* uwm/uwm.h, windows.c, uwm/init.c, uwm/menu.c: some more stiching in
 	  of the new config system.
 	* uwm/confparse.l, uwm/confparse.lex.l: renamed file from

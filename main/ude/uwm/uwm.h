@@ -129,7 +129,6 @@ typedef struct {
   char **BackCommand;
   Pixmap *BackPixmap;
   XpmAttributes *BackPixmapAttributes;
-  UDEColors *Colors;
   UDEDesktop desktop;
 } UDEScreen;
 
