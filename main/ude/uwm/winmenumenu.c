@@ -68,7 +68,7 @@ void WinMenuMenu(UltimateContext *TheWin,int x, int y)
   int a;
   Menu *men,*wsmen;
   MenuItem *item;
-  short useTitle = (settings.global_settings->BehaviourFlags & SUBMENU_TITLES);
+  short useTitle = (settings.global_settings->LayoutFlags & SUBMENU_TITLES);
 
   if(!(men = TheWin->title.name ? MenuCreate(TheWin->title.name) : MenuCreate("")))
     SeeYa(1,"FATAL: out of memory!");
