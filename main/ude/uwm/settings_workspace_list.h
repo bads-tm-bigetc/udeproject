@@ -13,9 +13,9 @@
 
 #define TY_INT int
 #define TY_STRING char *
-#define TY_FONT FontStruct
+#define TY_FONT FontStruct *
 #define TY_FLOAT double
-#define TY_PIXMAP uwm_image
+#define TY_PIXMAP uwm_image *
 #define TY_COLOR XColor *
 #define WORKSPACE_OPTION(NAME, TYPE, DEFAULT) \
 	TYPE NAME;

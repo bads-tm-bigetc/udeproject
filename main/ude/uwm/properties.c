@@ -138,14 +138,14 @@ void UpdateName(UltimateContext *uc)
       height = uc->title.height;
       XResizeWindow(disp, uc->title.win,
 		    uc->title.width = (XTextWidth(settings.global_settings
-							  ->TitleFont.xfs,
+							  ->TitleFont->xfs,
                     uc->title.name, strlen(uc->title.name))
 		    + (((settings.global_settings->FrameFlags & CENTER_TITLE)
 		        || (uc->flags & SHAPED)) ? 9 : 6)),
-                    uc->title.height = (settings.global_settings->TitleFont.xfs
-								->ascent
+                    uc->title.height = (settings.global_settings->TitleFont
+								->xfs->ascent
 					+ settings.global_settings->TitleFont
-								  .xfs->descent
+								 ->xfs->descent
 					+ ((uc->flags & SHAPED) ? 6 : 3)));
       if((settings.global_settings->FrameFlags & CENTER_TITLE)
 	 || (uc->flags & SHAPED))

@@ -47,6 +47,8 @@ extern const ConverterFunction
 char *uopt_int_int(YYSTYPE *in, const uwm_init_index *out, void *base);
 char *uopt_int_flt(YYSTYPE *in, const uwm_init_index *out, void *base);
 char *uopt_flt_flt(YYSTYPE *in, const uwm_init_index *out, void *base);
+char *uopt_str_int(YYSTYPE *in, const uwm_init_index *out, void *base);
+char *uopt_str_flt(YYSTYPE *in, const uwm_init_index *out, void *base);
 char *uopt_str_str(YYSTYPE *in, const uwm_init_index *out, void *base);
 char *uopt_str_fnt(YYSTYPE *in, const uwm_init_index *out, void *base);
 char *uopt_str_col(YYSTYPE *in, const uwm_init_index *out, void *base);

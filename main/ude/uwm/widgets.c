@@ -165,7 +165,7 @@ void DrawTitle(UltimateContext *uc)
   xgcv.foreground=Active
                   ? ActiveWSSettings->ActiveTitle->pixel
                   : ActiveWSSettings->InactiveTitle->pixel;
-  xgcv.font = settings.global_settings->TitleFont.xfs->fid;
+  xgcv.font = settings.global_settings->TitleFont->xfs->fid;
   TextGC=XCreateGC(disp,uc->frame,GCFunction|GCForeground|GCFont,&xgcv);
  
   XClearWindow(disp,uc->title.win);
@@ -219,7 +219,7 @@ void DrawTitle(UltimateContext *uc)
 				& CENTER_TITLE))
 			   ? 5 : 2,
 			   ((uc->flags & SHAPED) ? 3 : 0)
-			   + settings.global_settings->TitleFont.xfs->ascent,
+			   + settings.global_settings->TitleFont->xfs->ascent,
                            uc->title.name, strlen(uc->title.name));
                                                
   XFreeGC(disp, LightGC);

@@ -12,7 +12,7 @@
 
 #define TY_INT int
 #define TY_STRING char *
-#define TY_FONT FontStruct
+#define TY_FONT FontStruct *
 #define TY_FLOAT double
 #define GLOBAL_OPTION(NAME, TYPE, DEFAULT) \
 	TYPE NAME;

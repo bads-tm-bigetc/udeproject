@@ -112,7 +112,7 @@ Menu *MenuCreate(char *name)
   }
   if(!(menu->Items=NodeListCreate()))
     SeeYa(1,"FATAL: out of memory!");
-  menu->font = settings.global_settings->Font.xfs;
+  menu->font = settings.global_settings->Font->xfs;
   menu->width = (menu->name
                  ? XTextWidth(menu->font, menu->name, strlen(menu->name))
 		 : 0) + 4 * MENUBORDERW + 2*MENUXOFS;

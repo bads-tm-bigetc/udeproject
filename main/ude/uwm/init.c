@@ -34,6 +34,7 @@
 #endif
 
 #include <stdlib.h>
+#include <limits.h>
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -270,25 +271,22 @@ void InitUWM()
 
 /*** some inits to let SeeYa know what to deallocate etc... ***/
 
-  TheScreen.UltimateList= NULL;   /* in case we have to quit very soon */
+  TheScreen.UltimateList= NULL;
   TheScreen.AppsMenu= NULL;
   TheScreen.UWMMenu= NULL;
 
-/*** from now on SeeYa can be called 8-) ***/
+/*** from this point on SeeYa can be called ***/
 
-/*** setting up general X-stuff and initializing some TheScreen-members ***/
+  TheScreen.Home = getenv("HOME");
+  if(!TheScreen.Home) TheScreen.Home = ".";
 
-  TheScreen.Home= getenv("HOME");
-  if(!TheScreen.Home) TheScreen.Home= ".";
-
-  disp= XOpenDisplay(NULL);
+  disp = XOpenDisplay(NULL);
   if(!disp)
-    SeeYa(1,"Cannot open display");
-  /* That's it already in case we can't get a Display */
+    SeeYa(1, "Cannot open display");
 
-  TheScreen.Screen= DefaultScreen (disp);
-  TheScreen.width= DisplayWidth (disp,TheScreen.Screen);
-  TheScreen.height= DisplayHeight (disp,TheScreen.Screen);
+  TheScreen.Screen = DefaultScreen (disp);
+  TheScreen.width = DisplayWidth (disp,TheScreen.Screen);
+  TheScreen.height = DisplayHeight (disp,TheScreen.Screen);
 #ifndef DISABLE_BACKING_STORE
   TheScreen.DoesSaveUnders = DoesSaveUnders(ScreenOfDisplay(disp,
                                                             TheScreen.Screen));
@@ -303,15 +301,16 @@ void InitUWM()
   if(fcntl (ConnectionNumber(disp), F_SETFD, 1) == -1)
     SeeYa(1,"Looks like something is wrong with the Display I got");
 
-  TheScreen.root= RootWindow (disp, TheScreen.Screen);
+  TheScreen.root = RootWindow (disp, TheScreen.Screen);
   if(TheScreen.root == None)
-    SeeYa(1,"No proper root Window available");
+    SeeYa(1, "No proper root Window available");
 
   xswa.override_redirect = True;
   TheScreen.inputwin = XCreateWindow(disp, TheScreen.root, -2, -2, 1, 1, 0, 0,
                                      InputOnly, CopyFromParent,
                                      CWOverrideRedirect, &xswa);
-  if(TheScreen.inputwin == None) SeeYa(1,"couldn't initialize keyboard input");
+  if(TheScreen.inputwin == None)
+    SeeYa(1,"Couldn't initialize input and communication window");
   XMapWindow(disp, TheScreen.inputwin);
 
 /*** The following WM_Sx stuff is requested by icccm 2.0 ***/
@@ -334,21 +333,21 @@ void InitUWM()
   env = getenv("UDEdir");
   if(!env) {
     /* UDE_DIR is a macro that is defined in the Makefile (by automake) and
-       it will contain the default ude directory which is the same pkgdatadir
-       it will usually be /usr/local/share/ude */
+       it will contain the default ude directory which is the same as
+       pkgdatadir. it will usually be /usr/local/share/ude */
     env = UDE_DIR;
   }
   if('/' != (*(strchr(env, '\0') - 1))) {
     TheScreen.udedir = MyCalloc(strlen(env) + 2, sizeof(char));
-    sprintf(TheScreen.udedir,"%s/", env);
+    sprintf(TheScreen.udedir, "%s/", env);
   } else {
     TheScreen.udedir = MyCalloc(strlen(env) + 1, sizeof(char));
     sprintf(TheScreen.udedir,"%s", env);
   }
-  env = MyCalloc(strlen(TheScreen.udedir) + strlen("UDEdir = ") + 1,
+  env = MyCalloc(strlen(TheScreen.udedir) + strlen("UDEdir=") + 1,
                  sizeof(char));
-  sprintf(env, "UDEdir = %s", TheScreen.udedir);
-  putenv(env);   /* errors setting UDEdir are not fatal, so we ignore them. */
+  sprintf(env, "UDEdir=%s", TheScreen.udedir);
+  putenv(env);
 
   TheScreen.cppincpaths = malloc(sizeof(char) * (1 + strlen("-I ")
          + strlen(TheScreen.Home) + strlen("/.ude/config/ -I ") 
@@ -364,7 +363,7 @@ void InitUWM()
   UWMGroupContext = XUniqueContext();   /* Create Context to store group data */
   TheScreen.MenuContext = XUniqueContext();   
   TheScreen.MenuFrameContext = XUniqueContext();   
-    /* Create Context to store menu-data */
+    /* Create Contexts to store menu data */
 
   /* Atoms for selections */
   TheScreen.VERSION_ATOM = XInternAtom(disp,"VERSION",False);
@@ -382,12 +381,11 @@ void InitUWM()
   MOTIF_WM_HINTS = XInternAtom(disp,_XA_MOTIF_WM_HINTS,False);
 
   if(!(TheScreen.UltimateList = NodeListCreate()))
-    SeeYa(1,"FATAL: out of memory!");
+    SeeYa(1, "FATAL: out of memory!");
 
   /*** read configuration files ***/
 
   ReadConfigFile();
-
   PrepareIcons();
 
   /*** prepare menus ***/
@@ -438,7 +436,7 @@ void InitUWM()
   xgcv.function = GXcopy;
   xgcv.foreground = ActiveWSSettings->ForegroundColor->pixel;
   xgcv.fill_style = FillSolid;
-  xgcv.font = settings.global_settings->Font.xfs->fid;
+  xgcv.font = settings.global_settings->Font->xfs->fid;
   TheScreen.MenuTextGC = XCreateGC(disp,TheScreen.root, GCFunction
                                  | GCForeground | GCFillStyle | GCFont, &xgcv);
 
@@ -483,19 +481,12 @@ int ReadConfigFile()
 {
   int a;
 
+/*** preinitialize global options ***/
   memset(&global_settings, 0, sizeof(global_settings));
-  uwm_yyparse_wrapper("uwmrc.new");
-
-  /* initialize gettext defaults */
-  strncpy(uwm_default_ws_name, _("Default Workspace"),
-          UWM_DEFAULT_NAME_LENGTH);
-  uwm_default_ws_name[UWM_DEFAULT_NAME_LENGTH - 1] = '\0';
-
-  /* complete global options with defaults */
   for(a = 0; a < UWM_GLOBAL_OPTION_NR; a ++) {
     if(uwm_global_index[a].default_val_string
-       && (!(*(((void **)settings.global_settings)
-               + uwm_global_index[a].offset)))
+       && ((uwm_global_index[a].type == UWM_S_INT)
+           || (uwm_global_index[a].type == UWM_S_FLOAT))
        && (uwm_yy_to_setting_table[uwm_global_index[a].type][UWM_YY_STRING])) {
       YYSTYPE d;
       char *errmsg;
@@ -508,6 +499,55 @@ int ReadConfigFile()
       }
     }
   }
+
+  uwm_yyparse_wrapper("uwmrc.new");
+
+#define derefptr(TYPE) ((TYPE *)(((void *)settings.global_settings) \
+                                 + (uwm_global_index[a].offset)))
+#define deref(TYPE) (*(derefptr(TYPE)))
+  /* complete global options with defaults */
+  for(a = 0; a < UWM_GLOBAL_OPTION_NR; a ++) {
+    if(uwm_global_index[a].default_val_string
+       && (uwm_global_index[a].type != UWM_S_INT)
+       && (uwm_global_index[a].type != UWM_S_FLOAT)
+       && (deref(void*) == NULL)
+       && (uwm_yy_to_setting_table[uwm_global_index[a].type][UWM_YY_STRING])) {
+      YYSTYPE d;
+      char *errmsg;
+      d.string = MyStrdup(uwm_global_index[a].default_val_string);
+      if(errmsg = uwm_yy_to_setting_table
+                        [uwm_global_index[a].type][UWM_YY_STRING]
+                        (&d, &(uwm_global_index[a]),
+			 settings.global_settings)) {
+        SeeYa(1, errmsg);
+      }
+    }
+  }
+/***/for(a = 0; a < UWM_GLOBAL_OPTION_NR; a ++) {
+/***/  switch(uwm_global_index[a].type) {
+/***/    case UWM_S_INT: printf("%s = %d\n", uwm_global_index[a].name,
+/***/                           deref(int));
+/***/         break;
+/***/    case UWM_S_FLOAT: printf("%s = %f\n", uwm_global_index[a].name,
+/***/                             deref(double));
+/***/         break;
+/***/    case UWM_S_STRING: printf("%s = %s\n", uwm_global_index[a].name,
+/***/                             deref(char*));
+/***/         break;
+/***/    case UWM_S_FONT: if(deref(FontStruct*))
+/***/                       printf("%s = %s\n", uwm_global_index[a].name,
+/***/                              deref(FontStruct*)->name);
+/***/         break;
+/***/  }
+/***/}
+#undef derefptr
+#undef deref
+
+  /* initialize gettext defaults */
+  strncpy(uwm_default_ws_name, _("Default Workspace"),
+          UWM_DEFAULT_NAME_LENGTH);
+  uwm_default_ws_name[UWM_DEFAULT_NAME_LENGTH - 1] = '\0';
+
   /* complete workspace options with defaults */
   for(a = 0; a < settings.workspace_settings_count; a++) {
     int b;
@@ -515,11 +555,17 @@ int ReadConfigFile()
       settings.workspace_settings[a] = MyCalloc(1,
 						sizeof(uwm_workspace_settings));
       memset(settings.workspace_settings[a], 0, sizeof(uwm_workspace_settings));
+/* workspace options don't need preinitialisation because they currently */
+/* don't contain simple datatypes and so memset is sufficient */
     }
+#define derefptr(TYPE) ((TYPE *)(((void *)settings.workspace_settings[a]) \
+                                 + (uwm_workspace_index[b].offset)))
+#define deref(TYPE) (*(derefptr(TYPE)))
     for(b = 0; b < UWM_WORKSPACE_OPTION_NR; b ++) {
       if(uwm_workspace_index[b].default_val_string
-         && (!(*(((void **)settings.workspace_settings[a])
-                 + uwm_workspace_index[b].offset)))
+         && (uwm_workspace_index[b].type != UWM_S_INT)
+         && (uwm_workspace_index[b].type != UWM_S_FLOAT)
+         && (deref(void*) == NULL)
          && (uwm_yy_to_setting_table[uwm_workspace_index[b].type]
 	                            [UWM_YY_STRING])) {
         YYSTYPE d;
@@ -533,7 +579,9 @@ int ReadConfigFile()
         }
       }
     }
-/***/fprintf(TheScreen.errout, "%s\n", settings.workspace_settings[a]->Name);
+#undef derefptr
+#undef deref
   }
+exit(0);
 }
 

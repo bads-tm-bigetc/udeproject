@@ -221,46 +221,49 @@ void ShellQuit(int dummy)
 
 void TermSig(int dummy)
 {
-  SeeYa(0,"Term-Signal received!");
+  SeeYa(0,"Signal received!");
 }
 
-#define HELPARRAYLINES 8
+#define HELPARRAYLINES 9
 char *HelpArray[HELPARRAYLINES]=
- {"UWM HELP","Options & Switches:",
+ {"UWM HELP\n","Options & Switches:",
   "  --NoStartScript     prevents uwm from executing StartScript",
   "  --NoStopScript      prevents uwm from executing StopScript",
   "  --TryHard           try to replace another running icccm compliant wm",
   "  --Hostile           try harder replacing another icccm \'compliant\' wm",
-  "  --StayAlive         don't give away wmment control voluntarily",""};
+  "  --StayAlive         don't give away wmment control voluntarily",
+  "  --version, -v       print version information and exit",""};
 
-void PromptCommandLine(int argc,char **argv)
+void ParseCommandLine(int argc,char **argv)
 {
-  int a,b;
+  int a, b;
 
-  InitS.StartScript[0]='\0';
-  InitS.StopScript[0]='\0';
+  InitS.StartScript[0] = '\0';
+  InitS.StopScript[0] = '\0';
   TheScreen.icccmFlags = 0;
 
-  printf("\n");
-
-  for(a=1;a<argc;a++){
+  for(a = 1; a < argc; a++) {
     if(!strcmp("--help",argv[a])) {
+      printf("\n");
       for(b=0;b<HELPARRAYLINES;b++) printf("%s\n",HelpArray[b]);
       exit(0);
-    }
-    else if(!strcmp("--NoStartScript",argv[a]))
+    } else if(!strcmp("--NoStartScript", argv[a])) {
       InitS.StartScript[0]='\n';
-    else if(!strcmp("--NoStopScript",argv[a]))
+    } else if(!strcmp("--NoStopScript", argv[a])) {
       InitS.StopScript[0]='\n';
-    else if(!strcmp("--TryHard",argv[a]))
+    } else if(!strcmp("--TryHard", argv[a])) {
       TheScreen.icccmFlags |= ICF_TRY_HARD;
-    else if(!strcmp("--Hostile",argv[a]))
+    } else if(!strcmp("--Hostile", argv[a])) {
       TheScreen.icccmFlags |= ICF_HOSTILE;
-    else if(!strcmp("--StayAlive",argv[a]))
+    } else if(!strcmp("--StayAlive", argv[a])) {
       TheScreen.icccmFlags |= ICF_STAY_ALIVE;
-    else {
-      printf("Unknown Option: %s\nType %s --help for more info\n",argv[a],\
-                                                                  argv[0]);
+    } else if((!strcmp("--version", argv[a])) || (!strcmp("-v", argv[a]))) {
+      printf("\n     UWM - the UDE Window Manager\n");
+      printf("Version %s\n\n", UWMVERSION);
+      exit(0);
+    } else {
+      printf("\nUnknown Option: %s\nType %s --help for more info\n",
+	     argv[a], argv[0]);
       exit(0);
     }
   }
@@ -271,13 +274,13 @@ void PromptCommandLine(int argc,char **argv)
 int main(int argc,char **argv)
 {
   struct stat stats;
-  char dispstr[128], hdispstr[128], rmstr[256], *p;
-  /*** too lazy to alloc Mem... ***/
+  char *dispstr, *hdispstr, *xds;
+  char *rmstr, *p;
 
 #ifdef ENABLE_NLS
   /* init i18n */
   /*setlocale (LC_ALL, "");  don't need everything, LC_NUMERIC will confuse
-                             initialisation (dec points in BevelFactor)*/
+                             initialisation (decimal points)*/
 #ifdef LC_COLLATE
   setlocale(LC_COLLATE, "");
 #endif
@@ -291,49 +294,49 @@ int main(int argc,char **argv)
   setlocale(LC_TIME, "");
 #endif
 #ifdef LC_MESSAGES
-  setlocale(LC_MESSAGES,"");
+  setlocale(LC_MESSAGES, "");
 #endif
 #ifdef LC_RESPONSES
-  setlocale(LC_RESPONSES,"");
+  setlocale(LC_RESPONSES, "");
 #endif
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 #endif /* ENABLE_NLS */
 
-  printf("\n\n     UDE - the Unix Desktop Environment\n\n");
-  printf("Version %s\n",UWMVERSION);
+  ParseCommandLine(argc, argv);
 
-  PromptCommandLine(argc,argv);
+  CheckCPP(); /* do this before initializing SIGCHLD */
 
-  printf("\nAttempting to start UWM - the Ultimate Window Manager...\n");
+/*** from this point on MyOpen can be called ***/
 
-  CheckCPP();
-            /*** from now on MyOpen can be called */
+  signal(SIGCHLD, ShellQuit); /* collect zombies */
 
-  /* ugly thing, but can't really use sigaction due to differences between *
-   * sigaction structure on posix-std.-signal systems and bsd-like ones... */
-  signal(SIGCHLD,ShellQuit); /* kick out zombies */
-
-  signal(SIGTERM,TermSig);
+  signal(SIGTERM, TermSig);   /* exit gracefully on signal */
+  signal(SIGHUP,  TermSig);
 
   InitUWM();
 
 #ifdef HAVE_PUTENV
-  sprintf(dispstr,"DISPLAY=%s",XDisplayString(disp));/* Give 'em some info... */
+  xds = XDisplayString(disp);
+  dispstr = MyCalloc(strlen(xds) + 9, sizeof(char));
+  sprintf(dispstr, "DISPLAY=%s", xds);
   putenv(dispstr);
 #ifdef HAVE_UNAME
-  {
+  if(strchr(xds,':') == xds) {
     struct utsname hname;
     uname(&hname);
-    sprintf(hdispstr,"HOSTDISPLAY=%s%s",hname.nodename,strchr(dispstr,':'));
-    putenv(hdispstr);
+    hdispstr = MyCalloc(strlen(xds) + strlen(hname.nodename) + 13,
+			sizeof(char));
+    sprintf(hdispstr, "HOSTDISPLAY=%s%s", hname.nodename, xds);
+  } else {
+    hdispstr = MyCalloc(strlen(xds) + 13, sizeof(char));
+    sprintf(hdispstr, "HOSTDISPLAY=%s", xds);
   }
+  putenv(hdispstr);
 #endif /* HAVE_UNAME */
 #endif /* HAVE_PUTENV */
 
   CatchWindows();
-
-  printf("    ...made it!\n");
 
   if((InitS.StartScript[0]!='\n')&&(InitS.StartScript[0]!='\0')) {
     sprintf(rmstr,"%s/.ude/config/%s",TheScreen.Home,InitS.StartScript);

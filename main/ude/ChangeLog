@@ -1,3 +1,15 @@
+2004-05-01  Christian Ruppert <arc@users.sf.net>
+	* uwm/uwm.c: cleaned up uwm initialisation in main()
+	* uwm/uwm.c: fixed bug in HOSTDISPLAY which always used local hostname.
+	* uwm/init.c: cleaned up InitUWM() a bit
+	* uwm/init.c(ReadConfigFile), uwm/configconvertors.c, uwm/workspaces.c
+	  uwm/settings_*_list.h, uwm/menu.c, uwm/properties.c, uwm/widgets.c:
+	  fixed the bug with structures embedded in uwm_*_settings
+	  structure which are now referenced by pointers to allow reliable
+	  check wether option has been set or not.
+	* uwm/configconvertors.c, uwm/confparse.h: added convertors for
+	  string to int/float for default initialisation.
+
 2004-03-28  Christian Ruppert <arc@users.sf.net>
 	* uwm/Makefile.am: added conf_func.c to sources and conf_func.h,
 	  conf_func_list.h, settings_global_list.h and

@@ -65,8 +65,8 @@ void BroadcastWorkSpacesInfo()
 void SetWSBackground()
 {
   unsigned char back_changed= 0;
-  
-  if(ActiveWSSettings->Wallpaper.image != None) {
+
+  if(ActiveWSSettings->Wallpaper->image != None) {
       /* To set the root pixmap and properties pointing to it XGrabServer
 	 must be called to make sure that we don't leak the pixmap if
 	 somebody else is setting it at the same time. */
@@ -100,14 +100,14 @@ void SetWSBackground()
 		       XInternAtom (disp, "ESETROOT_PMAP_ID", 0), XA_PIXMAP,
 		       32, PropModeReplace,
 		       (unsigned char *)
-			ActiveWSSettings->Wallpaper.image, 1);
+			ActiveWSSettings->Wallpaper->image, 1);
       XChangeProperty (disp, TheScreen.root,
 		       XInternAtom (disp, "_XROOTPMAP_ID", 0), XA_PIXMAP,
 		       32, PropModeReplace,
 		       (unsigned char *)
-			ActiveWSSettings->Wallpaper.image, 1);
+			ActiveWSSettings->Wallpaper->image, 1);
       XSetWindowBackgroundPixmap(disp, TheScreen.root,
-				 ActiveWSSettings->Wallpaper.image);
+				 ActiveWSSettings->Wallpaper->image);
       back_changed= 1;
       UngrabServer (disp);
       XFlush (disp);
@@ -115,7 +115,7 @@ void SetWSBackground()
   else
     {
       XSetWindowBackground(disp, TheScreen.root,
-                           ActiveWSSettings->Wallpaper.image);
+                           ActiveWSSettings->Wallpaper->image);
       back_changed= 1;
     }
   if (back_changed)

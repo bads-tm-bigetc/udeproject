@@ -58,6 +58,18 @@ char *uopt_flt_flt(YYSTYPE *in, const uwm_init_index *out, void *base)
   return NULL;
 }
 
+char *uopt_str_int(YYSTYPE *in, const uwm_init_index *out, void *base)
+{
+  deref(int) = atoi(in->string);
+  return NULL;
+}
+
+char *uopt_str_flt(YYSTYPE *in, const uwm_init_index *out, void *base)
+{
+  deref(double) = atof(in->string);
+  return NULL;
+}
+
 char *uopt_str_str(YYSTYPE *in, const uwm_init_index *out, void *base)
 {
   deref(char *) = in->string;
@@ -68,12 +80,16 @@ char *uopt_str_fnt(YYSTYPE *in, const uwm_init_index *out, void *base)
 {
   XFontStruct *nxfs;
   if(nxfs = XLoadQueryFont(disp, in->string)) {
-    FontStruct *fs;
-    fs = derefptr(FontStruct);
-    if(fs->xfs) XFreeFont(disp, fs->xfs);
-    if(fs->name) free(fs->name);
+    FontStruct *oldfs, *fs;
+    if(oldfs = deref(FontStruct*)) {
+      if(oldfs->xfs) XFreeFont(disp, oldfs->xfs);
+      if(oldfs->name) free(oldfs->name);
+      free(oldfs);
+    }
+    fs = MyCalloc(1, sizeof(FontStruct));
     fs->xfs = nxfs;
     fs->name = in->string;
+    deref(FontStruct*) = fs;
   } else {
     static char errmsg[256] = "Could not load font \"";
     sprintf(errmsg + 21, "%.232s\"\n", in->string);
@@ -118,7 +134,6 @@ char *uopt_str_col(YYSTYPE *in, const uwm_init_index *out, void *base)
     AllocColor(xcol);
     deref(XColor*) = xcol;
     free(in->string);
-    return(NULL);
   } else {
     static char errmsg[128] = "Could not load color \"";
     sprintf(errmsg + 22, "%.103s\"\n", in->string);
@@ -126,24 +141,30 @@ char *uopt_str_col(YYSTYPE *in, const uwm_init_index *out, void *base)
     free(in->string);
     return(errmsg);
   }
+  return(NULL);
 }
 
 char *uopt_str_pix(YYSTYPE *in, const uwm_init_index *out, void *base)
 {
-  FreePic(&(deref(uwm_image).image), &(deref(uwm_image).attributes));
+  uwm_image *img;
+  img = MyCalloc(1, sizeof(uwm_image));
+  img->attributes = MyCalloc(1, sizeof(XpmAttributes));
 
-  if(in->string) {
-    deref(uwm_image).attributes = MyCalloc(1, sizeof(XpmAttributes));
-
-    if(LoadPic(in->string, &(deref(uwm_image).image),
-		deref(uwm_image).attributes)) {
-      return(NULL);
-    } else {
-      static char errmsg[256] = "Could not load background image \"";
-      sprintf(errmsg + 33, "%.220s\"\n", in->string);
-      free(deref(uwm_image).attributes);
-      deref(uwm_image).attributes = NULL;
-      return(errmsg);
+  if(LoadPic(in->string, &(img->image), img->attributes)) {
+    if(deref(uwm_image*)) {
+      FreePic(&(deref(uwm_image*)->image),
+              &(deref(uwm_image*)->attributes));
+      free(deref(uwm_image*));
     }
+    deref(uwm_image*) = img;
+    free(in->string);
+  } else {
+    static char errmsg[256] = "Could not load background image \"";
+    sprintf(errmsg + 33, "%.220s\"\n", in->string);
+    free(img->attributes);
+    free(img);
+    free(in->string);
+    return(errmsg);
   }
+  return(NULL);
 }
