@@ -19,6 +19,7 @@
 	* uwm/rubber.h: included special.h for GrabServer prototype
 	* uwm/workspaces.h: corrected a typo in BroadcastWorkSpacesInfo proto
 	* uwm/rubber.c: included special.h for GrabServer prototype
+	* uwm/windows.c: Deshaping of window frames now works correctly
 
 2001-04-22  Christian Ruppert <arc@gmx.li>
 

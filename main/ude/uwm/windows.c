@@ -115,8 +115,13 @@ void ShapeFrame(UltimateContext *uc)
       XUnmapWindow(disp, uc->border);
       UpdateName(uc);
     } else {
+      if(uc->flags & SHAPED) {
+        XShapeCombineMask(disp, uc->frame, ShapeBounding, 0, 0, None, ShapeSet);
+      }
       uc->flags &= ~SHAPED;
+      
       XMapWindow(disp, uc->border);
+      UpdateName(uc);
     }
   }
 /***************************************************************************/
