@@ -578,6 +578,7 @@ void InitHandlers()
   MenuHandle[ButtonPress]=MenuButtonPress;
   MenuHandle[ButtonRelease]=MenuButtonRelease;
   MenuHandle[VisibilityNotify]=MenuVisibility;
+  MenuHandle[Expose]=MenuExpose;
 }
 
 /**********/

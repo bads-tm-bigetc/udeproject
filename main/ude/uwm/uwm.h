@@ -11,6 +11,8 @@
 #include <X11/Xutil.h>
 #include <X11/xpm.h>
 
+#include <config.h>
+
 #include "nodes.h"
 #include "menu.h"
 #include "lib/ude-desktop.h"
@@ -84,6 +86,8 @@ typedef struct
 { int Screen;
   unsigned int width,height;
   Window root, inputwin;
+  Bool DoesSaveUnders, DoesBackingStore;
+
   struct {
     Window IconWins[ICONWINS];
     Pixmap IconPixs[ICONWINS];
@@ -114,7 +118,7 @@ typedef struct
   char **BackCommand;
   Pixmap *BackPixmap;
   XpmAttributes *BackPixmapAttributes;
-  XContext MenuContext;
+  XContext MenuContext, MenuFrameContext;
   XFontStruct *MenuFont;
   UDEColors *Colors;
   UDEDesktop desktop;

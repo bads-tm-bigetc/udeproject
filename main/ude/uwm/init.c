@@ -195,8 +195,9 @@ void PrepareIcons()
   xswa.save_under=True;
 
   TheScreen.icons.IconParent=XCreateWindow(disp,TheScreen.root,0,0,104,84,0,\
-                                  CopyFromParent,InputOutput,CopyFromParent,\
-                                       CWSaveUnder|CWOverrideRedirect,&xswa);
+                                  CopyFromParent,InputOutput,CopyFromParent,
+                               (TheScreen.DoesSaveUnders ? CWSaveUnder : 0)|
+				                   CWOverrideRedirect,&xswa);
   XSelectInput(disp,TheScreen.icons.IconParent,LeaveWindowMask|\
                                           VisibilityChangeMask);
   XShapeCombineMask(disp,TheScreen.icons.IconParent,ShapeBounding,\
@@ -1386,6 +1387,10 @@ void InitUWM()
   TheScreen.Screen= DefaultScreen (disp);
   TheScreen.width= DisplayWidth (disp,TheScreen.Screen);
   TheScreen.height= DisplayHeight (disp,TheScreen.Screen);
+  TheScreen.DoesSaveUnders = DoesSaveUnders(ScreenOfDisplay(disp,
+                                                            TheScreen.Screen));
+  TheScreen.DoesBackingStore = DoesBackingStore(ScreenOfDisplay(disp,
+                                                            TheScreen.Screen));
 
   /* Mark Display as close-on-exec (important for restarts and starting other wms) */
   if(fcntl (ConnectionNumber(disp), F_SETFD, 1) == -1)
@@ -1521,6 +1526,7 @@ UWM ");
 
   UWMContext = XUniqueContext();   /* Create Context to store UWM-data */
   TheScreen.MenuContext = XUniqueContext();   
+  TheScreen.MenuFrameContext = XUniqueContext();   
     /* Create Context to store menu-data */
 
   /* Atoms for selections */

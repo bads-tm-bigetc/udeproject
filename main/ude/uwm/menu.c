@@ -114,11 +114,13 @@ Menu *MenuCreate(char *name)
   wattr.backing_store=True;
   wattr.override_redirect=True;
   wattr.save_under=True;
-  menu->win=XCreateWindow(disp,TheScreen.root,0,0,menu->width,menu->height,\
-                               0,CopyFromParent,InputOutput,CopyFromParent,\
-          CWSaveUnder|CWBackPixel|CWBackingStore|CWOverrideRedirect,&wattr);
-  XSelectInput(disp,menu->win,LeaveWindowMask|EnterWindowMask|\
-                                         VisibilityChangeMask);
+  menu->win=XCreateWindow(disp, TheScreen.root, 0, 0, menu->width, menu->height,
+                               0,CopyFromParent,InputOutput,CopyFromParent,
+                               (TheScreen.DoesSaveUnders ? CWSaveUnder : 0)|
+                          (TheScreen.DoesBackingStore ? CWBackingStore : 0)|
+	                             CWBackPixel|CWOverrideRedirect,&wattr);
+  XSelectInput(disp, menu->win, ExposureMask | LeaveWindowMask 
+                                | EnterWindowMask | VisibilityChangeMask);
 
   xgcv.function=GXcopy;
   xgcv.foreground=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]
@@ -143,6 +145,7 @@ Menu *MenuCreate(char *name)
   xgcv.font=TheScreen.MenuFont->fid;
   menu->TextGC=XCreateGC(disp,menu->win,GCFunction|GCForeground|\
                                        GCFillStyle|GCFont,&xgcv);
+  XSaveContext(disp,menu->win,TheScreen.MenuFrameContext,(XPointer)menu);
 
   return(menu);
 }
@@ -204,11 +207,12 @@ void AppendMenuItem(Menu *menu,char *name,void *data,short type)
     wattr.backing_store=True;
     wattr.override_redirect=True;
     item->win=XCreateWindow(disp,menu->win,MENUBORDERW,menu->height-MENUBORDERW\
-                  ,menu->width-2*MENUBORDERW,menu->ItemHeight,0,CopyFromParent,\
-                         InputOutput,CopyFromParent,CWBackingStore|CWBackPixel|\
-                                                     CWOverrideRedirect,&wattr);
+                   ,menu->width-2*MENUBORDERW,menu->ItemHeight,0,CopyFromParent,
+                                                     InputOutput,CopyFromParent,
+                              (TheScreen.DoesBackingStore ? CWBackingStore : 0)|
+                                         CWBackPixel|CWOverrideRedirect,&wattr);
 
-    XSelectInput(disp,item->win,EnterWindowMask);
+    XSelectInput(disp, item->win, EnterWindowMask|ExposureMask);
 
     menu->height+=menu->ItemHeight;
 
@@ -239,13 +243,14 @@ void DestroyMenu(Menu *menu)
   XFreeGC(disp,menu->TextGC);
   XFreeGC(disp,menu->LightGC);
   XFreeGC(disp,menu->ShadowGC);
+  XDeleteContext(disp, menu->win, TheScreen.MenuFrameContext);
   XDestroyWindow(disp,menu->win);
   NodeListDelete(&(menu->Items));
   free(menu->name);
   free(menu);
 }
 
-void DrawItem(MenuItem *item)
+void DrawItem(MenuItem *item, short deactivate)
 {
   XClearWindow(disp,item->win);
   XDrawString(disp,item->win,item->menu->TextGC,MENUXOFS+MENUBORDERW,\
@@ -279,21 +284,18 @@ void DrawItem(MenuItem *item)
                 item->menu->ItemHeight/2-MENUBORDERW,\
                          2*MENUBORDERW,2*MENUBORDERW);
   }
+  if(!deactivate && (item == selectedMenuItem))
+    DrawBevel(item->win,0,0,item->menu->width-2*MENUBORDERW-1,\
+                         item->menu->ItemHeight-1,MENUBORDERW,\
+                     item->menu->ShadowGC,item->menu->LightGC);
 }
 
-void DrawMenu(Menu *menu,int x, int y)
+void DrawMenuFrame(Menu *menu, int items)
 {
-  int a,h;
+  int a;
   Node *mi;
 
-  activemen=menu;
-  menu->x=x;
-  menu->y=y;
-
   XClearWindow(disp,menu->win);
-  XMapSubwindows(disp,menu->win);
-  XMoveWindow(disp,menu->win,x,y);
-  XMapRaised(disp,menu->win);
 
   DrawBevel(menu->win,0,0,menu->width-1,menu->height-1,MENUBORDERW,\
                                       menu->LightGC,menu->ShadowGC);
@@ -307,9 +309,10 @@ void DrawMenu(Menu *menu,int x, int y)
   while(mi=NodeNext(menu->Items,mi)){
     MenuItem *item;
     item=mi->data;
-    if(item->type!=I_LINE) {
-      DrawItem(item);
+    if(item->type != I_LINE) {
+      if(items) DrawItem(item, 0);
     } else {
+      int h;
       h=item->y;
       for(a=0;a<MENUBORDERW;a++) {
         XDrawLine(disp,menu->win,menu->ShadowGC,a+1,h-1-a,menu->width-a,h-1-a);
@@ -319,10 +322,21 @@ void DrawMenu(Menu *menu,int x, int y)
   }
 }
 
+void MapMenu(Menu *menu,int x, int y)
+{
+  activemen=menu;
+  menu->x=x;
+  menu->y=y;
+
+  XMapSubwindows(disp,menu->win);
+  XMoveWindow(disp,menu->win,x,y);
+  XMapRaised(disp,menu->win);
+}
+
 void RedrawMenuTreeRecursion(Menu *men)
 {
   if(men->parent) RedrawMenuTreeRecursion(men->parent);
-  DrawMenu(men,men->x,men->y);
+  DrawMenuFrame(men, 1);
 }
 void RedrawMenuTree()
 {
@@ -380,7 +394,7 @@ MenuItem *StartMenu(Menu *menu, int x, int y, Bool q, Bool mousestarted,
   menu->parent=NULL;
   XInstallColormap(disp,TheScreen.colormap);
 
-  DrawMenu(menu,x,y);
+  MapMenu(menu, x, y);
 
   while(Buttoncount || keepIt){
     XEvent event;
@@ -400,7 +414,7 @@ MenuItem *StartMenu(Menu *menu, int x, int y, Bool q, Bool mousestarted,
 void SelectItem(MenuItem *item)
 {
   if(selectedMenuItem){
-    DrawItem(selectedMenuItem);
+    DrawItem(selectedMenuItem, 1);
   }
   selectedMenuItem=item;
   if(selectedMenuItem){
@@ -441,7 +455,7 @@ void SelectItem(MenuItem *item)
       if(y>(((signed long int)TheScreen.height)-((signed long int)men->height-\
                                          1))) y=TheScreen.height-men->height-1;
       if(y<0) y=0;
-      DrawMenu(men,x,y);
+      MapMenu(men, x, y);
     }
   }
 }
@@ -490,6 +504,24 @@ void RaiseMenuNParents(Menu *men)
   XRaiseWindow(disp,men->win);
 }
 
+void MenuExpose(XEvent *event)
+{
+  Menu *mc;
+  MenuItem *mi;
+
+  if(event->xexpose.count) return;
+  if(!XFindContext(disp, event->xexpose.window, TheScreen.MenuContext,
+                   (XPointer *)&mi)) {
+    DrawItem(mi, 0);
+    return;
+  }
+  if(!XFindContext(disp, event->xexpose.window, TheScreen.MenuFrameContext,
+                   (XPointer *)&mc)) {
+    DrawMenuFrame(mc, 0);
+    return;
+  }
+  HandleExpose(event);
+}
 
 void MenuVisibility(XEvent *event)
 {

@@ -49,5 +49,6 @@ void RedrawMenuTree();
 void Menu2ws(Menu *menu,short ws);
 Menu *RootMenu(Menu *men);
 void MenuDontKeepItAnymore();
+void MenuExpose(XEvent *event);
 
 #endif
