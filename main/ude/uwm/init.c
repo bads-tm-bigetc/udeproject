@@ -525,6 +525,20 @@ void InitUWM()
   SetWSBackground();
 }
 
+int button_gel(void *a, void *b)
+{
+  uwm_button_event *ae = a;
+  uwm_button_event *be = b;
+  return(memcmp(&(ae->event), &(be->event), sizeof(ae->event)));
+}
+
+int keysym_gel(void *a, void *b)
+{
+  uwm_key_event *ae = a;
+  uwm_key_event *be = b;
+  return(memcmp(&(ae->event), &(be->event), sizeof(ae->event)));
+}
+
 uwm_global_settings global_settings;
 
 uwm_settings settings = {

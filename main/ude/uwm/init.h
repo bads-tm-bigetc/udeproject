@@ -7,6 +7,8 @@
 #ifndef UWM_INIT_H
 #define UWM_INIT_H
 
+#include "nodes.h"
+
 #if 0
 /* BorderTitleFlags */
 #define BT_GROOVE    (1<<0)  /* draw groove into borders? */
@@ -56,5 +58,8 @@ void InitUWM();
 
 unsigned long AllocColor(XColor *xcol);
 void FreeColor(XColor *color);
+
+int button_gel(void *a, void *b);
+int keysym_gel(void *a, void *b);
 
 #endif
