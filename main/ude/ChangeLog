@@ -1,10 +1,26 @@
+2002-02-10  Christian Ruppert <arc@gmx.li>
+
+	* uwm/init.h: added InitStruct.BehaviourFlags and BF_IN_WIN_CTRL
+	  definition.
+	* uwm/uwm.h: added braces around event mask definitions
+	* uwm/uwm.h: added UWM_MODIFIERS definition.
+	* uwm/init.c: replaced modifier key combination with UWM_MODIFIERS
+	  predefinition.
+	* uwm/init.c (InitDefaults): added default initialisation of
+	  InitS.BehaviourFlags.
+	* uwm/init.c: added config option BehaviourFlags
+	* doc/manual.tex: added description for BehaviourFlags option.
+	* doc/manual.tex: started chapter "The Keyboard".
+	* config/uwmrc-behaviour.hook: added BehaviourFlags example.
+	* uwm/handlers.c (HandleButtonPress): added support for
+	  BehaviourFlags/BF_IN_WIN_CTRL option.
+
 2002-01-21  Christian Ruppert <arc@gmx.li>
 
 	* uwm/properties.c (UpdateMotifHints): bugfix: now remaping window
 	  after redrawing  border in case window is visible while motif hints
 	  change.
 	* configure.in: added po/Makefile to output list
-         
 
 2001-10-29  Christian Ruppert <arc@gmx.li>
 
