@@ -1,3 +1,8 @@
+2004-11-13  Christian Ruppert <arc@users.sf.net>
+	* uwm/confparse.tab.y: some major cleanups, the new config file syntax
+	  is now almost completely implemented (except for some event
+	  definition expressions).
+
 2004-11-11  Christian Ruppert <arc@users.sf.net>
 	* uwm/conf_func.h, uwm/conf_func.c: added some more functions for the
 	  new config format.

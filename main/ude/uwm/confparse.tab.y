@@ -72,7 +72,6 @@
 %left NEGATION
 %type <intval> Integer
 %type <floatval> FloatVal
-%type <string> Identifier
 /*%type <uwm_yy_Context> FunctionBlock Menu WorkspaceSetting EventSettings*/
 %type <string> String
 %type <rawfunction> WinSpecifier
@@ -120,26 +119,25 @@ const ConverterFunction uwm_yy_to_setting_table[UWM_S_TYPENO][UWM_YY_TYPENO] = {
 %%
 
 TopLevel : TopLine
-	 | TopLevel TopLine
-	 | RecoverFromERR ;
+	 | TopLevel TopLine ;
 
-RecoverFromERR : error ErrDelim { yyerrok; } ;
-
-TopLine : AnyLine
-        | MenuBlock
-	| WorkspaceBlock
-	| OptionBlock 
-	| EventBlock
-	| FileLine ;
-
-AnyLine : PreProc
-	| ';' ;
+GenericLine : /* nothing */
+	    | PreProc
+	    | FileLine
+	    | ';'
+	    | error ErrDelim { yyerrok; } ;
 
 ErrDelim : ';' { uwm_yy_LEX_FLAG_Newline_Requested = 0; }
-	 | '}' { uwm_yy_LEX_FLAG_Newline_Requested = 0; }
 	 | '\n'
-	 | ';' '\n'
-	 | '}' '\n';
+	 | ';' '\n' ;
+
+TopLine : GenericLine
+	| AnyTop ;
+
+AnyTop: MenuBlock
+      | WorkspaceBlock
+      | OptionBlock
+      | EventBlock ;
 
 String : StringAtom
        | LightOfAtom '(' String ',' FloatVal ')' {
@@ -151,7 +149,6 @@ String : StringAtom
 			  free($3);
 			} ;
 
-
 /* Deal with linenumber and filename information we get from C preprocessor */
 PreProc : PreprocessorAtom Integer StringAtom IntegerGarbage '\n' {
 				  uwm_yyParseLineStack->linenumber = $2;
@@ -160,19 +157,17 @@ PreProc : PreprocessorAtom Integer StringAtom IntegerGarbage '\n' {
 				    free(uwm_yyParseLineStack->filename);
 				  }
 				  uwm_yyParseLineStack->filename
-				       = (strlen($3) && strcmp($3, "<stdin>"))
-				         ? $3 : uwm_yyParseLineStack->topfilename;
+				    = (strlen($3) && strcmp($3, "<stdin>"))
+				      ? $3 : uwm_yyParseLineStack->topfilename;
 				} ;
+
 IntegerGarbage : Integer { }
 	       | IntegerGarbage Integer { }
 	       | { } ;
 
-/* Workspace related settings */
-
-WorkspaceBlock : WorkspaceAtom WorkspaceSetting ;
-
-WorkspaceSetting : Integer { uwm_yy_PushContext(UWM_YY_WORKSPACE_CONTEXT, &$1);}
-	           OptionSetting { uwm_yy_PopContext(); } ;
+WorkspaceBlock : WorkspaceAtom Integer
+		 { uwm_yy_PushContext(UWM_YY_WORKSPACE_CONTEXT, &$2); }
+		 OptionSetting { uwm_yy_PopContext(); } ;
 
 OptionBlock : OptionAtom OptionSetting ;
 
@@ -180,45 +175,41 @@ OptionSetting : OptionLine
               | '{' OptionLines '}' ;
 
 OptionLines : OptionLine
-            | OptionLines OptionLine
-	    | RecoverFromERR ;
+	    | OptionLines OptionLine ;
 
-OptionLine : AnyLine
-	   | IntOption
-           | FloatOption
-	   | StringOption
-	   | FileLine ;
+OptionLine : GenericLine
+	   | AnyOption ';' ;
 
-IntOption : Identifier '=' Integer ';' {
+AnyOption: IntOption
+	 | FloatOption
+	 | StringOption ;
+
+IntOption : IdentifierAtom '=' Integer {
 		uwm_init_set_option($1, UWM_YY_INT, (YYSTYPE *)&($3));
 	} ;
 
-FloatOption : Identifier '=' FloatVal ';' {
+FloatOption : IdentifierAtom '=' FloatVal {
 		uwm_init_set_option($1, UWM_YY_FLOAT, (YYSTYPE *)&($3));
 	} ;
 
-StringOption : Identifier '=' String ';' {
+StringOption : IdentifierAtom '=' String {
 		uwm_init_set_option($1, UWM_YY_STRING, (YYSTYPE *)&($3));
 	} ;
 
-Identifier : IdentifierAtom { $$ = $1 ; } ;
-
-EventBlock : EventAtom EventSettings ;
-
-EventSettings : { uwm_yy_PushContext(UWM_YY_EVENT_CONTEXT, NULL); }
-		EventSetting { uwm_yy_PopContext(); } ;
+EventBlock : EventAtom { uwm_yy_PushContext(UWM_YY_EVENT_CONTEXT, NULL); }
+	     EventSetting { uwm_yy_PopContext(); } ;
 
 EventSetting : EventLine
 	     | '{' EventLines '}' ;
 
 EventLines : EventLine
-	   | EventLines EventLine
-	   | RecoverFromERR ;
+	   | EventLines EventLine ;
 
-EventLine : AnyLine
-	  | KeystrokeAtom Integer ',' Integer ':' FunctionBlock
-	  | ButtonAtom Integer ',' Integer ':' FunctionBlock
-	  | FileLine ;
+EventLine : GenericLine
+	  | EventDescriptor ':' FunctionBlock ;
+
+EventDescriptor : KeystrokeAtom Integer ',' Integer
+		| ButtonAtom Integer ',' Integer ;
 
 FunctionBlock : { uwm_yy_PushContext(UWM_YY_FUNCTION_CONTEXT, NULL); }
 		FunctionBlock_ { uwm_yy_PopContext(); } ;
@@ -227,8 +218,18 @@ FunctionBlock_ : Function
 	       | '{' Functions '}' ;
 
 Functions : Function
-	  | Functions Function
-	  | RecoverFromERR ;
+	  | Functions Function ;
+
+Function : GenericLine { }
+	 | WinFunction { }
+	 | AnyFunction ';' ;
+
+AnyFunction : WorkspaceFunction { }
+	    | String { }      /* shell command */
+	    | MenuAtom Integer { }
+	    | QuitAtom { }
+/*	    | MessageAtom { }
+	    | AskAtom { } */ ;
 
 WorkspaceSpecifier : NextAtom { }
 		   | PrevAtom { }
@@ -237,13 +238,6 @@ WorkspaceSpecifier : NextAtom { }
 		   | CloseAtom { } ;
 
 WorkspaceFunction : WorkspaceAtom WorkspaceSpecifier { } ;
-
-TopFunction : WorkspaceFunction ';' { }
-	    | String ';' { }      /* shell command */
-	    | MenuAtom Integer ';' { }
-	    | QuitAtom ';' { }
-/*	    | MessageAtom { }
-	    | AskAtom { } */ ;
 
 AnyWinSpecifier : AnyAtom | { } ; /* No specifier is the same as ANY */
 
@@ -257,49 +251,56 @@ WinSpecifier : AnyWinSpecifier { $$ = cf_AnyWindow; }
 	     | VisibleAtom { $$ = cf_VisibleWindow; }
 	     | NoneAtom { $$ = cf_NoneWindow; } ;
 
-WinAction : DragPosAtom { }
-	  | DragSizeAtom { }
-	  | HexMenuAtom { }
-	  | SetFocusAtom { }
-	  | ShowAtom { }
-	  | RaiseAtom { }
-	  | LowerAtom { }
-	  | MaxAtom { }
-	  | VMaxAtom { }
-	  | HMaxAtom { }
-	  | DemaxAtom { }
-	  | ResizeAtom '(' Integer ',' Integer ')' { }
-	  | SetSizeAtom '(' Integer ',' Integer ')' { }
-	  | ReposAtom '(' Integer ',' Integer ')' { }
-	  | SetPosAtom '(' Integer ',' Integer ')' { } 
-	  | WorkspaceFunction { } 
-	  | CloseAtom { }
-	  | IconifyAtom { }
-	  | KillAtom { } ;
+AnyWinAction : DragPosAtom { }
+	     | DragSizeAtom { }
+	     | HexMenuAtom { }
+	     | SetFocusAtom { }
+	     | ShowAtom { }
+	     | RaiseAtom { }
+	     | LowerAtom { }
+	     | MaxAtom { }
+	     | VMaxAtom { }
+	     | HMaxAtom { }
+	     | DemaxAtom { }
+	     | ResizeAtom '(' Integer ',' Integer ')' { }
+	     | SetSizeAtom '(' Integer ',' Integer ')' { }
+	     | ReposAtom '(' Integer ',' Integer ')' { }
+	     | SetPosAtom '(' Integer ',' Integer ')' { } 
+	     | CloseAtom { }
+	     | IconifyAtom { }
+	     | KillAtom { } 
+	     | AnyFunction { } ;
 
-OrWinAction : OrAtom WinAction ';' { }
-	    | OrAtom '{' WinActions '}' { } ;
+WinAction : GenericLine
+	  | AnyWinAction ;
 
-AltWinActionBlocks : WinAction ';'
-		   | WinAction OrWinAction
-		   | '{' WinActions '}'
-		   | '{' WinActions '}' OrWinAction ;
+WinActionSemi : GenericLine
+	      | AnyWinAction ';' ;
 
-WinActionOrFuncBlocks : WinAction ';'
-		      | WinAction OrAtom FunctionBlock
-		      | '{' WinActions '}'
-		      | '{' WinActions '}' OrAtom FunctionBlock ;
+WinActions : WinActionSemi
+	   | WinActions WinActionSemi ;
 
-WinActions : WinAction ';'
-	   | WinActions WinAction ';'
-	   | RecoverFromERR ;
+WinActionBlock : { uwm_yy_PushContext(UWM_YY_FUNCTION_CONTEXT, NULL); }
+		WinActionBlock_ { uwm_yy_PopContext(); } ;
 
-WinFunction : WindowAtom WinSpecifier AltWinActionBlocks { }
-	    | WindowAtom FindAtom WinSpecifier WinActionOrFuncBlocks { } ;
+WinActionBlock_ : WinAction
+		 | '{' WinActions '}' ;
 
-Function : AnyLine { }
-	 | TopFunction { }
-	 | WinFunction { } ;
+WinLimitBlocks : WinLimit
+	       | WinLimitBlocks OrAtom WinLimit ;
+
+WinLimit : WinSpecifier WinActionBlock { } ;
+
+WinFindDefault : /* no default action */
+	       | OrAtom FunctionBlock ;
+
+WinFindBlocks : WinFind
+	      | WinFindBlocks OrAtom WinFind ;
+
+WinFind : FindAtom WinSpecifier WinActionBlock { } ;
+
+WinFunction : WindowAtom WinLimitBlocks { }
+	    | WindowAtom WinFindBlocks WinFindDefault { } ;
 
 MenuBlock : MenuAtom Integer Menu ;
 
@@ -312,10 +313,9 @@ Menu_ : '{' MenuLines '}'
       | WinmenuAtom ';' ;
 
 MenuLines : MenuLine
-	  | MenuLines MenuLine
-	  | RecoverFromERR ;
+	  | MenuLines MenuLine ;
 
-MenuLine : AnyLine
+MenuLine : GenericLine
 	 | DrawLine
 	 | MenuItem
 	 | SubmenuBlock
@@ -336,7 +336,7 @@ Integer : '(' Integer ')' { $$ = $2 ; }
 	| Integer '*' Integer { $$ = $1 * $3 ; }
 	| Integer '/' Integer { if($3 != 0) {
 				  $$ = $1 / $3 ;
-	                        } else {
+				} else {
 				  yyerror("Division by Zero");
 				  YYERROR ;
 				}
@@ -358,21 +358,21 @@ FloatVal : '(' FloatVal ')' { $$ = $2 ; }
 	 | FloatVal '*' Integer { $$ = $1 * $3 ; }
 	 | FloatVal '/' FloatVal { if($3 != 0) {
 				  $$ = $1 / $3 ;
-	                        } else {
+				} else {
 				  yyerror("Division by Zero");
 				  YYERROR ;
 				}
 			      }
 	 | Integer '/' FloatVal { if($3 != 0) {
 				  $$ = $1 / $3 ;
-	                        } else {
+				} else {
 				  yyerror("Division by Zero");
 				  YYERROR ;
 				}
 			      }
 	 | FloatVal '/' Integer { if($3 != 0) {
 				  $$ = $1 / $3 ;
-	                        } else {
+				} else {
 				  yyerror("Division by Zero");
 				  YYERROR ;
 				}
