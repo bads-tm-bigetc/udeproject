@@ -3,6 +3,9 @@
 	  from InitUWM to an earlier point in main.
 	* uwm/special.c(CheckCPP): fixed broken pipe error in case we don't
 	  find a preprocessor binary to execute.
+	* uwm/special.c(CheckCPP): fixed broken pipe error in case we don't
+	  find a /bin/sh binary to execute (although this might not be our
+	  biggest problem in this case)
 
 2004-08-09  Christian Ruppert <arc@users.sf.net>
 	* uwm/init.c: removed exit() statements that were introduced for

@@ -301,10 +301,11 @@ int CheckCPP()
     fclose(stdin);
     if(STDIN_FILENO != fcntl(ofiles[0], F_DUPFD, STDIN_FILENO)) exit(-1);
     close(ofiles[0]);
-    if(-1 == fcntl(STDOUT_FILENO, F_SETFD, 0)) exit(-1);
+    if(-1 == fcntl(STDIN_FILENO, F_SETFD, 0)) exit(-1);
 
     execl("/bin/sh", "/bin/sh", "-c", temp, NULL);
     fprintf(TheScreen.errout,"UWM: couldn't start application: /bin/sh\n");
+    while(getc(STDIN_FILENO) != EOF) ;
     exit(-1);
   }
 
