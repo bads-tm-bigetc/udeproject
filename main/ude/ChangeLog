@@ -1,4 +1,7 @@
 2004-05-01  Christian Ruppert <arc@users.sf.net>
+	* config/urdb: fixed ddd resource application name.
+
+2004-05-01  Christian Ruppert <arc@users.sf.net>
 	* uwm/uwm.c: cleaned up uwm initialisation in main()
 	* uwm/uwm.c: fixed bug in HOSTDISPLAY which always used local hostname.
 	* uwm/init.c: cleaned up InitUWM() a bit

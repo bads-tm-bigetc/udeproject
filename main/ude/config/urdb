@@ -441,20 +441,20 @@ Editres*Panner.Background: @BACKGROUND@
 
 ! Ddd
 
-Ddd*foreground:			   @STANDARDTEXT@
-Ddd*background:			   @BACKGROUND@
-Ddd*XmText.background:		   @TEXTBGR@
-Ddd*XmTextField.background:	   @TEXTBGR@
-Ddd*GraphEdit.background:	   @TEXTBGR@
-Ddd*XmList.background:		   @TEXTBGR@
-Ddd*XmText.foreground:		   @TEXTCOLOR@
-Ddd*XmTextField.foreground:	   @TEXTCOLOR@
-Ddd*GraphEdit.foreground:	   @TEXTCOLOR@
-Ddd*XmList.foreground:		   @TEXTCOLOR@
-Ddd*topShadowColor:		   @LIGHTCOLOR@
-Ddd*bottomShadowColor:		   @SHADOWCOLOR@
-Ddd*defaultFont:       @TEXTFONT@
-Ddd*variableWidthFont: @STANDARDFONT@
+ddd*foreground:			   @STANDARDTEXT@
+ddd*background:			   @BACKGROUND@
+ddd*XmText.background:		   @TEXTBGR@
+ddd*XmTextField.background:	   @TEXTBGR@
+ddd*GraphEdit.background:	   @TEXTBGR@
+ddd*XmList.background:		   @TEXTBGR@
+ddd*XmText.foreground:		   @TEXTCOLOR@
+ddd*XmTextField.foreground:	   @TEXTCOLOR@
+ddd*GraphEdit.foreground:	   @TEXTCOLOR@
+ddd*XmList.foreground:		   @TEXTCOLOR@
+ddd*topShadowColor:		   @LIGHTCOLOR@
+ddd*bottomShadowColor:		   @SHADOWCOLOR@
+ddd*defaultFont:       @TEXTFONT@
+ddd*variableWidthFont: @STANDARDFONT@
 
 ! XTerm
 
