@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
+#include "uwm.h"
 
 void UpdateDesktop();
 void ShowMenu(int menuNumber, int x, int y);

@@ -1,4 +1,11 @@
 2003-02-09  Christian Ruppert <arc@users.sf.net>
+	* uwm/confparse.h, uwm/confparse.l, confparse.y, configconvertors.c,
+	  settings.h: added files for new configuration file parser
+	* uwm/Makefile.am: added rules to build c from flex/yacc before
+	  building distribution and to add new files to distribution.
+	* uwm/special.h: added missing include "uwm.h"
+
+2003-02-09  Christian Ruppert <arc@users.sf.net>
 	* uwm/workspaces.c: changed order of UpdateDesktop and SetWSBackground
 	  calls in ChangeWS to prevent race condition problem in urdb2gtkd
 	  --dump.

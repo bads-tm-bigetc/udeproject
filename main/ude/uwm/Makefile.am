@@ -29,6 +29,9 @@ uwm_SOURCES=  \
     selection.c \
     wingroups.c \
     tree.c \
+    confparse.lex.c \
+    confparse.tab.c \
+    configconvertors.c \
     uwm.c
 
 noinst_HEADERS= \
@@ -55,6 +58,33 @@ noinst_HEADERS= \
 	selection.h \
 	wingroups.h \
 	tree.h \
+	confparse.h \
+	settings.h \
+	confparse.h \
+	confparse.tab.h \
 	workspaces.h
 
-EXTRA_DIST= shape.bitmap
+EXTRA_DIST= shape.bitmap confparse.l confparse.y 
+
+# no, folks - this is not for public use so configure doesn't check for
+# flex/yacc. people who compile from cvs should know what to do.
+
+# YACC = yacc # bison -y will not work
+FLEX = flex
+
+confparse.tab.c: confparse.y
+	@which $(YACC) >/dev/null \
+          || (echo "	======> INSTALL YACC/BISON TO BUILD FROM CVS <======" ;\
+              exit 1)
+	$(YACC) -d -b confparse confparse.y
+
+confparse.tab.h: confparse.tab.c
+
+confparse.lex.c: confparse.l confparse.tab.h
+	@which $(FLEX) >/dev/null \
+          || (echo "	======> INSTALL FLEX TO BUILD FROM CVS <======" ;\
+              exit 1)
+	$(FLEX) -oconfparse.lex.c confparse.l
+
+cleanparser: clean
+	rm -f *.tab.c *.lex.c *.tab.h
