@@ -26,6 +26,7 @@ have, I think it's time to face the fact that uwm has become quite a stable
 and reliable program that no longer deserves a BETA in its version string.
 Don't blame me for having written this if this is the first version that
 crashes on your system - rather see it as another proof of murphys law ;)
+And write a bug report of course!
 Seriously: Seeing that I'm currently not having too much time to work on
 uwm and that the current code is extremely stable (and the program better
 than it ever was before) I wanted to make this version available to
