@@ -6,6 +6,8 @@
 	* uwm/confparse.tab.y: implemented FILE functionality.
 	* uwm/confparse.tab.y, uwm/confparse.lex.l, uwm/confparse.h:
 	  implemented PIPE functionality.
+	* doc/manual.tex: Started documentation of new config file format.
+	* uwm/ude_config_consts.h: removed unused defines.
 
 2004-09-09  Christian Ruppert <arc@users.sf.net>
 	* uwm/handlers.c(InitHandlers): uwm now stops at initialisation in
