@@ -1,5 +1,10 @@
 2001-04-22  Christian Ruppert <arc@gmx.li>
 
+	* uwm/properties.c: changed SetWinMapState to unmap withdrawn windows
+	  in any case.
+
+2001-04-22  Christian Ruppert <arc@gmx.li>
+
 	* uwm/handlers.c: shaped window titles are now also refreshed.
 	* uwm/handlers.c: shaped window's titles are always centered.
 	* uwm/properties.c: changed window name refreshing to work with new

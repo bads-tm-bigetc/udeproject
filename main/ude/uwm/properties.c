@@ -233,7 +233,8 @@ void SetWinMapState(UltimateContext *uc,int state)
   data[1] = None;
 /*  if(uc->WMHints) data[1] = (unsigned long) uc->WMHints->icon_window; */
   switch(state){
-    case WithdrawnState: DisenborderWin(uc, True);
+    case WithdrawnState: UnmapWin(uc);
+                         DisenborderWin(uc, True);
                          break;
     default: break;
   }
