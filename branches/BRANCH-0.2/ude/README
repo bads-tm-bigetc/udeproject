@@ -1,4 +1,4 @@
-README for uwm 0.2.8
+README for uwm 0.2.9
 ====================
 
 This is uwm, the ultimate window manager, which will be one day part of
@@ -18,23 +18,6 @@ has migrated to sourceforge and can be reached at
 Mirror pages also might be down or outaged due to some problems with the
 migration.
 
-Some of you might wonder about where the BETA in the version number has
-gone, and yes, you're right: This is the first official stable release of
-uwm. Although the program still lacks lots of functionality (for instance
-full icccm 2.0 compliance, so we're still in the 0.2.x-es) I'ld like it to
-have, I think it's time to face the fact that uwm has become quite a stable
-and reliable program that no longer deserves a BETA in its version string.
-Don't blame me for having written this if this is the first version that
-crashes on your system - rather see it as another proof of murphys law ;)
-And write a bug report of course!
-Seriously: Seeing that I'm currently not having too much time to work on
-uwm and that the current code is extremely stable (and the program better
-than it ever was before) I wanted to make this version available to
-everyone although the declared goal of icccm2.0-compliance is not fully
-achieved yet.
-
-Have fun with this first officially stable release.
-
 Oh, and don't forget: We're still looking for developers, designers etc.
 The more people work on this project the higher the chances are that one
 day we'll reach a major version number of 1 (i.e. "all" features
@@ -46,5 +29,5 @@ ude - get used to it.
 
 For bug reports, suggestions etc. please contact
 
-                        Christian Ruppert <arc@gmx.li>
+                        Christian Ruppert <arc@users.sourceforge.net>
 

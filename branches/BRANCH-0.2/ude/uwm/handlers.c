@@ -94,13 +94,14 @@ void TermHandler(int dummy)
 /*** Handler for system Error ***/
 void UWMErrorHandler(Display *disp, XErrorEvent *Err)
 {
-  char et[1024];
-  XGetErrorText(disp,Err->error_code,et,1023);
-  fprintf(TheScreen.errout,"An error #%d occured:\n%s\n",Err->error_code,et);
+DBG(\
+  char et[1024];\
+  XGetErrorText(disp,Err->error_code,et,1023);\
+  fprintf(TheScreen.errout,"An error #%d occured:\n%s\n",Err->error_code,et);\
   fprintf(TheScreen.errout,"It was caused by command (Major-Minor): %d-%d\n",\
-                                           Err->request_code,Err->minor_code);
-  fprintf(TheScreen.errout,"Look up the meanings in X11/Xproto.h\n");
-DBG( fprintf(TheScreen.errout,"The considered resource was: %d\n",\
+                                           Err->request_code,Err->minor_code);\
+  fprintf(TheScreen.errout,"Look up the meanings in X11/Xproto.h\n");\
+  fprintf(TheScreen.errout,"The considered resource was: %d\n",\
                                                  Err->resourceid);)
 }
 

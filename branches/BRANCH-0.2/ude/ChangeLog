@@ -1,3 +1,13 @@
+2003-11-30  Christian Ruppert <arc@users.sf.net>
+	* RELEASE: ude-0.2.9
+	* uwm/Makefile.am: removed tree.c and tree.h from built and
+	  distribution
+	* uwm/handlers.c: uwm no longer outputs usually meaningless error
+	  messages when compiled without debugging
+	* configure.in: changed version
+	* README: updated
+	* NEWS: updated
+
 2003-11-25  Christian Ruppert <arc@users.sf.net>
 	* uwm/windows.c: fixed a bug in focus management (ActivateWin now no
 	  longer gives focus to root before setting focus to destination
