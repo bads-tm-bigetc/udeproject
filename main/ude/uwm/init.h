@@ -14,16 +14,15 @@
 #define BF_IN_WIN_CTRL    (1<<0)  /* process clicks we get from inside a
                                      client window */
 
-#endif
-
 /* icccmFlags */
 #define ICF_STAY_ALIVE    (1<<0)  /* don't let yourself replace by another wm */
 #define ICF_TRY_HARD      (1<<1)  /* try to replace other icccm wms */
 #define ICF_HOSTILE       (1<<2)  /* try to replace other icccm wms violently */
+#endif
+
 typedef struct {
   char StartScript[256];
   char StopScript[256];
-  char HexPath[256];
   char menuType[3];
   char BorderButtons[3];
   char DragButtons[3];
@@ -31,8 +30,9 @@ typedef struct {
   char WMMenuButtons[3];
   char **OtherWms;
   unsigned short OtherWmCount;
-  unsigned char icccmFlags;
 #if 0
+  char HexPath[256];
+  unsigned char icccmFlags;
   int MenuBorderWidth,MenuXOffset,MenuYOffset;
   char RubberMove;
   unsigned long OpaqueMoveSize;
