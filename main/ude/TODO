@@ -1,0 +1,24 @@
+=== TODO ===
+- fix window state machine, transform all data structures to lazy (i.e. update
+  only on reception of Notify-Events) WAS: mplayer -fs problem. SEE handwritten
+  notes on state machine.
+- truncate window titles in menus and title bars
+- dynamic workspace system
+- menu color inversion
+- menugeflacker (hex und normal) ein- fuer allemal abstellen.
+- xinerama support
+- use ultimatelist for gradientplace instead of x-server query
+- (basic) freedesktop.org support
+- font antialiasing using Xft or XRender (XRender also for
+  animated/transparent cursors?)
+- paste name of workspace in menu.
+- send events so that xt-applications will recognize changed colors when a
+  workspace has changed.
+- manage Cut-buffer???
+- borderless maximize (one pixel on bootom is left to hex menu and background)
+- stay on top/bottom
+- maximisation rework (1 pixel edge)
+
+=== done? ===
+- bugfix window border drawing (focus/no focus problems)
+- remove conf_func_list.h and related stuff.
