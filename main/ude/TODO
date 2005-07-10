@@ -1,24 +1,46 @@
 === TODO ===
-- fix window state machine, transform all data structures to lazy (i.e. update
-  only on reception of Notify-Events) WAS: mplayer -fs problem. SEE handwritten
-  notes on state machine.
-- truncate window titles in menus and title bars
-- dynamic workspace system
-- menu color inversion
-- menugeflacker (hex und normal) ein- fuer allemal abstellen.
-- xinerama support
+
+high priority:
+--------------
 - use ultimatelist for gradientplace instead of x-server query
-- (basic) freedesktop.org support
+
+- fix menu flickering problem (hex and normal menus) once and for all
+
+- dynamic workspace system ("infinite" workspaces)
+     - paste name of workspace in menu.
+
+- fix window state machine:
+     - transform all data structures to lazy (i.e. update only on reception
+       of Notify-Events)
+  WAS: mplayer -fs problem. SEE handwritten notes on state machine or
+       contact christian <arc@users.sf.net> for details.
+
+normal priority:
+----------------
+- truncate window titles in menus and title bars - should be easy to do
+
+- menu color inversion for better visibility
+
+- (basic) freedesktop.org support:
+     - xinerama
+     - desktop resizing
+     - workspace management freedesktop conformant?
+
+- borderless maximize windows (one pixel border on bootom is left to hex menu,
+  workspace menus in bottom corners)
+
+low priority:
+-------------
+- stay on top/bottom windows
+
+- send events so that xt-applications will recognize changed colors when a
+  workspace has changed (might be complex to do... needs to be examined if
+  it's worth the trouble)
+
 - font antialiasing using Xft or XRender (XRender also for
   animated/transparent cursors?)
-- paste name of workspace in menu.
-- send events so that xt-applications will recognize changed colors when a
-  workspace has changed.
-- manage Cut-buffer???
-- borderless maximize (one pixel on bootom is left to hex menu and background)
-- stay on top/bottom
-- maximisation rework (1 pixel edge)
+
+- manage Cut-buffer - might also be left to xcliboard etc, very low priority
 
 === done? ===
-- bugfix window border drawing (focus/no focus problems)
-- remove conf_func_list.h and related stuff.
+- bugfix window border drawing (focus/no focus problems) - seems to be ok.
