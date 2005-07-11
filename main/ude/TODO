@@ -42,5 +42,6 @@ low priority:
 
 - manage Cut-buffer - might also be left to xcliboard etc, very low priority
 
+
 === done? ===
 - bugfix window border drawing (focus/no focus problems) - seems to be ok.
