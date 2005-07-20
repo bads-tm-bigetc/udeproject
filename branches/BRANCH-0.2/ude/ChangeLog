@@ -1,3 +1,7 @@
+2004-07-21  Christian Ruppert <arc@users.sf.net>
+	* ude/placement.c: Backport and some very slight modifications to
+	  make Edd Buduleas placement patch use preexisting infrastructure.
+
 2004-02-05  Christian Ruppert <arc@users.sf.net>
 	* po/it.po, configure.in: added italian language support. Many thanks
 	  to Diego Bertone.
