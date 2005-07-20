@@ -63,13 +63,23 @@ extern UltimateContext *ActiveWin;
 
 NodeList* ScanScreen(Window win)
 {
-  Window dummy,*children;
+//  Window dummy,*children;
   unsigned int number;
-  int a;
+  Node *winNode;
   NodeList *wins;
 
-  XQueryTree(disp,TheScreen.root,&dummy,&dummy,&children,&number);
   if(!(wins=NodeListCreate())) SeeYa(1,"FATAL: out of mem!");
+  for(winNode=TheScreen.UltimateList->first;winNode;winNode=winNode->next){
+	UltimateContext*uc=winNode->data;
+    if(uc&&uc->WorkSpace==TheScreen.ActiveWorkspace&&!IsIconic(uc)){
+	  ScanData *data;
+	  data=MyCalloc(1,sizeof(ScanData));
+	  data->x1=uc->Attr.x;data->x2=uc->Attr.x+uc->Attr.width;
+	  data->y1=uc->Attr.y;data->y2=uc->Attr.y+uc->Attr.height;
+	  NodeAppend(wins,data);
+	}
+  }
+/*  XQueryTree(disp,TheScreen.root,&dummy,&dummy,&children,&number);
 
   if(children) {
     for(a=0;a<number;a++) {
@@ -86,7 +96,7 @@ NodeList* ScanScreen(Window win)
       }
     }
     XFree((char *)children);
-  }
+  }*/
   return(wins);
 }
 
