@@ -1,0 +1,131 @@
+/* we still use the c preprocessor: */
+#include "/home/arc/.ude/config/udeconfigdefines.h"
+
+/* there are two ways of specifying options: individually... */
+OPTION BorderWidth = 12;
+OPTION TransientBorderWidth = 10;
+OPTION BorderWidth = 10;
+/* ... or grouped */
+OPTION {
+  TitleHeight     = 0;
+  FrameBevelWidth = 0;
+  BevelWidth      = 1;
+  MenuXOffset	  = 2;
+  MenuYOffset     = 4;
+  FrameFlags      = CENTER_TITLE | BLACK_LINE | INACTIVE_TITLE;
+  StartScript	  = "hallihallo";
+  ResourceFile    = "hallohalli";
+  Font		  = "-*-utopia-*-r-*-*-*-*-*-*-*-*-*-*";
+};
+/* environment variables can be used using ${NAME}, the braces are mandatory */
+OPTION HexPath	   = "${HOME}/a/nonexistent/testpath";
+OPTION
+  WarpPointerToNewWinV = 73.45;
+OPTION
+  WarpPointerToNewWinH = 44;
+OPTION  BevelWidth	  = 2;
+OPTION	OpaqueMoveSize	=	200;
+OPTION	MaxWinHeight	=	0;
+
+% the %-sign way still works for comments:
+% definition for workspace options are just like global options, except that
+% the keyword OPTION is replaced by WORKSPACE <integer>.
+WORKSPACE 0 {
+  Name = "${USER}";
+% for colors: you can either use a name from /usr/X11/lib/X11/rgb.txt
+% or X11 color definitions such as #RRGGBB, #RRRRGGGGBBBB or #RGB
+  ScreenColor = "inexistent test color";
+  BackgroundColor = "blue";
+  BackgroundShadow = SHADOW_OF("blue", 1.3);
+  BackgroundLight = LIGHT_OF("blue", 1.3);
+  InactiveColor = "green";
+  InactiveShadow = SHADOW_OF("blue", 1.5);
+  InactiveLight = LIGHT_OF("blue", 1.5);
+  Wallpaper = "${HOME}/fun/cancer.jpg";
+};
+
+WORKSPACE 0 ScreenColor = "blue";
+WORKSPACE 0 ScreenColor = "green";
+WORKSPACE 3 Name = "ws3";
+
+% The menu syntax has not changed except that we now need semicolons
+% after closing braces. and top level menus have to be declared using the
+% syntax MENU <integer> so they can be called by events (see below).
+MENU 3 { FILE "appmenu"; } ;
+
+% here are some event definitions. please note that everything before the
+% colon is still nothing but a placeholder until the real definitions are
+% implemented. after the colon, an action is defined. all actions that work
+% with events equally work with menus.
+
+% as in the old format, a string means execute a shell command when an event
+% occurs:
+EVENT KEYSTROKE 0,0: "xmessage \"hello\"";
+
+% create a new workspace, goto next and previous workspace
+EVENT KEYSTROKE 1,0: WORKSPACE NEW;
+EVENT KEYSTROKE 2,0: WORKSPACE NEXT;
+EVENT KEYSTROKE 2,1: WORKSPACE PREVIOUS;
+
+% the window actions are a bit tricky: when an event occurs there is always an
+% initial window set, wich is the focus window for now (but it may
+% contain several windows so there is room for extension).
+% this set may be limited using the WINDOW action: 
+
+% eliminate all windows that are not called "xterm" from the set and close
+% the remaining ones (i.e. close the active window if its title is "xterm").
+EVENT KEYSTROKE 3,0: WINDOW "xterm" CLOSE;
+
+% set the focus to the next window:
+EVENT KEYSTROKE 3,2: WINDOW NEXT SET_FOCUS;
+
+% take the next window on the workspace and put it to the previous workspace:
+EVENT KEYSTROKE 3,1: WINDOW NEXT WORKSPACE PREVIOUS;
+
+% WINDOW FIND ignores the initial window set and finds all existing windows
+% that fit the description.
+% find all windows that belong to the application firefox-bin and do whatever
+% is necessary to show them (go to workspace, deiconify and raise them).
+% if nothing is found iconify all windows that are called "Firefox", move them
+% on a new workspace and iconify them there.
+% if all else fails fire up firefox and show the menu number three (see above).
+% note that the last (else) braces contain top level actions while the
+% rest describes things to be done with windows. WINDOW FIND and WINDOW may
+% not be mixed but nested.
+EVENT KEYSTROKE 3,4: WINDOW FIND APPLICATION "firefox-bin" SHOW
+			 OR FIND "Firefox" {
+			WORKSPACE NEW;
+			ICONIFY;
+		     } OR {
+			"firefox";
+			MENU 3;
+		     };
+
+% definition of menu number eight.
+MENU 8 {
+  ITEM "Firefox": WINDOW FIND APPLICATION "firefox-bin" SHOW OR "firefox";
+};
+
+% this resizes the active window by extending the upper left corner by five
+% pixels (or closest step, at least one step) in each direction.
+EVENT KEYSTROKE 5,1: WINDOW {
+  REPOSITION(-5,-5);
+  RESIZE(5,5);
+};
+
+% if the active window is called moc iconify it, if it is not but visible on
+% the screen do the reposition/resize combination and if it is invisible move
+% it to the next workspace.
+EVENT KEYSTROKE 8,2: {
+  WINDOW "moc" ICONIFY
+      OR VISIBLE {
+    REPOSITION(5, -5);
+    RESIZE(5, -5);
+  } OR {
+    WORKSPACE NEXT;
+  };
+};
+
+% the PIPE and FILE commands still exists but can also be used outside of
+% menu definitions: (commented out here)
+% PIPE "sleep 3 ; echo WORKSPACE 0 Wallpaper = \\\"/home/arc/fun/glenwood.jpg\\\"\\;";

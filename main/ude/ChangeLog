@@ -1,6 +1,8 @@
 2004-07-21  Christian Ruppert <arc@users.sf.net>
 	* ude/placement.c: Some very slight modifications to make Edd Buduleas
 	  placement patch use preexisting infrastructure.
+	* config/uwmrc.new: added an extremely preliminary example of the new
+	  uwmrc syntax, use with caution!!!
 
 2004-07-21  Edd Budulea <e_timotei@users.sf.net>
 	* ude/placement.c: patched ScanScreen so that UltimateList is used
