@@ -65,7 +65,7 @@ void StartDragging(UltimateContext *uc,unsigned int x,unsigned int y)
   GrabPointer(uc->frame, PointerMotionMask | PointerMotionHintMask
               | ButtonPressMask | ButtonReleaseMask, TheScreen.Mice[C_DRAG]);
   InstallMoveHandle();
-  if(settings.global_settings->SnapDistance) movewins = ScanScreen(uc->frame);
+  if(settings.global_settings->SnapDistance) movewins = ScanScreen(uc);
     
   RubberMove = (settings.global_settings->BehaviourFlags & RubberMove)
 	       ? True : False;

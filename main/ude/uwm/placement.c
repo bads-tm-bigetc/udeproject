@@ -61,7 +61,7 @@ extern UDEScreen TheScreen;
 extern InitStruct InitS;
 extern UltimateContext *ActiveWin;
 
-NodeList* ScanScreen(Window win)
+NodeList* ScanScreen(UltimateContext *win)
 {
 //  Window dummy,*children;
   unsigned int number;
@@ -72,7 +72,7 @@ NodeList* ScanScreen(Window win)
   winNode = NULL;
   while(winNode = NodeNext(TheScreen.UltimateList, winNode)) {
     UltimateContext *uc = winNode->data;
-    if(uc && WinVisible(uc)) {
+    if(uc && (uc != win) && WinVisible(uc)) {
       ScanData *data;
       data = MyCalloc(1, sizeof(ScanData));
       data->x1 = uc->Attr.x; data->x2 = uc->Attr.x + uc->Attr.width;
@@ -407,22 +407,19 @@ long LeastOverlap(NodeList *wins,int w,int h,int *x,int *y)
 void PlaceWin(UltimateContext *uc)
 {
   NodeList *wins;
-  Window win;
   int x,y,width,height;
 
 
   if(settings.global_settings->PlacementStrategy && (uc->flags & PLACEIT)) {
     if(uc->frame != None) {
-      win = uc->frame;
       width = uc->Attr.width;
       height = uc->Attr.height;
     } else {
-      win = uc->win;
       width = uc->Attributes.width;
       height = uc->Attributes.height;
     }
 
-    wins=ScanScreen(win);
+    wins=ScanScreen(uc);
 
     switch(settings.global_settings->PlacementStrategy >> 1){
       case 2: if(settings.global_settings->PlacementThreshold
