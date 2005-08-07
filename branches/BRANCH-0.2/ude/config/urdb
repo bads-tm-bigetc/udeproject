@@ -491,3 +491,6 @@ rxvt.font: @TEXTFONT@
 rxvt.background: @TEXTBGR@
 rxvt.foreground: @TEXTCOLOR@
 
+! xfig
+xfig*canvasbackground: white
+xfig*canvasforeground: black

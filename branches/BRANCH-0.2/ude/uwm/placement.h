@@ -6,7 +6,7 @@ typedef struct {
 } ScanData;
 
 void PlaceWin(UltimateContext *uc);
-NodeList *ScanScreen(Window win);
+NodeList *ScanScreen(UltimateContext *win);
 void FreeScanned(NodeList *wins);
 void SnapWin(NodeList *wins, int *x, int *y, int width, int height);
 
