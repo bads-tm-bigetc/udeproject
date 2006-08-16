@@ -19,6 +19,8 @@ cat <<EOF
 
 EOF
 
+BRANCH02URL="`svn info | sed -e 's/^Repository Root: //' -e t -e d`/uwm/branches/BRANCH-0.2"
+
 while true ; do 
   echo "Do you now want to patch this version back to the latest version that"
   echo "actually does window management, i.e. the latest version from the"
@@ -29,15 +31,15 @@ while true ; do
       echo
       cat <<EOF
 This script will now take the necessary steps to patch uwm back to the
-0.2 branch. please make sure that your computer is connected to the internet
-and that you are logged in to the ude cvs server (if using anonymous cvs via
-pserver) and press return.
+0.2 branch. Please make sure that your computer is connected to the internet
+and that you have access to the ude svn server and press return.
 
-you can also press CTRL-C at this point and run "cvs update -r BRANCH-0_2"
+You can also press CTRL-C at this point and run 
+svn switch "$BRANCH02URL"
 in this directory anytime later.
 EOF
       read
-      cvs update -r BRANCH-0_2
+      svn switch "$BRANCH02URL"
       exec $@
       break
       ;;
@@ -46,7 +48,7 @@ EOF
       cat <<EOF
 Thanks for being interested in helping us out with uwm 0.3.
 contact christian ruppert <arc@users.sourceforge.net> for details and full
-cvs access.
+svn access.
 
 press return to proceed.
 EOF
