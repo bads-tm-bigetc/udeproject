@@ -106,7 +106,7 @@ void FreeScanned(NodeList *wins)
 {
   Node *dn;
   dn=NULL;
-  while(dn=NodeNext(wins,dn)){
+  while((dn=NodeNext(wins,dn))){
     free(dn->data);
   }
   NodeListDelete(&wins);
@@ -121,7 +121,7 @@ long Overlap(NodeList *wins,int x1,int y1,int x2,int y2)
   o=0;
 
   dn=NULL;
-  while(dn=NodeNext(wins,dn)){
+  while((dn=NodeNext(wins,dn))){
     ScanData *test;
     int dx,dy;
     dx=dy=0;
@@ -158,7 +158,7 @@ Bool GradientMove(NodeList *wins,int *x,int *y,int w,int h)
   y2=(y1=((*y)-1))+h+2;
 
   dn=NULL;
-  while(dn=NodeNext(wins,dn)){
+  while((dn=NodeNext(wins,dn))){
     ScanData *test;
     int dx,dy;
     dx=dy=0;
@@ -218,9 +218,9 @@ long GradientPlace(NodeList *wins,int w,int h,int *x,int *y)
   if(!o) return(o);
 
   xn=yn=NULL;
-  while(xn=NodeNext(wins,xn)){
+  while((xn=NodeNext(wins,xn))){
     xd=xn->data;
-    while(yn=NodeNext(wins,yn)){
+    while((yn=NodeNext(wins,yn))){
       yd=yn->data;
       if(BETWEEN(xd->y1,yd->y1,xd->y2) && BETWEEN(yd->x1,xd->x1,yd->x2)) {
         xa=MAX(0,xd->x1-w);
@@ -284,7 +284,7 @@ void SnapWin(NodeList *wins, int *x, int *y, int width, int height)
              InitS.SnapDistance))
     *y = TheScreen.height - height;
 
-  while(n=NodeNext(wins,n)){
+  while((n=NodeNext(wins,n))){
     test = n->data;
     if(((test->y1 - InitS.SnapDistance) < (*y + height)) 
        && ((test->y2 + InitS.SnapDistance) > *y)){
@@ -334,7 +334,6 @@ void ManualPlace(NodeList *wins,int w,int h,int *x,int *y)
   StartRubber(*x,*y,w,h,TheScreen.BorderWidth1);
   placing=-1;
   while(placing){
-    int i;
     XEvent event;
     KeySym keysym;
 

@@ -41,7 +41,7 @@ MenuItem *lastsel;
 
 void OtherSelect(XEvent *event,MenuItem *selected)
 {
-  if(lastsel=selected) if((selected->type==I_SELECT)&&(selected->data))
+  if((lastsel=selected)) if((selected->type==I_SELECT)&&(selected->data))
     MySystem(((AppStruct *)selected->data)->command);
 }
 

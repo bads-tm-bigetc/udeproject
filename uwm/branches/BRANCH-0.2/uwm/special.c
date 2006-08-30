@@ -122,7 +122,7 @@ void ShowMenu(int menuNumber, int x, int y)
   }
 }
 
-void BorderButton(char a,UltimateContext *uc,int x,int y,int x_root,int y_root)
+void BorderButton(int a,UltimateContext *uc,int x,int y,int x_root,int y_root)
 {
   switch (InitS.BorderButtons[a]) {
     case 'M':
@@ -273,7 +273,7 @@ int CheckCPP()
   char *cppenv;
   char buffer[512];
 
-  if(cppenv = getenv("CPP")) TheScreen.cppcall = cppenv;
+  if((cppenv = getenv("CPP"))) TheScreen.cppcall = cppenv;
   else TheScreen.cppcall = CPP_CALL;
 
   recheck:  /* ugly but undangerous in this case. */

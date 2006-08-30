@@ -91,7 +91,7 @@ void CleanUp(Bool StopScript)
 
   if(ScreenCommandPID>0) if(!kill(ScreenCommandPID,SIGTERM)) sleep(1);
                      /* terminate running ScreenCommand and not leave a zombie*/
-  if(TheScreen.UltimateList) if(n=TheScreen.UltimateList->first)
+  if(TheScreen.UltimateList) if((n=TheScreen.UltimateList->first))
     while(n) {
       XMapWindow(disp, ((UltimateContext *)(n->data))->win);
       SetSeemsMapState(n->data, ((UltimateContext *)(n->data))->uwmstate);
@@ -105,11 +105,11 @@ void CleanUp(Bool StopScript)
 
   if((InitS.StopScript[0]!='\n')&&(InitS.StopScript[0]!='\0')&&StopScript) {
     sprintf(rmstr,"%s/.ude/config/%s",TheScreen.Home,InitS.StopScript);
-    if(p=strchr(rmstr,' ')) (*p)='\0';
+    if((p=strchr(rmstr,' '))) (*p)='\0';
     if(stat(rmstr,&stats))
       if((errno==ENOENT)||(errno==EACCES)) {
         sprintf(rmstr,"%sconfig/%s",TheScreen.udedir,InitS.StopScript);
-        if(p=strchr(rmstr,' ')) (*p)='\0';
+        if((p=strchr(rmstr,' '))) (*p)='\0';
         if(stat(rmstr,&stats))
           if((errno==ENOENT)||(errno==EACCES)) {
             sprintf(rmstr,"%s",InitS.StopScript);
@@ -141,7 +141,7 @@ void CatchWindows()
 
   XQueryTree(disp,TheScreen.root,&dummy,&dummy,&children,&number);
   for(a=0;a<number;a++) if(children[a]) {
-    if(hints=XGetWMHints(disp,children[a])) {
+    if((hints=XGetWMHints(disp,children[a]))) {
       if(hints->flags & IconWindowHint) {
         for(b=0;b<number;b++) 
           if(children[b]==hints->icon_window) {
@@ -163,7 +163,7 @@ void CatchWindows()
                                      False, WM_STATE_PROPERTY, &type,
 				     &format, &number, &bytesafter,
 				     (unsigned char **)&data)) data = NULL;
-      if(uc = UltimizeWin(children[a])) {
+      if((uc = UltimizeWin(children[a]))) {
         if(!uc->Attributes.override_redirect) {
 	  CARD32 state = WithdrawnState;
 	
@@ -341,11 +341,11 @@ int main(int argc,char **argv)
 
   if((InitS.StartScript[0]!='\n')&&(InitS.StartScript[0]!='\0')) {
     sprintf(rmstr,"%s/.ude/config/%s",TheScreen.Home,InitS.StartScript);
-    if(p=strchr(rmstr,' ')) (*p)='\0';
+    if((p=strchr(rmstr,' '))) (*p)='\0';
     if(stat(rmstr,&stats))
       if((errno==ENOENT)||(errno==EACCES)) {
         sprintf(rmstr,"%sconfig/%s",TheScreen.udedir,InitS.StartScript);
-        if(p=strchr(rmstr,' ')) (*p)='\0';
+        if((p=strchr(rmstr,' '))) (*p)='\0';
         if(stat(rmstr,&stats))
           if((errno==ENOENT)||(errno==EACCES)) {
             sprintf(rmstr,"%s",InitS.StartScript);
@@ -358,4 +358,6 @@ int main(int argc,char **argv)
 
   ManagEm();                     /* what a window manager is supposed to do */
   SeeYa(0,NULL);
+
+  return(0);
 }

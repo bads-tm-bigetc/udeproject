@@ -202,7 +202,7 @@ void StickyWin(UltimateContext *uc)
   else Win2WS(uc, -1);
   if(uc->group) {
     Node *n = NULL;
-    while(n = NodeNext(uc->group->members, n)) { 
+    while((n = NodeNext(uc->group->members, n))) { 
       Win2WS(n->data, uc->WorkSpace);
     }
     uc->group->WorkSpace = uc->WorkSpace;
@@ -213,7 +213,7 @@ void WithWin2WS(UltimateContext *uc,short ws)
 {
   if(uc->group) {
     Node *n = NULL;
-    while(n = NodeNext(uc->group->members, n)) { 
+    while((n = NodeNext(uc->group->members, n))) { 
       ((UltimateContext *)(n->data))->WorkSpace = ws;
     }
     uc->group->WorkSpace = uc->WorkSpace;

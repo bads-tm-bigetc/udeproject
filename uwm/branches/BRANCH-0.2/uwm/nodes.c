@@ -217,7 +217,7 @@ unsigned int NodeCount(NodeList *list)
   Node *n = NULL;
   unsigned int cnt = 0;
 
-  while(n = NodeNext(list, n)) cnt++;
+  while((n = NodeNext(list, n))) cnt++;
   return cnt;
 }
 
@@ -273,7 +273,6 @@ void Node2Start(NodeList *list,Node *node)
 
 void SortNodeList(NodeList *list, gelfunc order)
 {
-  NodeList origlist;
   Node *next;
 
   next = list->first;

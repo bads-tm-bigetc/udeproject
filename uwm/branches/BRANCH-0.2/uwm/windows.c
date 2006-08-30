@@ -75,7 +75,7 @@ void DrawWinBorder(UltimateContext *uc)
   unsigned long winbg;
 
   if(uc->frame == None) return;
-  if(active = (uc == FocusWin)) {
+  if((active = (uc == FocusWin))) {
     uc->flags |= ACTIVE_BORDER;
   } else {
     uc->flags &= ~ACTIVE_BORDER;
@@ -562,7 +562,7 @@ void CloseWin(UltimateContext *uc)
 
 void DeiconifyMenu(int x, int y)
 {
-  int a, b;
+  int a;
   Node *ucn;
   Menu *men, **wspaces=NULL, *sticky;
   MenuItem *item;
@@ -588,7 +588,7 @@ void DeiconifyMenu(int x, int y)
   GrabServer();  /* Make sure no window gets destroyed meanwhile */
 
   ucn=NULL;
-  while(ucn = NodeNext(TheScreen.UltimateList,ucn)){
+  while((ucn = NodeNext(TheScreen.UltimateList,ucn))){
     UltimateContext *uc;
     uc=ucn->data;
     if((IsNormal(uc)) || (IsIconic(uc))) {
@@ -601,7 +601,7 @@ void DeiconifyMenu(int x, int y)
     }
   }
 
-  if(item = StartMenu(men, x, y, True, NULL)){
+  if((item = StartMenu(men, x, y, True, NULL))){
     if(SWITCHTYPE(item->type)){
       UltimateContext *uc;
       uc=item->data;

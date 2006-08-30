@@ -9,7 +9,7 @@
 
 void UpdateDesktop();
 void ShowMenu(int menuNumber, int x, int y);
-void BorderButton(char a,UltimateContext *uc,int x,int y,int x_root,int y_root);
+void BorderButton(int a,UltimateContext *uc,int x,int y,int x_root,int y_root);
 void SendWMProtocols(UltimateContext *uc, Atom prot);
 void SendConfigureEvent(UltimateContext *uc);
 void SendSelectionNotify(XEvent *request, Atom property);

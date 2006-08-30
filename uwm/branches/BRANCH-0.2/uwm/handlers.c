@@ -275,7 +275,6 @@ void HandleUnmapNotify(XEvent *event)
 void HandleReparentNotify(XEvent *event)
 {
   UltimateContext *uc;
-  XEvent event2;
 
   DBG(fprintf(TheScreen.errout,"HandleUnmapNotify\n");)
   
@@ -456,7 +455,7 @@ void HandleKeyRelease(XEvent *event)
                      break;
       case XK_Up:    n=n2=InNodeList(TheScreen.UltimateList, ActiveWin);{
                        do {
-                         if(n2=NodePrev(TheScreen.UltimateList, n2))
+                         if((n2=NodePrev(TheScreen.UltimateList, n2)))
                            if(WinVisible(n2->data)) break;
                        } while(n!=n2);
                        if(n2) ActivateWin(n2->data);
@@ -465,7 +464,7 @@ void HandleKeyRelease(XEvent *event)
                      break;
       case XK_Down:  n=n2=InNodeList(TheScreen.UltimateList, ActiveWin);{
                        do {
-                         if(n2=NodeNext(TheScreen.UltimateList, n2))
+                         if((n2=NodeNext(TheScreen.UltimateList, n2)))
                            if(WinVisible(n2->data)) break;
                        } while(n!=n2);
                        if(n2) ActivateWin(n2->data);
@@ -492,7 +491,7 @@ void HandlePropertyNotify(XEvent *event)
 
   GrabServer();
   if(!XFindContext(disp,event->xproperty.window,UWMContext,(XPointer *)&uc)){
-    if(event->xproperty.window == uc->win) switch(event->xproperty.atom){
+    if((event->xproperty.window == uc->win)) switch(event->xproperty.atom){
       case XA_WM_NORMAL_HINTS: Updatera(uc); break;
       case XA_WM_NAME: UpdateName(uc); break;
       case XA_WM_ICON_NAME: UpdateIconName(uc); break;

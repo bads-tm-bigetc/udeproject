@@ -61,7 +61,10 @@ void SendSelectionNotify(XEvent *request, Atom property)
      returns 0 on success, -1 on error. ***/
 int _ChangePropertyReturnValue;
 int ChangePropertyErrorHandler(Display *d, XErrorEvent *e)
-{ _ChangePropertyReturnValue = -1; }
+{
+  _ChangePropertyReturnValue = -1;
+  return(_ChangePropertyReturnValue);
+}
 int ChangeProperty(Window win, Atom property, Atom type, int format, int mode,
                    char *data, int nelements)
 {

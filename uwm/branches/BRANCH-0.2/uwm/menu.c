@@ -78,7 +78,7 @@ void Menu2ws(Menu *menu,short ws)
   wattr.background_pixel=TheScreen.Colors[ws][UDE_Back].pixel;
   XChangeWindowAttributes(disp,menu->win,CWBackPixel,&wattr);
   mi=NULL;
-  while(mi=NodeNext(menu->Items,mi)){
+  while((mi=NodeNext(menu->Items,mi))){
     MenuItem *item;
     item=mi->data;
     if(item->type!=I_LINE) {
@@ -98,7 +98,6 @@ Menu *MenuCreate(char *name)
 {
   Menu *menu;
   XSetWindowAttributes wattr;
-  XGCValues xgcv;
 
   if(!(menu=malloc(sizeof(Menu)))) return (NULL);
 
@@ -147,7 +146,7 @@ void RemoveMenuBottomLines(Menu *men)
     XResizeWindow(disp,men->win,men->width,men->height);
   }
   n=NULL;
-  while(n=NodeNext(men->Items,n)){
+  while((n=NodeNext(men->Items,n))){
     MenuItem *mi;
     mi=n->data;
     if(mi->type==I_SUBMENU) RemoveMenuBottomLines(mi->data);
@@ -183,7 +182,7 @@ void AppendMenuItem(Menu *menu,char *name,void *data,short type)
     if(width>menu->width) {
       Node *mi=NULL;
       menu->width=width;
-      while(mi=NodeNext(menu->Items,mi))
+      while((mi=NodeNext(menu->Items,mi)))
         if(((MenuItem *)(mi->data))->type!=I_LINE)
           XResizeWindow(disp,((MenuItem *)(mi->data))->win,\
                 menu->width-2*MENUBORDERW,menu->ItemHeight);
@@ -216,7 +215,7 @@ void DestroyMenu(Menu *menu)
   Node *mi;
 
   mi=NULL;
-  while(mi=NodeNext(menu->Items,mi)) {
+  while((mi=NodeNext(menu->Items,mi))) {
     MenuItem *item;
     item=mi->data;
     if(item->type!=I_LINE) {
@@ -292,7 +291,7 @@ void DrawMenuFrame(Menu *menu, int items)
   }
 
   mi=NULL;
-  while(mi=NodeNext(menu->Items,mi)){
+  while((mi=NodeNext(menu->Items,mi))){
     MenuItem *item;
     item=mi->data;
     if(item->type != I_LINE) {
@@ -334,7 +333,7 @@ void DeleteMenuTree(Menu *menu)
   Node *mi;
 
   mi=NULL;
-  while(mi=NodeNext(menu->Items,mi)){
+  while((mi=NodeNext(menu->Items,mi))){
     MenuItem *item;
     item=mi->data;
     if(item->type==I_SUBMENU) {
@@ -349,7 +348,7 @@ void DeleteSubMenus(Menu *menu)
   Node *mi;
 
   mi=NULL;
-  while(mi=NodeNext(menu->Items,mi)){
+  while((mi=NodeNext(menu->Items,mi))){
     MenuItem *item;
     item=mi->data;
     if(item->type==I_SUBMENU) {
@@ -468,8 +467,8 @@ void MenuEnterNotify(XEvent *event)
   if(VisibleMenuWin(event->xcrossing.window))
     XChangeActivePointerGrab(disp,ButtonPressMask|ButtonReleaseMask|\
           EnterWindowMask|LeaveWindowMask,TheScreen.Mice[C_WINDOW],TimeStamp);
-  if(!XFindContext(disp,event->xcrossing.window,TheScreen.MenuContext,\
-                                                     (XPointer *)&mc)){
+  if((!XFindContext(disp,event->xcrossing.window,TheScreen.MenuContext,	\
+		    (XPointer *)&mc))){
     SelectItem(mc, event->xcrossing.state);
     XChangeActivePointerGrab(disp,ButtonPressMask|ButtonReleaseMask|\
           EnterWindowMask|LeaveWindowMask,TheScreen.Mice[C_WINDOW],TimeStamp);

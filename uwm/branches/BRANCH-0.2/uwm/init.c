@@ -114,9 +114,9 @@ void DereferenceENV(char *s)
   int a;
 
   t=s;
-  while(t=strchr(t,'$')){
+  while((t=strchr(t,'$'))){
     a=0;
-    while(u=environ[a])
+    while((u=environ[a]))
       if(!strncmp(u,t+sizeof(char),strlen(u)-strlen(v=strchr(u,'=')))){
         v++;
         buf=MyCalloc(strlen(t),sizeof(char));/* a little more than needed */
@@ -306,7 +306,7 @@ ReadMenuFile (FILE *mf)
 		    }
 
 		  n=NULL;
-		  while(n=NodeNext(men->Items,n))
+		  while((n=NodeNext(men->Items,n)))
 		    if(!strcmp(t,((MenuItem *)(n->data))->name))
 		      break;
 		  
@@ -358,7 +358,7 @@ ReadMenuFile (FILE *mf)
 		    }
 		  
 		  n=NULL;
-		  while(n=NodeNext(men->Items,n))
+		  while((n=NodeNext(men->Items,n)))
 		    if(!strcmp(u,((MenuItem *)(n->data))->name))
 		      break;
 
@@ -861,7 +861,7 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
 		      case MenuFont:
 			{ XFontStruct *Font;
 			p=RLSpace(p);
-			if(Font=XLoadQueryFont(disp,p)){
+			if((Font=XLoadQueryFont(disp,p))){
 			  XFreeFont(disp,TheScreen.MenuFont);
                           strncpy(TheScreen.desktop.StandardFont,p,256);
                           TheScreen.desktop.StandardFont[255]=0;
@@ -1070,7 +1070,7 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
 		      case TitleFont:
 			{ XFontStruct *Font;
 			p=RLSpace(p);
-			if(Font=XLoadQueryFont(disp,p)){
+			if((Font=XLoadQueryFont(disp,p))){
 			  XFreeFont(disp,TheScreen.TitleFont);
 			  TheScreen.TitleFont=Font;
 			}
@@ -1215,7 +1215,7 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
 		      case InactiveFont:
 			{ XFontStruct *Font;
 			p=RLSpace(p);
-			if(Font=XLoadQueryFont(disp,p)){
+			if((Font=XLoadQueryFont(disp,p))){
 			  XFreeFont(disp,Font);
                           strncpy(TheScreen.desktop.InactiveFont,p,256);
                           TheScreen.desktop.InactiveFont[255]=0;
@@ -1225,7 +1225,7 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
 		      case HighlightFont:
 			{ XFontStruct *Font;
 			p=RLSpace(p);
-			if(Font=XLoadQueryFont(disp,p)){
+			if((Font=XLoadQueryFont(disp,p))){
 			  XFreeFont(disp,Font);
                           strncpy(TheScreen.desktop.HighlightFont,p,256);
                           TheScreen.desktop.HighlightFont[255]=0;
@@ -1235,7 +1235,7 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
 		      case TextFont:
 			{ XFontStruct *Font;
 			p=RLSpace(p);
-			if(Font=XLoadQueryFont(disp,p)){
+			if((Font=XLoadQueryFont(disp,p))){
 			  XFreeFont(disp,Font);
                           strncpy(TheScreen.desktop.TextFont,p,256);
                           TheScreen.desktop.TextFont[255]=0;

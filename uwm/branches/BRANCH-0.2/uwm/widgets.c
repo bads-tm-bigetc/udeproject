@@ -29,6 +29,7 @@
 #endif
 
 #include <X11/Xlib.h>
+#include <string.h>
 
 #include "uwm.h"
 #include "init.h"

@@ -90,10 +90,10 @@ void WinMenuMenu(UltimateContext *TheWin,int x, int y)
 
 /*  AppendMenuItem(men,TheScreen.Texts.WinMenuMenu.AlwaysOnTop,NULL,I_SELECT);*/
 
-  if(item=StartMenu(men,x,y,True,NULL)){
+  if((item=StartMenu(men,x,y,True,NULL))){
     if((item->type==I_SELECT)||(SWITCHTYPE(item->type))){
       Procs *pr;
-      if(pr=item->data){
+      if((pr=item->data)){
         HandlerTable p;
         p=pr->Proc;
         p(TheWin,pr->arg);
