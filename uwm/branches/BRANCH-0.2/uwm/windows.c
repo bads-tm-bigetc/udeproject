@@ -583,6 +583,7 @@ void DeiconifyMenu(int x, int y)
     AppendMenuItem (men, _("Sticky Windows"), sticky, I_SUBMENU);
   } else {
     wspaces[0]=men;
+    sticky = men;
   }
 
   GrabServer();  /* Make sure no window gets destroyed meanwhile */

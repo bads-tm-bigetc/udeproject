@@ -65,13 +65,12 @@ extern UltimateContext *ActiveWin;
 NodeList* ScanScreen(UltimateContext *win)
 {
 //  Window dummy,*children;
-  unsigned int number;
   Node *winNode;
   NodeList *wins;
 
   if(!(wins = NodeListCreate())) SeeYa(1, "FATAL: out of mem!");
   winNode = NULL;
-  while(winNode = NodeNext(TheScreen.UltimateList, winNode)) {
+  while((winNode = NodeNext(TheScreen.UltimateList, winNode))) {
     UltimateContext *uc = winNode->data;
     if(uc && (uc != win) && WinVisible(uc)) {
       ScanData *data;

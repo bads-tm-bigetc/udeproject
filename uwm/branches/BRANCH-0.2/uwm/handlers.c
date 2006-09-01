@@ -322,21 +322,21 @@ void HandleButtonPress(XEvent *event)
 
       if(uc->frame != None){
         x = event->xbutton.x_root - uc->Attr.x;
-	y = event->xbutton.y_root - uc->Attr.y;
-      }
+        y = event->xbutton.y_root - uc->Attr.y;
       ActivateWin(uc);
-      switch(event->xbutton.button){
-        case Button1: BorderButton(0,uc,x,y,event->xbutton.x_root,\
-                                            event->xbutton.y_root);
-                      break;
-        case Button2: BorderButton(1,uc,x,y,event->xbutton.x_root,\
-                                            event->xbutton.y_root);
-                      break;
-        case Button3: BorderButton(2,uc,x,y,event->xbutton.x_root,\
-                                            event->xbutton.y_root);
-                      break;
-        case Button4: DBG(fprintf(TheScreen.errout,"4\n");)break;
-        case Button5: DBG(fprintf(TheScreen.errout,"5\n");)break;
+        switch(event->xbutton.button){
+          case Button1: BorderButton(0,uc,x,y,event->xbutton.x_root,\
+                                              event->xbutton.y_root);
+                        break;
+          case Button2: BorderButton(1,uc,x,y,event->xbutton.x_root,\
+                                              event->xbutton.y_root);
+                        break;
+          case Button3: BorderButton(2,uc,x,y,event->xbutton.x_root,\
+                                              event->xbutton.y_root);
+                        break;
+          case Button4: DBG(fprintf(TheScreen.errout,"4\n");)break;
+          case Button5: DBG(fprintf(TheScreen.errout,"5\n");)break;
+        }
       }
     }
   }
