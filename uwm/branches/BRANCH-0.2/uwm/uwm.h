@@ -91,12 +91,20 @@ typedef struct
   Bool DoesSaveUnders, DoesBackingStore;
 
   struct {
-    Window IconWins[ICONWINS];
-    Pixmap IconPixs[ICONWINS];
-    Pixmap IconSelectPixs[ICONWINS];
-    Pixmap shape;
+    int width, height;
+    int x, y;
     Window IconParent;
-  } icons;
+    struct {
+      int x, y;
+      int width, height;
+      int SelectX, SelectY;
+      Window IconWin;
+      Pixmap IconPix;
+      Pixmap IconSelectPix;
+      Pixmap IconShape;
+      Pixmap IconSelectShape;
+    } icons [ICONWINS];
+  } HexMenu;
 
   Menu *AppsMenu;
   Menu *UWMMenu;

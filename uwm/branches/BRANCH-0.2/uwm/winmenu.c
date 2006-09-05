@@ -53,31 +53,34 @@ UltimateContext *TheWin;
 
 void StartWinMenu(UltimateContext *uc,int x,int y)
 {
-  TheWin=uc;
-  selectedHex=ICONWINS;
+  TheWin = uc;
+  selectedHex = ICONWINS;
 
-  hexX=x;hexY=y;
-  if(x<40) x=40;
-  if(x>(TheScreen.width-64)) x=TheScreen.width-64;
-  if(y<42) y=42;
-  if(y>(TheScreen.height-42)) y=TheScreen.height-42;
-  
-  XUnmapWindow(disp,TheScreen.icons.IconWins[I_REALLY]);
-  XShapeCombineMask(disp,TheScreen.icons.IconParent,ShapeBounding,\
-                  iconpostab[I_REALLY][0],iconpostab[I_REALLY][1],\
-                              TheScreen.icons.shape,ShapeSubtract);
+  hexX = x;
+  hexY = y;
+  if(x < TheScreen.HexMenu.x) x = TheScreen.HexMenu.x;
+  if(x > (TheScreen.width + TheScreen.HexMenu.x - TheScreen.HexMenu.width)) {
+    x = TheScreen.width + TheScreen.HexMenu.x - TheScreen.HexMenu.width;
+  }
+  if(y < TheScreen.HexMenu.y) y = TheScreen.HexMenu.y;
+  if(y > (TheScreen.height + TheScreen.HexMenu.y - TheScreen.HexMenu.height)) {
+    y = TheScreen.height + TheScreen.HexMenu.y - TheScreen.HexMenu.height;
+  }
 
-  XMoveWindow(disp, TheScreen.icons.IconParent, x - 40, y - 42);
-  XInstallColormap(disp,TheScreen.colormap);
-  XMapRaised(disp,TheScreen.icons.IconParent);
-  GrabPointer(TheScreen.icons.IconParent,ButtonPressMask|ButtonReleaseMask|\
-                                  EnterWindowMask,TheScreen.Mice[C_BORDER]);
+  XMoveWindow(disp, TheScreen.HexMenu.IconParent, x - TheScreen.HexMenu.x,
+              y - TheScreen.HexMenu.y);
+  XInstallColormap(disp, TheScreen.colormap);
+  XMapRaised(disp, TheScreen.HexMenu.IconParent);
+  GrabPointer(TheScreen.HexMenu.IconParent,
+              ButtonPressMask|ButtonReleaseMask|EnterWindowMask,
+              TheScreen.Mice[C_BORDER]);
 
   move_back=False;
-  if((x!=hexX)|(y!=hexY)){
-    XWarpPointer(disp,None,TheScreen.root,0,0,0,0,x,y);
-    move_back=True;
-    hexX-=x;hexY-=y;
+  if((x != hexX) | (y != hexY)){
+    XWarpPointer(disp, None, TheScreen.root, 0, 0, 0, 0, x, y);
+    move_back = True;
+    hexX -= x;
+    hexY -= y;
   }
 
   InstallWinMenuHandle();
@@ -94,23 +97,28 @@ void StopWinMenu(short selected, XEvent *event)
       break;
     case I_AUTORISE:
       if(TheWin->flags & RISEN) {
-        MoveResizeWin(TheWin,TheWin->ra.x,TheWin->ra.y,\
-                                TheWin->ra.w,TheWin->ra.h);
+        MoveResizeWin(TheWin, TheWin->ra.x, TheWin->ra.y,
+                      TheWin->ra.w, TheWin->ra.h);
         TheWin->flags &= ~RISEN;
       } else {
-        int maxw,maxh,bw,bh,wi,hi;
-        maxw=TheWin->ra.maxw;maxh=TheWin->ra.maxh;
-        bw=TheWin->ra.bw;bh=TheWin->ra.bh;
-        wi=TheWin->ra.wi;hi=TheWin->ra.hi;
-        TheWin->ra.x=TheWin->Attr.x;
-        TheWin->ra.y=TheWin->Attr.y;
-        TheWin->ra.w=TheWin->Attr.width;
-        TheWin->ra.h=TheWin->Attr.height;
-        MoveResizeWin(TheWin,0,0,(maxw>TheScreen.width)?\
-         (bw+((int)((TheScreen.width-bw-1)/wi))*wi):maxw,\
-                      (maxh>TheScreen.height)?(bh+((int)\
-                 ((TheScreen.height-bh-1)/hi))*hi):maxh);
-
+        int maxw, maxh, bw, bh, wi, hi;
+        maxw = TheWin->ra.maxw;
+        maxh = TheWin->ra.maxh;
+        bw = TheWin->ra.bw;
+        bh = TheWin->ra.bh;
+        wi = TheWin->ra.wi;
+        hi = TheWin->ra.hi;
+        TheWin->ra.x = TheWin->Attr.x;
+        TheWin->ra.y = TheWin->Attr.y;
+        TheWin->ra.w = TheWin->Attr.width;
+        TheWin->ra.h = TheWin->Attr.height;
+        MoveResizeWin(TheWin, 0, 0,
+                      (maxw > TheScreen.width)
+                      ? (bw + ((int)((TheScreen.width - bw - 1) / wi)) * wi)
+                      : maxw,
+                      (maxh > TheScreen.height)
+                      ? (bh + ((int)((TheScreen.height - bh - 1) / hi)) * hi)
+                      : maxh);
 
         TheWin->flags |= RISEN;
       }
@@ -121,21 +129,23 @@ void StopWinMenu(short selected, XEvent *event)
     case I_KILL:
       break;
     case I_MENU:
-      WinMenuMenu(TheWin,event->xbutton.x,event->xbutton.y);
+      WinMenuMenu(TheWin, event->xbutton.x, event->xbutton.y);
       break;
     case I_REALLY:
-      XKillClient(disp,TheWin->win);
+      XKillClient(disp, TheWin->win);
       break;
     default:
-      if(move_back) XWarpPointer(disp,None,None,0,0,0,0,hexX,hexY);
+      if(move_back) XWarpPointer(disp, None, None, 0, 0, 0, 0, hexX, hexY);
   }
-  XUnmapWindow(disp,TheScreen.icons.IconParent);
-  if(TheWin) XInstallColormap(disp,TheWin->Attributes.colormap);
+  XUnmapWindow(disp, TheScreen.HexMenu.IconParent);
+  if(TheWin) XInstallColormap(disp, TheWin->Attributes.colormap);
   ReinstallDefaultHandle();
 
-  if(selectedHex<ICONWINS)
-    XSetWindowBackgroundPixmap(disp,TheScreen.icons.IconWins[selectedHex],\
-                                    TheScreen.icons.IconPixs[selectedHex]);
+  if(selectedHex<ICONWINS) {
+    XSetWindowBackgroundPixmap(disp,
+                               TheScreen.HexMenu.icons[selectedHex].IconWin,
+                               TheScreen.HexMenu.icons[selectedHex].IconPix);
+  }
   UngrabPointer();
 }
 
@@ -144,33 +154,40 @@ void WinMenuEnterNotify(XEvent *event)
   int a;
 
   StampTime(event->xcrossing.time);
-  if(selectedHex<ICONWINS){
-    XSetWindowBackgroundPixmap(disp,TheScreen.icons.IconWins[selectedHex],\
-                                    TheScreen.icons.IconPixs[selectedHex]);
-    XClearWindow(disp,TheScreen.icons.IconWins[selectedHex]);
+  if(selectedHex < ICONWINS){
+    XSetWindowBackgroundPixmap(disp,
+                               TheScreen.HexMenu.icons[selectedHex].IconWin,\
+                               TheScreen.HexMenu.icons[selectedHex].IconPix);
+    XClearWindow(disp, TheScreen.HexMenu.icons[selectedHex].IconWin);
   }
 
-  selectedHex=ICONWINS;
-  for(a=0;a<ICONWINS;a++)
-    if(event->xcrossing.window==TheScreen.icons.IconWins[a])
+  selectedHex = ICONWINS;
+  for(a = 0; a < ICONWINS; a++) {
+    if(event->xcrossing.window == TheScreen.HexMenu.icons[a].IconWin)
       selectedHex=a;
-
-  if(selectedHex<ICONWINS){
-    XSetWindowBackgroundPixmap(disp,TheScreen.icons.IconWins[selectedHex],\
-                                    TheScreen.icons.IconSelectPixs[selectedHex]);
-    XClearWindow(disp,TheScreen.icons.IconWins[selectedHex]);
   }
 
-  if((selectedHex==I_KILL)||(selectedHex==I_REALLY)){
-    XMapWindow(disp,TheScreen.icons.IconWins[I_REALLY]);
-    XShapeCombineMask(disp,TheScreen.icons.IconParent,ShapeBounding,\
-                    iconpostab[I_REALLY][0],iconpostab[I_REALLY][1],\
-                                   TheScreen.icons.shape,ShapeUnion);
-    } else {
-    XShapeCombineMask(disp,TheScreen.icons.IconParent,ShapeBounding,\
-                    iconpostab[I_REALLY][0],iconpostab[I_REALLY][1],\
-                                TheScreen.icons.shape,ShapeSubtract);
-    XUnmapWindow(disp,TheScreen.icons.IconWins[I_REALLY]);
+  if(selectedHex<ICONWINS) {
+    XSetWindowBackgroundPixmap(disp,
+                          TheScreen.HexMenu.icons[selectedHex].IconWin,
+                          TheScreen.HexMenu.icons[selectedHex].IconSelectPix);
+    XClearWindow(disp, TheScreen.HexMenu.icons[selectedHex].IconWin);
+  }
+
+  if((selectedHex == I_KILL) || (selectedHex == I_REALLY)) {
+    XMapWindow(disp, TheScreen.HexMenu.icons[I_REALLY].IconWin);
+    XShapeCombineMask(disp, TheScreen.HexMenu.IconParent, ShapeBounding,
+                      TheScreen.HexMenu.icons[I_REALLY].x,
+                      TheScreen.HexMenu.icons[I_REALLY].y,
+                      TheScreen.HexMenu.icons[I_REALLY].IconShape,
+                      ShapeUnion);
+  } else {
+    XShapeCombineMask(disp, TheScreen.HexMenu.IconParent, ShapeBounding,
+                      TheScreen.HexMenu.icons[I_REALLY].x,
+                      TheScreen.HexMenu.icons[I_REALLY].y,
+                      TheScreen.HexMenu.icons[I_REALLY].IconShape,
+                      ShapeSubtract);
+    XUnmapWindow(disp,TheScreen.HexMenu.icons[I_REALLY].IconWin);
   }
 }
 
@@ -183,11 +200,11 @@ void WinMenuVisibility(XEvent *event)
 {
   XEvent dummy;
 
-  if(event->xvisibility.window==TheScreen.icons.IconParent) {
-    if(event->xvisibility.state!=VisibilityUnobscured){
+  if(event->xvisibility.window == TheScreen.HexMenu.IconParent) {
+    if(event->xvisibility.state != VisibilityUnobscured){
       RaiseWin(TheWin);
-      XRaiseWindow(disp,TheScreen.icons.IconParent);
-    } else while(XCheckTypedWindowEvent(disp, TheScreen.icons.IconParent,
+      XRaiseWindow(disp, TheScreen.HexMenu.IconParent);
+    } else while(XCheckTypedWindowEvent(disp, TheScreen.HexMenu.IconParent,
                                         VisibilityNotify, &dummy));
   }
 }

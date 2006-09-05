@@ -76,16 +76,6 @@
 
 extern char **environ;
 
-const int iconpostab[ICONWINS][2]={
-  {0,14},
-  {24,0},
-  {24,56},
-  {0,42},
-  {48,14},
-  {48,42},
-  {72,28}
-};
-
 extern UDEScreen TheScreen;
 extern Display *disp;
 extern XContext UWMContext;
@@ -155,35 +145,60 @@ char *iconfiles[7]={
   "really"
 };
 
-#include "shape.bitmap"
-
 void PrepareIcons()
 {
   XpmAttributes xa;
   char filename[512], dirname[300];
   XSetWindowAttributes xswa;
-  int a,b;
+  int a, b;
+  int minx, miny;
 
   a=0;
-  if(InitS.HexPath[0]=='\0') sprintf(dirname,"%sgfx/",TheScreen.udedir);
-  else sprintf(dirname,"%s/",InitS.HexPath);
+  if(InitS.HexPath[0]=='\0') sprintf(dirname, "%sgfx/", TheScreen.udedir);
+  else sprintf(dirname, "%s/", InitS.HexPath);
 
-  for(b=0;b<7;b++){
+  TheScreen.HexMenu.x = 64;
+  TheScreen.HexMenu.x = 42;
+  TheScreen.HexMenu.width = 104;
+  TheScreen.HexMenu.height = 84;
+
+  minx = miny = 0;
+  for(b = 0; b < 7; b++){
+    xa.valuemask = 0;
+    sprintf(filename, "%s%s.xpm", dirname, iconfiles[b]);
+    a |= XpmReadFileToPixmap(disp, TheScreen.root, filename,
+                             &TheScreen.HexMenu.icons[b].IconPix,
+                             &TheScreen.HexMenu.icons[b].IconShape,
+                             &xa);
+    if(xa.valuemask & XpmHotspot) {
+      printf("%s hotspot: %d %d\n", filename, xa.x_hotspot, xa.y_hotspot);
+      TheScreen.HexMenu.icons[b].x = xa.x_hotspot;
+      TheScreen.HexMenu.icons[b].y = xa.y_hotspot;
+    }
+    TheScreen.HexMenu.icons[b].width = xa.width;
+    TheScreen.HexMenu.icons[b].height = xa.height;
     xa.valuemask=0;
-    sprintf(filename,"%s%s.xpm",dirname,iconfiles[b]);
-    a|=XpmReadFileToPixmap(disp,TheScreen.root,filename,&TheScreen.icons.\
-                                  IconPixs[b],&TheScreen.icons.shape,&xa);
-    if(TheScreen.icons.shape != None) XFreePixmap(disp,TheScreen.icons.shape);
-    xa.valuemask=0;
-    sprintf(filename,"%s%ss.xpm",dirname,iconfiles[b]);
-    a|=XpmReadFileToPixmap(disp,TheScreen.root,filename,&TheScreen.icons.\
-                            IconSelectPixs[b],&TheScreen.icons.shape,&xa);
-    if(TheScreen.icons.shape != None) XFreePixmap(disp,TheScreen.icons.shape);
+    sprintf(filename, "%s%ss.xpm", dirname, iconfiles[b]);
+    a |= XpmReadFileToPixmap(disp, TheScreen.root, filename,
+                           &TheScreen.HexMenu.icons[b].IconSelectPix,
+                           &TheScreen.HexMenu.icons[b].IconSelectShape,
+                           &xa);
+    if(xa.valuemask & XpmHotspot) {
+      printf("%s hotspot: %d %d\n", filename, xa.x_hotspot, xa.y_hotspot);
+      TheScreen.HexMenu.icons[b].SelectX = xa.x_hotspot;
+      TheScreen.HexMenu.icons[b].SelectY = xa.y_hotspot;
+    }
+    if(TheScreen.HexMenu.icons[b].width < xa.width) {
+      TheScreen.HexMenu.icons[b].width = xa.width;
+    }
+    if(TheScreen.HexMenu.icons[b].width < xa.width) {
+      TheScreen.HexMenu.icons[b].height = xa.height;
+    }
   }
   if(a) {
-    if(InitS.HexPath[0]=='\0') SeeYa(1,"Icon pixmaps could not be loaded");
+    if(InitS.HexPath[0]=='\0') SeeYa(1, "Icon pixmaps could not be loaded");
     else {
-      InitS.HexPath[0]='\0';
+      InitS.HexPath[0] = '\0';
       fprintf(TheScreen.errout,
               "UWM: icons specified in uwmrc not found, trying to load default.\n");
       PrepareIcons();
@@ -191,35 +206,40 @@ void PrepareIcons()
     return;
   }
 
-  TheScreen.icons.shape=XCreateBitmapFromData(disp,TheScreen.root,\
-                              shape_bits,shape_width,shape_height);
+  xswa.override_redirect = True;
+  xswa.save_under = True;
 
-  xswa.override_redirect=True;
-  xswa.save_under=True;
+  TheScreen.HexMenu.IconParent
+      = XCreateWindow(disp, TheScreen.root, 0, 0,
+                      TheScreen.HexMenu.width, TheScreen.HexMenu.height, 0,
+                      CopyFromParent, InputOutput, CopyFromParent,
+                      (TheScreen.DoesSaveUnders ? CWSaveUnder : 0)
+                      | CWOverrideRedirect, &xswa);
+  XSelectInput(disp, TheScreen.HexMenu.IconParent,
+               LeaveWindowMask | VisibilityChangeMask);
 
-  TheScreen.icons.IconParent=XCreateWindow(disp,TheScreen.root,0,0,104,84,0,\
-                                  CopyFromParent,InputOutput,CopyFromParent,
-                               (TheScreen.DoesSaveUnders ? CWSaveUnder : 0)|
-				                   CWOverrideRedirect,&xswa);
-  XSelectInput(disp,TheScreen.icons.IconParent,LeaveWindowMask|\
-                                          VisibilityChangeMask);
-  XShapeCombineMask(disp,TheScreen.icons.IconParent,ShapeBounding,\
-                                iconpostab[0][0],iconpostab[0][1],\
-                                   TheScreen.icons.shape,ShapeSet);
-  for(a=0;a<ICONWINS;a++) {
-    TheScreen.icons.IconWins[a]=XCreateWindow(disp,TheScreen.icons.IconParent,\
-                                    iconpostab[a][0],iconpostab[a][1],32,28,0,\
-           CopyFromParent,InputOutput,CopyFromParent,CWOverrideRedirect,&xswa);
-    XSelectInput(disp,TheScreen.icons.IconWins[a],EnterWindowMask);
-    XSetWindowBackgroundPixmap(disp,TheScreen.icons.IconWins[a],\
-                                    TheScreen.icons.IconPixs[a]);
-    XShapeCombineMask(disp,TheScreen.icons.IconWins[a],ShapeBounding,0,0,\
-                                          TheScreen.icons.shape,ShapeSet);
-    XShapeCombineMask(disp,TheScreen.icons.IconParent,ShapeBounding,\
-            iconpostab[a][0],iconpostab[a][1],TheScreen.icons.shape,\
-                                                         ShapeUnion);
+  for(a = 0; a < ICONWINS; a++) {
+    TheScreen.HexMenu.icons[a].IconWin
+        = XCreateWindow(disp, TheScreen.HexMenu.IconParent,
+                        TheScreen.HexMenu.icons[a].x,
+                        TheScreen.HexMenu.icons[a].y,
+                        TheScreen.HexMenu.icons[a].width,
+                        TheScreen.HexMenu.icons[a].height,
+                        0, CopyFromParent, InputOutput, CopyFromParent,
+                        CWOverrideRedirect, &xswa);
+    XSelectInput(disp, TheScreen.HexMenu.icons[a].IconWin, EnterWindowMask);
+    XSetWindowBackgroundPixmap(disp, TheScreen.HexMenu.icons[a].IconWin,
+                               TheScreen.HexMenu.icons[a].IconPix);
+    XShapeCombineMask(disp, TheScreen.HexMenu.icons[a].IconWin, ShapeBounding,
+                      0, 0, TheScreen.HexMenu.icons[a].IconShape, ShapeSet);
+    XShapeCombineMask(disp, TheScreen.HexMenu.IconParent, ShapeBounding,
+                      TheScreen.HexMenu.icons[a].x,
+                      TheScreen.HexMenu.icons[a].y,
+                      TheScreen.HexMenu.icons[a].IconShape,
+                      (a == 0) ? ShapeSet : ShapeUnion);
   }
-  XMapSubwindows(disp,TheScreen.icons.IconParent);
+  XMapSubwindows(disp, TheScreen.HexMenu.IconParent);
+  XMapWindow(disp, TheScreen.HexMenu.IconParent);
 }
 
 char *ReadQuoted(FILE *f) /* allocs mem and writes string to it*/
