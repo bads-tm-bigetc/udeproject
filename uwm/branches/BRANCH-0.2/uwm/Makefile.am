@@ -54,5 +54,3 @@ noinst_HEADERS= \
 	selection.h \
 	wingroups.h \
 	workspaces.h
-
-EXTRA_DIST= shape.bitmap
