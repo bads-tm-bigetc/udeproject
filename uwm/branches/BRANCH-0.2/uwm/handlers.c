@@ -627,7 +627,7 @@ void InitHandlers()
   ResizeHandle[ButtonRelease] = ResizeButtonRelease;
   for(i = 0;i<LASTEvent;i++) WinMenuHandle[i]=DefaultHandle[i];
   WinMenuHandle[EnterNotify] = WinMenuEnterNotify;
-  WinMenuHandle[LeaveNotify] = NULL;
+  WinMenuHandle[LeaveNotify] = WinMenuEnterNotify;
   WinMenuHandle[ButtonPress] = WinMenuButtonPress;
   WinMenuHandle[ButtonRelease] = WinMenuButtonRelease;
   WinMenuHandle[VisibilityNotify] = WinMenuVisibility;

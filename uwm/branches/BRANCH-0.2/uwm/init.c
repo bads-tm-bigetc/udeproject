@@ -67,6 +67,7 @@
 #include "handlers.h"
 #include "workspaces.h"
 #include "uwmmenu.h"
+#include "winmenu.h"
 #include "winmenumenu.h"
 #include "ude-desktop.h"
 #include "ude-i18n.h"
@@ -157,8 +158,8 @@ void PrepareIcons()
   if(InitS.HexPath[0]=='\0') sprintf(dirname, "%sgfx/", TheScreen.udedir);
   else sprintf(dirname, "%s/", InitS.HexPath);
 
-  TheScreen.HexMenu.x = 64;
-  TheScreen.HexMenu.x = 42;
+  TheScreen.HexMenu.x = 40;
+  TheScreen.HexMenu.y = 42;
   TheScreen.HexMenu.width = 104;
   TheScreen.HexMenu.height = 84;
 
@@ -215,8 +216,7 @@ void PrepareIcons()
                       CopyFromParent, InputOutput, CopyFromParent,
                       (TheScreen.DoesSaveUnders ? CWSaveUnder : 0)
                       | CWOverrideRedirect, &xswa);
-  XSelectInput(disp, TheScreen.HexMenu.IconParent,
-               LeaveWindowMask | VisibilityChangeMask);
+  XSelectInput(disp, TheScreen.HexMenu.IconParent, IconParent_EVENT_SELECTION);
 
   for(a = 0; a < ICONWINS; a++) {
     TheScreen.HexMenu.icons[a].IconWin
@@ -227,7 +227,8 @@ void PrepareIcons()
                         TheScreen.HexMenu.icons[a].height,
                         0, CopyFromParent, InputOutput, CopyFromParent,
                         CWOverrideRedirect, &xswa);
-    XSelectInput(disp, TheScreen.HexMenu.icons[a].IconWin, EnterWindowMask);
+    XSelectInput(disp, TheScreen.HexMenu.icons[a].IconWin,
+                 IconWin_EVENT_SELECTION);
     XSetWindowBackgroundPixmap(disp, TheScreen.HexMenu.icons[a].IconWin,
                                TheScreen.HexMenu.icons[a].IconPix);
     XShapeCombineMask(disp, TheScreen.HexMenu.icons[a].IconWin, ShapeBounding,
@@ -239,7 +240,6 @@ void PrepareIcons()
                       (a == 0) ? ShapeSet : ShapeUnion);
   }
   XMapSubwindows(disp, TheScreen.HexMenu.IconParent);
-  XMapWindow(disp, TheScreen.HexMenu.IconParent);
 }
 
 char *ReadQuoted(FILE *f) /* allocs mem and writes string to it*/
