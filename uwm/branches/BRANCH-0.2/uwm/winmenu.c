@@ -94,6 +94,60 @@ void StartWinMenu(UltimateContext *uc,int x,int y)
   InstallWinMenuHandle();
 }
 
+void ShowSelectedHex(int hex) {
+  XSelectInput(disp, TheScreen.HexMenu.icons[hex].IconWin, 0);
+  XShapeCombineMask(disp, TheScreen.HexMenu.IconParent, ShapeBounding,
+                    TheScreen.HexMenu.icons[hex].x,
+                    TheScreen.HexMenu.icons[hex].y,
+                    TheScreen.HexMenu.icons[hex].IconShape,
+                    ShapeSubtract);
+  XShapeCombineMask(disp, TheScreen.HexMenu.icons[hex].IconWin,
+                    ShapeBounding, 0, 0,
+                    TheScreen.HexMenu.icons[hex].IconSelectShape,
+                    ShapeSet);
+  XMoveWindow(disp, TheScreen.HexMenu.icons[hex].IconWin,
+              TheScreen.HexMenu.icons[hex].SelectX,
+              TheScreen.HexMenu.icons[hex].SelectY);
+  XSetWindowBackgroundPixmap(disp,
+                        TheScreen.HexMenu.icons[hex].IconWin,
+                        TheScreen.HexMenu.icons[hex].IconSelectPix);
+  XShapeCombineMask(disp, TheScreen.HexMenu.IconParent, ShapeBounding,
+                    TheScreen.HexMenu.icons[hex].SelectX,
+                    TheScreen.HexMenu.icons[hex].SelectY,
+                    TheScreen.HexMenu.icons[hex].IconSelectShape,
+                    ShapeUnion);
+  XClearWindow(disp, TheScreen.HexMenu.icons[hex].IconWin);
+  XSelectInput(disp, TheScreen.HexMenu.icons[hex].IconWin,
+               IconWin_EVENT_SELECTION);
+}
+
+void ShowUnselectedHex(int hex) {
+  XSelectInput(disp, TheScreen.HexMenu.icons[hex].IconWin, 0);
+  XShapeCombineMask(disp, TheScreen.HexMenu.IconParent, ShapeBounding,
+                    TheScreen.HexMenu.icons[hex].SelectX,
+                    TheScreen.HexMenu.icons[hex].SelectY,
+                    TheScreen.HexMenu.icons[hex].IconSelectShape,
+                    ShapeSubtract);
+  XShapeCombineMask(disp, TheScreen.HexMenu.icons[hex].IconWin,
+                    ShapeBounding, 0, 0,
+                    TheScreen.HexMenu.icons[hex].IconShape,
+                    ShapeSet);
+  XMoveWindow(disp, TheScreen.HexMenu.icons[hex].IconWin,
+              TheScreen.HexMenu.icons[hex].x,
+              TheScreen.HexMenu.icons[hex].y);
+  XSetWindowBackgroundPixmap(disp,
+                             TheScreen.HexMenu.icons[hex].IconWin,\
+                             TheScreen.HexMenu.icons[hex].IconPix);
+  XShapeCombineMask(disp, TheScreen.HexMenu.IconParent, ShapeBounding,
+                    TheScreen.HexMenu.icons[hex].x,
+                    TheScreen.HexMenu.icons[hex].y,
+                    TheScreen.HexMenu.icons[hex].IconShape,
+                    ShapeUnion);
+  XClearWindow(disp, TheScreen.HexMenu.icons[hex].IconWin);
+  XSelectInput(disp, TheScreen.HexMenu.icons[hex].IconWin,
+               IconWin_EVENT_SELECTION);
+}
+
 void StopWinMenu(short selected, XEvent *event)
 {
   switch(selected){
@@ -149,10 +203,8 @@ void StopWinMenu(short selected, XEvent *event)
   if(TheWin) XInstallColormap(disp, TheWin->Attributes.colormap);
   ReinstallDefaultHandle();
 
-  if(selectedHex<ICONWINS) {
-    XSetWindowBackgroundPixmap(disp,
-                               TheScreen.HexMenu.icons[selectedHex].IconWin,
-                               TheScreen.HexMenu.icons[selectedHex].IconPix);
+  if(selectedHex < ICONWINS) {
+    ShowUnselectedHex(selected);
   }
   UngrabPointer();
 }
@@ -182,60 +234,14 @@ void WinMenuEnterNotify(XEvent *event)
   }
 
   XSelectInput(disp, TheScreen.HexMenu.IconParent, 0);
-  if(selectedHex < ICONWINS){
-    XSelectInput(disp, TheScreen.HexMenu.icons[selectedHex].IconWin, 0);
-    XShapeCombineMask(disp, TheScreen.HexMenu.IconParent, ShapeBounding,
-                      TheScreen.HexMenu.icons[selectedHex].SelectX,
-                      TheScreen.HexMenu.icons[selectedHex].SelectY,
-                      TheScreen.HexMenu.icons[selectedHex].IconSelectShape,
-                      ShapeSubtract);
-    XShapeCombineMask(disp, TheScreen.HexMenu.icons[selectedHex].IconWin,
-                      ShapeBounding, 0, 0,
-                      TheScreen.HexMenu.icons[selectedHex].IconShape,
-                      ShapeSet);
-    XMoveWindow(disp, TheScreen.HexMenu.icons[selectedHex].IconWin,
-                TheScreen.HexMenu.icons[selectedHex].x,
-                TheScreen.HexMenu.icons[selectedHex].y);
-    XSetWindowBackgroundPixmap(disp,
-                               TheScreen.HexMenu.icons[selectedHex].IconWin,\
-                               TheScreen.HexMenu.icons[selectedHex].IconPix);
-    XShapeCombineMask(disp, TheScreen.HexMenu.IconParent, ShapeBounding,
-                      TheScreen.HexMenu.icons[selectedHex].x,
-                      TheScreen.HexMenu.icons[selectedHex].y,
-                      TheScreen.HexMenu.icons[selectedHex].IconShape,
-                      ShapeUnion);
-    XClearWindow(disp, TheScreen.HexMenu.icons[selectedHex].IconWin);
-    XSelectInput(disp, TheScreen.HexMenu.icons[selectedHex].IconWin,
-                 IconWin_EVENT_SELECTION);
+  if(selectedHex < ICONWINS) {
+    ShowUnselectedHex(selectedHex);
   }
 
   selectedHex = nextHex;
 
   if(selectedHex < ICONWINS) {
-    XSelectInput(disp, TheScreen.HexMenu.icons[selectedHex].IconWin, 0);
-    XShapeCombineMask(disp, TheScreen.HexMenu.IconParent, ShapeBounding,
-                      TheScreen.HexMenu.icons[selectedHex].x,
-                      TheScreen.HexMenu.icons[selectedHex].y,
-                      TheScreen.HexMenu.icons[selectedHex].IconShape,
-                      ShapeSubtract);
-    XShapeCombineMask(disp, TheScreen.HexMenu.icons[selectedHex].IconWin,
-                      ShapeBounding, 0, 0,
-                      TheScreen.HexMenu.icons[selectedHex].IconSelectShape,
-                      ShapeSet);
-    XMoveWindow(disp, TheScreen.HexMenu.icons[selectedHex].IconWin,
-                TheScreen.HexMenu.icons[selectedHex].SelectX,
-                TheScreen.HexMenu.icons[selectedHex].SelectY);
-    XSetWindowBackgroundPixmap(disp,
-                          TheScreen.HexMenu.icons[selectedHex].IconWin,
-                          TheScreen.HexMenu.icons[selectedHex].IconSelectPix);
-    XShapeCombineMask(disp, TheScreen.HexMenu.IconParent, ShapeBounding,
-                      TheScreen.HexMenu.icons[selectedHex].SelectX,
-                      TheScreen.HexMenu.icons[selectedHex].SelectY,
-                      TheScreen.HexMenu.icons[selectedHex].IconSelectShape,
-                      ShapeUnion);
-    XClearWindow(disp, TheScreen.HexMenu.icons[selectedHex].IconWin);
-    XSelectInput(disp, TheScreen.HexMenu.icons[selectedHex].IconWin,
-                 IconWin_EVENT_SELECTION);
+    ShowSelectedHex(selectedHex);
   }
 
   if((selectedHex == I_KILL) || (selectedHex == I_REALLY)) {
