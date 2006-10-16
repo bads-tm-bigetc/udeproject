@@ -153,6 +153,7 @@ void PrepareIcons()
   XSetWindowAttributes xswa;
   int a, b;
   int minx, miny;
+  XGCValues xgcv;
 
   a=0;
   if(InitS.HexPath[0]=='\0') sprintf(dirname, "%sgfx/", TheScreen.udedir);
@@ -209,7 +210,6 @@ void PrepareIcons()
 
   xswa.override_redirect = True;
   xswa.save_under = True;
-
   TheScreen.HexMenu.IconParent
       = XCreateWindow(disp, TheScreen.root, 0, 0,
                       TheScreen.HexMenu.width, TheScreen.HexMenu.height, 0,
@@ -217,6 +217,14 @@ void PrepareIcons()
                       (TheScreen.DoesSaveUnders ? CWSaveUnder : 0)
                       | CWOverrideRedirect, &xswa);
   XSelectInput(disp, TheScreen.HexMenu.IconParent, IconParent_EVENT_SELECTION);
+
+  TheScreen.HexMenu.ParentShape
+      = XCreatePixmap(disp, TheScreen.HexMenu.IconParent,
+                      TheScreen.HexMenu.width, TheScreen.HexMenu.height, 1);
+
+  xgcv.function = GXor;
+  TheScreen.HexMenu.ShapeGC = XCreateGC(disp, TheScreen.HexMenu.ParentShape,
+                                        GCFunction, &xgcv);
 
   for(a = 0; a < ICONWINS; a++) {
     TheScreen.HexMenu.icons[a].IconWin
@@ -229,15 +237,6 @@ void PrepareIcons()
                         CWOverrideRedirect, &xswa);
     XSelectInput(disp, TheScreen.HexMenu.icons[a].IconWin,
                  IconWin_EVENT_SELECTION);
-    XSetWindowBackgroundPixmap(disp, TheScreen.HexMenu.icons[a].IconWin,
-                               TheScreen.HexMenu.icons[a].IconPix);
-    XShapeCombineMask(disp, TheScreen.HexMenu.icons[a].IconWin, ShapeBounding,
-                      0, 0, TheScreen.HexMenu.icons[a].IconShape, ShapeSet);
-    XShapeCombineMask(disp, TheScreen.HexMenu.IconParent, ShapeBounding,
-                      TheScreen.HexMenu.icons[a].x,
-                      TheScreen.HexMenu.icons[a].y,
-                      TheScreen.HexMenu.icons[a].IconShape,
-                      (a == 0) ? ShapeSet : ShapeUnion);
   }
   XMapSubwindows(disp, TheScreen.HexMenu.IconParent);
 }

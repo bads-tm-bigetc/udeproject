@@ -94,6 +94,8 @@ typedef struct
     int width, height;
     int x, y;
     Window IconParent;
+    Pixmap ParentShape;
+    GC ShapeGC;
     struct {
       int x, y;
       int width, height;

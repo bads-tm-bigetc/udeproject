@@ -1,3 +1,6 @@
+2006-10-16  Christian Ruppert <arc@users.sf.net>
+	* hex menu reshape feature backported from 0.3 and fixed.
+
 2004-08-07  Christian Ruppert <arc@users.sf.net>
 	* uwm/placement.c, uwm/placement.h, uwm/move.c: a small bugfix in
 	  ScanScreen: modified win argument type from Window to UltimateContext
