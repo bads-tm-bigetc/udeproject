@@ -1,6 +1,6 @@
 /* XPM */
 static char * menus_xpm[] = {
-"32 28 64 1 48 42",
+"32 28 64 1 XPMEXT",
 " 	c None",
 ".	c #040304",
 "+	c #0E9004",
@@ -92,4 +92,6 @@ static char * menus_xpm[] = {
 "      #|kkkkkkkkkkkkkkk+77      ",
 "       pkkkkkkkkkkkkkkk+7       ",
 "       #k++++++++++++++77       ",
-"        |++++++++++++++7        "};
+"        |++++++++++++++7        ",
+"XPMEXT ude_hex_coords 8 0",
+"XPMENDEXT"};

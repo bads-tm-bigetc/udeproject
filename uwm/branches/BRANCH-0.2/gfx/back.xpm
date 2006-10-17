@@ -1,6 +1,6 @@
 /* XPM */
 static char * back_xpm[] = {
-"32 28 64 1 0 42",
+"32 28 64 1 XPMEXT",
 " 	c None",
 ".	c #040304",
 "+	c #0E9004",
@@ -92,4 +92,6 @@ static char * back_xpm[] = {
 "      ||kkkkkkkkkkkkkkk|,.      ",
 "       |k||||||||||||||#3       ",
 "       pp##############,.       ",
-"        |##############,        "};
+"        |##############,        ",
+"XPMEXT ude_hex_coords -40 0",
+"XPMENDEXT"};

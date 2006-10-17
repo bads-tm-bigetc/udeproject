@@ -40,6 +40,7 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <signal.h>
+#include <limits.h>
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -148,7 +149,6 @@ char *iconfiles[7]={
 
 void PrepareIcons()
 {
-  XpmAttributes xa;
   char filename[512], dirname[300];
   XSetWindowAttributes xswa;
   int a, b;
@@ -159,42 +159,87 @@ void PrepareIcons()
   if(InitS.HexPath[0]=='\0') sprintf(dirname, "%sgfx/", TheScreen.udedir);
   else sprintf(dirname, "%s/", InitS.HexPath);
 
-  TheScreen.HexMenu.x = 40;
-  TheScreen.HexMenu.y = 42;
-  TheScreen.HexMenu.width = 104;
-  TheScreen.HexMenu.height = 84;
+  TheScreen.HexMenu.x = INT_MAX;
+  TheScreen.HexMenu.y = INT_MAX;
+  TheScreen.HexMenu.width = INT_MIN;
+  TheScreen.HexMenu.height = INT_MIN;
 
   minx = miny = 0;
-  for(b = 0; b < 7; b++){
-    xa.valuemask = 0;
+  for(b = 0; b < 7; b++) {
+    XpmAttributes xa;
+    xa.valuemask = XpmReturnExtensions;
     sprintf(filename, "%s%s.xpm", dirname, iconfiles[b]);
     a |= XpmReadFileToPixmap(disp, TheScreen.root, filename,
                              &TheScreen.HexMenu.icons[b].IconPix,
                              &TheScreen.HexMenu.icons[b].IconShape,
                              &xa);
-    if(xa.valuemask & XpmHotspot) {
-      printf("%s hotspot: %d %d\n", filename, xa.x_hotspot, xa.y_hotspot);
-      TheScreen.HexMenu.icons[b].x = xa.x_hotspot;
-      TheScreen.HexMenu.icons[b].y = xa.y_hotspot;
-    }
     TheScreen.HexMenu.icons[b].width = xa.width;
     TheScreen.HexMenu.icons[b].height = xa.height;
-    xa.valuemask=0;
+    if(xa.valuemask & XpmExtensions) {
+      int z;
+      for(z = 0; z < xa.nextensions; z++) {
+        if((xa.extensions[z].nlines == 0)
+           && (2 == sscanf(xa.extensions[z].name, "ude_hex_coords %i %i",
+                           &TheScreen.HexMenu.icons[b].x,
+                           &TheScreen.HexMenu.icons[b].y))) {
+          if(TheScreen.HexMenu.icons[b].x < TheScreen.HexMenu.x) {
+            TheScreen.HexMenu.x = TheScreen.HexMenu.icons[b].x;
+          }
+          if(TheScreen.HexMenu.icons[b].y < TheScreen.HexMenu.y) {
+            TheScreen.HexMenu.y = TheScreen.HexMenu.icons[b].y;
+          }
+          break;
+        }
+      }
+    }
+    xa.valuemask = XpmReturnExtensions;
     sprintf(filename, "%s%ss.xpm", dirname, iconfiles[b]);
     a |= XpmReadFileToPixmap(disp, TheScreen.root, filename,
-                           &TheScreen.HexMenu.icons[b].IconSelectPix,
-                           &TheScreen.HexMenu.icons[b].IconSelectShape,
-                           &xa);
-    if(xa.valuemask & XpmHotspot) {
-      printf("%s hotspot: %d %d\n", filename, xa.x_hotspot, xa.y_hotspot);
-      TheScreen.HexMenu.icons[b].SelectX = xa.x_hotspot;
-      TheScreen.HexMenu.icons[b].SelectY = xa.y_hotspot;
-    }
+                             &TheScreen.HexMenu.icons[b].IconSelectPix,
+                             &TheScreen.HexMenu.icons[b].IconSelectShape,
+                             &xa);
     if(TheScreen.HexMenu.icons[b].width < xa.width) {
       TheScreen.HexMenu.icons[b].width = xa.width;
     }
     if(TheScreen.HexMenu.icons[b].width < xa.width) {
       TheScreen.HexMenu.icons[b].height = xa.height;
+    }
+    if(xa.valuemask & XpmExtensions) {
+      int z;
+      for(z = 0; z < xa.nextensions; z++) {
+        if((xa.extensions[z].nlines == 0)
+           && (2 == sscanf(xa.extensions[z].name, "ude_hex_coords %i %i",
+                           &TheScreen.HexMenu.icons[b].SelectX,
+                           &TheScreen.HexMenu.icons[b].SelectY))) {
+          if(TheScreen.HexMenu.icons[b].SelectX < TheScreen.HexMenu.x) {
+            TheScreen.HexMenu.x = TheScreen.HexMenu.icons[b].SelectX;
+          }
+          if(TheScreen.HexMenu.icons[b].SelectY < TheScreen.HexMenu.y) {
+            TheScreen.HexMenu.y = TheScreen.HexMenu.icons[b].SelectY;
+          }
+          break;
+        }
+      }
+    }
+    if(TheScreen.HexMenu.width < (TheScreen.HexMenu.icons[b].width
+                                  + TheScreen.HexMenu.icons[b].SelectX)) {
+      TheScreen.HexMenu.width = TheScreen.HexMenu.icons[b].width
+                                + TheScreen.HexMenu.icons[b].SelectX;
+    }
+    if(TheScreen.HexMenu.width < (TheScreen.HexMenu.icons[b].width
+                                  + TheScreen.HexMenu.icons[b].x)) {
+      TheScreen.HexMenu.width = TheScreen.HexMenu.icons[b].width
+                                + TheScreen.HexMenu.icons[b].x;
+    }
+    if(TheScreen.HexMenu.height < (TheScreen.HexMenu.icons[b].height
+                                  + TheScreen.HexMenu.icons[b].SelectY)) {
+      TheScreen.HexMenu.height = TheScreen.HexMenu.icons[b].height
+                                + TheScreen.HexMenu.icons[b].SelectY;
+    }
+    if(TheScreen.HexMenu.height < (TheScreen.HexMenu.icons[b].height
+                                  + TheScreen.HexMenu.icons[b].y)) {
+      TheScreen.HexMenu.height = TheScreen.HexMenu.icons[b].height
+                                + TheScreen.HexMenu.icons[b].y;
     }
   }
   if(a) {
@@ -207,6 +252,10 @@ void PrepareIcons()
     }
     return;
   }
+  TheScreen.HexMenu.x = -TheScreen.HexMenu.x;
+  TheScreen.HexMenu.y = -TheScreen.HexMenu.y;
+  TheScreen.HexMenu.width += TheScreen.HexMenu.x;
+  TheScreen.HexMenu.height += TheScreen.HexMenu.y;
 
   xswa.override_redirect = True;
   xswa.save_under = True;
@@ -227,6 +276,11 @@ void PrepareIcons()
                                         GCFunction, &xgcv);
 
   for(a = 0; a < ICONWINS; a++) {
+printf("%s: %d %d\n", iconfiles[a], TheScreen.HexMenu.icons[a].x, TheScreen.HexMenu.icons[a].y);
+    TheScreen.HexMenu.icons[a].x += TheScreen.HexMenu.x;
+    TheScreen.HexMenu.icons[a].SelectX += TheScreen.HexMenu.x;
+    TheScreen.HexMenu.icons[a].y += TheScreen.HexMenu.y;
+    TheScreen.HexMenu.icons[a].SelectY += TheScreen.HexMenu.y;
     TheScreen.HexMenu.icons[a].IconWin
         = XCreateWindow(disp, TheScreen.HexMenu.IconParent,
                         TheScreen.HexMenu.icons[a].x,

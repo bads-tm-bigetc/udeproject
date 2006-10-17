@@ -1,3 +1,9 @@
+2006-10-17  Christian Ruppert <arc@users.sf.net>
+	* uwm/init.c: implemented pointer-relative coordinate system by
+	  replacing hotspot hex icon coordinates with an ude extension that
+	  also accepts negative numbers.
+	* gfx/*.xpm: changed to new format using extension instead of hotspot
+
 2006-10-16  Christian Ruppert <arc@users.sf.net>
 	* hex menu reshape feature backported from 0.3 and fixed.
 
