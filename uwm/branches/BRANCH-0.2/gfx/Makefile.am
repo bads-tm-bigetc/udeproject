@@ -3,7 +3,6 @@ DIR_CONTENTS= \
 	autorises.xpm \
 	back.xpm \
 	backs.xpm \
-	bgr1.xpm \
 	close.xpm \
 	closes.xpm \
 	iconify.xpm \
@@ -13,8 +12,7 @@ DIR_CONTENTS= \
 	menu.xpm \
 	menus.xpm \
 	really.xpm \
-	reallys.xpm \
-	shape.xpm
+	reallys.xpm
 
 udegfxdir= ${pkgdatadir}/gfx
 udegfx_DATA= ${DIR_CONTENTS}

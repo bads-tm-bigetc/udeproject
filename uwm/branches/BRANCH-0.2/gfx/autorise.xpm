@@ -93,5 +93,5 @@ static char * autorise_xpm[] = {
 "       |k||||||||||||||#3       ",
 "       pp##############,.       ",
 "        |##############,        ",
-"XPMEXT ude_hex_coords -16 12",
+"XPMEXT ude_hex_coords -16 14",
 "XPMENDEXT"};
