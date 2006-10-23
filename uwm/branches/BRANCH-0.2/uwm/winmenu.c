@@ -74,10 +74,14 @@ void SetHexShape(int hex) {
     y = (a == hex) ? TheScreen.HexMenu.icons[a].SelectY
                           : TheScreen.HexMenu.icons[a].y;
 
-    XMoveWindow(disp, TheScreen.HexMenu.icons[a].IconWin, x, y);
     if(a == hex) {
       XRaiseWindow(disp, TheScreen.HexMenu.icons[a].IconWin);
+    } else {
+      XLowerWindow(disp, TheScreen.HexMenu.icons[a].IconWin);
     }
+    XShapeCombineMask(disp, TheScreen.HexMenu.icons[a].IconWin, ShapeBounding,
+                      0, 0, shape, ShapeUnion);
+    XMoveWindow(disp, TheScreen.HexMenu.icons[a].IconWin, x, y);
     XShapeCombineMask(disp, TheScreen.HexMenu.icons[a].IconWin, ShapeBounding,
                       0, 0, shape, ShapeSet);
     XCopyArea(disp, shape,

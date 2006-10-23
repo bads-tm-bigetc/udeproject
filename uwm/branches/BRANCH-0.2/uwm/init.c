@@ -201,7 +201,7 @@ void PrepareIcons()
     if(TheScreen.HexMenu.icons[b].width < xa.width) {
       TheScreen.HexMenu.icons[b].width = xa.width;
     }
-    if(TheScreen.HexMenu.icons[b].width < xa.width) {
+    if(TheScreen.HexMenu.icons[b].height < xa.height) {
       TheScreen.HexMenu.icons[b].height = xa.height;
     }
     if(xa.valuemask & XpmExtensions) {
