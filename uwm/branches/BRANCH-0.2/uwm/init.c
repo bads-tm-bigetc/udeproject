@@ -276,7 +276,6 @@ void PrepareIcons()
                                         GCFunction, &xgcv);
 
   for(a = 0; a < ICONWINS; a++) {
-printf("%s: %d %d\n", iconfiles[a], TheScreen.HexMenu.icons[a].x, TheScreen.HexMenu.icons[a].y);
     TheScreen.HexMenu.icons[a].x += TheScreen.HexMenu.x;
     TheScreen.HexMenu.icons[a].SelectX += TheScreen.HexMenu.x;
     TheScreen.HexMenu.icons[a].y += TheScreen.HexMenu.y;
