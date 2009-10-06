@@ -147,7 +147,7 @@ typedef struct
   FILE *errout;
 } UDEScreen;
 
-#define StampTime(TIME) (TheScreen.now = ((TheScreen.now < TIME) || (TheScreen.now > (TIME + (1<<(sizeof(TheScreen.now)*8-1))))) ? TIME : TheScreen.now)
+#define StampTime(TIME) (TheScreen.now = ((TheScreen.now < TIME) || (TheScreen.now > (TIME + (1L<<(sizeof(TheScreen.now)*8-1))))) ? TIME : TheScreen.now)
 #define TimeStamp TheScreen.now
 
 #define ButtonCount(CNT) ((((CNT) & Button1Mask) ? 1 : 0) \

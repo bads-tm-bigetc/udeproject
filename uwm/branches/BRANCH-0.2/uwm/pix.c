@@ -82,7 +82,7 @@ Pixmap LoadJpeg(Display *disp, Drawable draw, char *filename, XpmAttributes *xpa
 /* we need these to be static to make sure they won't be affected by longjmp */
   static XImage *image = NULL;
   static JSAMPLE *data = NULL;
-  static unsigned long *idata = NULL;
+  static Pixel *idata = NULL;
   static int  c = 0;
 
   if(!(jpg_file = fopen(filename,"rb"))) return(None);
@@ -142,10 +142,10 @@ Pixmap LoadJpeg(Display *disp, Drawable draw, char *filename, XpmAttributes *xpa
 
   if((!(xpa->pixels = calloc(dobj.actual_number_of_colors, sizeof(*(xpa->pixels))))) 
      || (!(idata = calloc(dobj.output_components * dobj.output_width 
-                   * dobj.output_height, sizeof(unsigned long))))
+                   * dobj.output_height, sizeof(Pixel))))
      || (!(image = XCreateImage(disp, xpa->visual, xpa->depth, ZPixmap, 0, (char *)idata,
-                   dobj.output_width, dobj.output_height, 8 * sizeof(unsigned long),
-                   dobj.output_width * dobj.output_components * sizeof(unsigned long))))){
+                   dobj.output_width, dobj.output_height, 32,
+                   dobj.output_width * sizeof(Pixel))))){
     longjmp(jerr.jb, 1);
   }
 
