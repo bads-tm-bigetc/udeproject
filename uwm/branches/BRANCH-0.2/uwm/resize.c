@@ -47,8 +47,10 @@ extern Display *disp;
 extern UltimateContext *ActiveWin;
 extern InitStruct InitS;
 
-int ox1,ox2,oy1,oy2,x1,x2,y1,y2,minw,maxw,minh,maxh,wi,hi;
-int bw,bh;
+struct {
+  int ox1,ox2,oy1,oy2,x1,x2,y1,y2,minw,maxw,minh,maxh,wi,hi;
+  int bw,bh;
+} resize_state;
 
 short risen;  /*  0: normal resize; 1: fullscreen; 2:old size */
 short risenstart; /* started in risen mode? */
@@ -64,72 +66,72 @@ unsigned char borderstat,oldstat;
 void SqueezeIt(int mousex,int mousey)
 {
   if(!(borderstat & TACTIVE)) 
-    if(mousey <= (oy1+ActiveWin->BorderWidth+TheScreen.TitleHeight)){
+    if(mousey <= (resize_state.oy1+ActiveWin->BorderWidth+TheScreen.TitleHeight)){
       borderstat&=(~(BACTIVE|YACTIVE));
       borderstat|=TACTIVE;
-      y2=oy2;
+      resize_state.y2=resize_state.oy2;
     }
   if(!(borderstat & BACTIVE)) 
-    if(mousey >= (oy2-ActiveWin->BorderWidth)){
+    if(mousey >= (resize_state.oy2-ActiveWin->BorderWidth)){
       borderstat&=(~(TACTIVE|YACTIVE));
       borderstat|=BACTIVE;
-      y1=oy1;
+      resize_state.y1=resize_state.oy1;
     }
   if(!(borderstat & LACTIVE)) 
-    if(mousex <= (ox1+ActiveWin->BorderWidth)){
+    if(mousex <= (resize_state.ox1+ActiveWin->BorderWidth)){
       borderstat&=(~(RACTIVE|XACTIVE));
       borderstat|=LACTIVE;
-      x2=ox2;
+      resize_state.x2=resize_state.ox2;
     }
   if(!(borderstat & RACTIVE)) 
-    if(mousex >= (ox2-ActiveWin->BorderWidth)){
+    if(mousex >= (resize_state.ox2-ActiveWin->BorderWidth)){
       borderstat&=(~(LACTIVE|XACTIVE));
       borderstat|=RACTIVE;
-      x1=ox1;
+      resize_state.x1=resize_state.ox1;
     }
 
   if(borderstat & TACTIVE){
-    if((!(borderstat & YACTIVE)) && ((mousey<oy1)||\
-      (mousey>oy1+ActiveWin->BorderWidth+TheScreen.TitleHeight)))
+    if((!(borderstat & YACTIVE)) && ((mousey<resize_state.oy1)||\
+      (mousey>resize_state.oy1+ActiveWin->BorderWidth+TheScreen.TitleHeight)))
       borderstat|=YACTIVE;
     if(borderstat & YACTIVE){
-      y1=mousey;
-      if((y2-y1)<minh) y1=y2-minh;
-      if((y2-y1)>maxh) y1=y2-maxh;
-      y1=y2-((int)((y2-y1-bh)/hi))*hi-bh;
+      resize_state.y1=mousey;
+      if((resize_state.y2-resize_state.y1)<resize_state.minh) resize_state.y1=resize_state.y2-resize_state.minh;
+      if((resize_state.y2-resize_state.y1)>resize_state.maxh) resize_state.y1=resize_state.y2-resize_state.maxh;
+      resize_state.y1=resize_state.y2-((int)((resize_state.y2-resize_state.y1-resize_state.bh)/resize_state.hi))*resize_state.hi-resize_state.bh;
     }
   }
   if(borderstat & BACTIVE){
-    if((!(borderstat & YACTIVE)) && ((mousey>oy2)||\
-      (mousey<oy2-ActiveWin->BorderWidth)))
+    if((!(borderstat & YACTIVE)) && ((mousey>resize_state.oy2)||\
+      (mousey<resize_state.oy2-ActiveWin->BorderWidth)))
       borderstat|=YACTIVE;
     if(borderstat & YACTIVE){
-      y2=mousey;
-      if((y2-y1)<minh) y2=y1+minh;
-      if((y2-y1)>maxh) y2=y1+maxh;
-      y2=y1+((int)((y2-y1-bh)/hi))*hi+bh;
+      resize_state.y2=mousey;
+      if((resize_state.y2-resize_state.y1)<resize_state.minh) resize_state.y2=resize_state.y1+resize_state.minh;
+      if((resize_state.y2-resize_state.y1)>resize_state.maxh) resize_state.y2=resize_state.y1+resize_state.maxh;
+      resize_state.y2=resize_state.y1+((int)((resize_state.y2-resize_state.y1-resize_state.bh)/resize_state.hi))*resize_state.hi+resize_state.bh;
     }
   }
   if(borderstat & LACTIVE){
-    if((!(borderstat & XACTIVE)) && ((mousex<ox1)||\
-      (mousex>ox1+ActiveWin->BorderWidth)))
+    if((!(borderstat & XACTIVE)) && ((mousex<resize_state.ox1)||\
+      (mousex>resize_state.ox1+ActiveWin->BorderWidth)))
       borderstat|=XACTIVE;
     if(borderstat & XACTIVE){
-      x1=mousex;
-      if((x2-x1)<minw) x1=x2-minw;
-      if((x2-x1)>maxw) x1=x2-maxw;
-      x1=x2-((int)((x2-x1-bw)/wi))*wi-bw;
+      resize_state.x1=mousex;
+      if((resize_state.x2-resize_state.x1)<resize_state.minw) resize_state.x1=resize_state.x2-resize_state.minw;
+      if((resize_state.x2-resize_state.x1)>resize_state.maxw) resize_state.x1=resize_state.x2-resize_state.maxw;
+      resize_state.x1=resize_state.x2-((int)((resize_state.x2-resize_state.x1-resize_state.bw)/resize_state.wi))*resize_state.wi-resize_state.bw;
     }
   }
   if(borderstat & RACTIVE){
-    if((!(borderstat & XACTIVE)) && ((mousex>ox2)||\
-      (mousex<ox2-ActiveWin->BorderWidth)))
+    if((!(borderstat & XACTIVE)) && ((mousex>resize_state.ox2)||\
+      (mousex<resize_state.ox2-ActiveWin->BorderWidth)))
       borderstat|=XACTIVE;
     if(borderstat & XACTIVE){
-      x2=mousex;
-      if((x2-x1)<minw) x2=x1+minw;
-      if((x2-x1)>maxw) x2=x1+maxw;
-      x2=x1+((int)((x2-x1-bw)/wi))*wi+bw;
+      resize_state.x2=mousex;
+      if((resize_state.x2-resize_state.x1)<resize_state.minw) resize_state.x2=resize_state.x1+resize_state.minw;
+      if((resize_state.x2-resize_state.x1)>resize_state.maxw) resize_state.x2=resize_state.x1+resize_state.maxw;
+      resize_state.x2=resize_state.x1+((int)((resize_state.x2-resize_state.x1-resize_state.bw)/resize_state.wi))*resize_state.wi+resize_state.bw;
     }
   }
   if(borderstat!=oldstat){
@@ -173,21 +175,21 @@ void SqueezeIt(int mousex,int mousey)
         break;
     }
   }
-  SqueezeRubber(x1,y1,x2-x1,y2-y1);
+  SqueezeRubber(resize_state.x1,resize_state.y1,resize_state.x2-resize_state.x1,resize_state.y2-resize_state.y1);
 }
 
 void RiseIt()
 {
   if((!risenstart)&&(risen!=1)){
-    x1=y1=0;
-    x2=(maxw>TheScreen.width)?(bw+((int)((TheScreen.width-bw-1)/wi))*wi):maxw;
-    y2=(maxh>TheScreen.height)?(bh+((int)((TheScreen.height-bh-1)/hi))*hi):maxh;
-    SqueezeRubber(x1,y1,x2-x1,y2-y1);
+    resize_state.x1=resize_state.y1=0;
+    resize_state.x2=(resize_state.maxw>TheScreen.width)?(resize_state.bw+((int)((TheScreen.width-resize_state.bw-1)/resize_state.wi))*resize_state.wi):resize_state.maxw;
+    resize_state.y2=(resize_state.maxh>TheScreen.height)?(resize_state.bh+((int)((TheScreen.height-resize_state.bh-1)/resize_state.hi))*resize_state.hi):resize_state.maxh;
+    SqueezeRubber(resize_state.x1,resize_state.y1,resize_state.x2-resize_state.x1,resize_state.y2-resize_state.y1);
     risen=1;
   } else {
-    x1=ActiveWin->ra.x;y1=ActiveWin->ra.y;
-    x2=x1+ActiveWin->ra.w;y2=y1+ActiveWin->ra.h;
-    SqueezeRubber(x1,y1,x2-x1,y2-y1);
+    resize_state.x1=ActiveWin->ra.x;resize_state.y1=ActiveWin->ra.y;
+    resize_state.x2=resize_state.x1+ActiveWin->ra.w;resize_state.y2=resize_state.y1+ActiveWin->ra.h;
+    SqueezeRubber(resize_state.x1,resize_state.y1,resize_state.x2-resize_state.x1,resize_state.y2-resize_state.y1);
     risen=2;
     risenstart=False;
   }
@@ -197,7 +199,7 @@ void RiseIt()
 
 void UnriseIt(int x,int y)
 {
-  x1=ox1;x2=ox2;y1=oy1;y2=oy2;
+  resize_state.x1=resize_state.ox1;resize_state.x2=resize_state.ox2;resize_state.y1=resize_state.oy1;resize_state.y2=resize_state.oy2;
   borderstat=0;
   SqueezeIt(x,y);
   risen=0;
@@ -210,37 +212,37 @@ void StartResizing(UltimateContext *uc,int x,int y)
 {
   risen=0;
 
-  minh=uc->ra.minh;    /*** lazy dayze ***/
-  maxh=uc->ra.maxh;
-  minw=uc->ra.minw;
-  maxw=uc->ra.maxw;
-  wi=uc->ra.wi;
-  hi=uc->ra.hi;
-  bw=uc->ra.bw;
-  bh=uc->ra.bh;
+  resize_state.minh=uc->ra.minh;    /*** lazy dayze ***/
+  resize_state.maxh=uc->ra.maxh;
+  resize_state.minw=uc->ra.minw;
+  resize_state.maxw=uc->ra.maxw;
+  resize_state.wi=uc->ra.wi;
+  resize_state.hi=uc->ra.hi;
+  resize_state.bw=uc->ra.bw;
+  resize_state.bh=uc->ra.bh;
 
-  x1=ox1=uc->Attr.x;
-  x2=ox2=((uc->Attr.x)+(uc->Attr.width));
-  y1=oy1=uc->Attr.y;
-  y2=oy2=((uc->Attr.y)+(uc->Attr.height));
+  resize_state.x1=resize_state.ox1=uc->Attr.x;
+  resize_state.x2=resize_state.ox2=((uc->Attr.x)+(uc->Attr.width));
+  resize_state.y1=resize_state.oy1=uc->Attr.y;
+  resize_state.y2=resize_state.oy2=((uc->Attr.y)+(uc->Attr.height));
   if(!(uc->flags & RISEN)){
-    ActiveWin->ra.x=ox1;
-    ActiveWin->ra.y=oy1;
-    ActiveWin->ra.w=ox2-ox1;
-    ActiveWin->ra.h=oy2-oy1;
+    ActiveWin->ra.x=resize_state.ox1;
+    ActiveWin->ra.y=resize_state.oy1;
+    ActiveWin->ra.w=resize_state.ox2-resize_state.ox1;
+    ActiveWin->ra.h=resize_state.oy2-resize_state.oy1;
     risenstart=False;
   } else risenstart=True;
   borderstat=oldstat=0;
 
   GrabPointer(TheScreen.root,PointerMotionMask|ButtonPressMask|\
                                         ButtonReleaseMask,None);
-  StartRubber(x1,y1,x2-x1,y2-y1,ActiveWin->BorderWidth);
+  StartRubber(resize_state.x1,resize_state.y1,resize_state.x2-resize_state.x1,resize_state.y2-resize_state.y1,ActiveWin->BorderWidth);
   GrabServer();
   InstallResizeHandle();
   if(!(uc->flags & RISEN)) SqueezeIt(x,y);
 
   DBG( fprintf(TheScreen.errout,"min w: %u; h: %u max w: %u; h: %u; wi: %u; hi: %u\n",\
-       minw,minh,maxw,maxh,wi,hi);)
+       resize_state.minw,resize_state.minh,resize_state.maxw,resize_state.maxh,resize_state.wi,resize_state.hi);)
 }
 
 void ResizeButtons(int a,XEvent *event)
