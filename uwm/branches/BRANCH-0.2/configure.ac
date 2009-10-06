@@ -1,6 +1,4 @@
-MY_VERSION='SNAP$(shell date +%d%m%Y)'
-
-AC_INIT([uwm], ${MY_VERSION}, [arc@users.sf.net])
+AC_INIT([uwm], [$(shell date +SNAP_%Y_%m_%d)], [arc@users.sf.net])
 AM_INIT_AUTOMAKE([-Wall])
 AC_USE_SYSTEM_EXTENSIONS
 
