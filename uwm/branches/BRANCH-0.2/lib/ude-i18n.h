@@ -6,7 +6,7 @@
 
 #ifdef ENABLE_NLS
 
-#include <libintl.h>
+#include <gettext.h>
 
 #define _(String) gettext (String)
 

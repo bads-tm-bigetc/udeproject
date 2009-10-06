@@ -17,5 +17,5 @@ manual.dvi: manual.tex
 	latex manual.tex
 	latex manual.tex
 
-clean:
+clean-local:
 	rm -rf *.log *.aux *.toc *.dvi

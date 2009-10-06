@@ -19,7 +19,7 @@ manual.css: ${TEXSOURCES}
 	rm -f manual.css
 	latex2html -no_subdir -init_file ../l2h.conf manual.tex
 
-clean:
+clean-local:
 	rm -rf *.html *.png *.pl *.css
 
 *.html: manual.css
