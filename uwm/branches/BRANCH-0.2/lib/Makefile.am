@@ -19,10 +19,9 @@ nodist_SOURCES=\
 # libude_la_LDFLAGS= -version-info 0:0:0
 
 # pkginclude_HEADERS= ude-i18n.h \
-nodist_HEADERS= ude-i18n.h \
+nodist_HEADERS=\
                         ude-bevels.h \
 			ude-box.h \
-			ude-desktop.h \
 			ude-events.h \
 			ude-types.h \
 			ude-vector.h \
@@ -30,10 +29,9 @@ nodist_HEADERS= ude-i18n.h \
 			ude-wraparounds.h \
 			ude-hex.h \
                         ude-button.h \
-                        ude-internals.h \
                         ude-raster.xbm \
 			ude.h \
 			ude-menu.h
 
-dist-hook:
-	cp ude-desktop.h ude-internals.h ude-i18n.h $(distdir)
+noinst_HEADERS=ude-desktop.h ude-internals.h ude-i18n.h gettext.h
+

@@ -1,4 +1,4 @@
-AC_INIT([uwm], [$(shell date +SNAP_%Y_%m_%d)], [arc@users.sf.net])
+AC_INIT([uwm], [SNAP_2009_10_09], [arc@users.sf.net])
 AM_INIT_AUTOMAKE([-Wall])
 AC_USE_SYSTEM_EXTENSIONS
 
@@ -63,4 +63,4 @@ AC_CHECK_LIB([Xmu], [XmuGetHostname],, AC_MSG_ERROR([uwm requires libXmu.]),
 
 
 AC_CONFIG_HEADERS([config.h])
-AC_OUTPUT([uwm/Makefile config/Makefile doc/Makefile doc/html/Makefile extras/Makefile extras/tools/Makefile gfx/Makefile Makefile ude.spec config/StartScript po/Makefile.in intl/Makefile])
+AC_OUTPUT([uwm/Makefile config/Makefile doc/Makefile doc/html/Makefile extras/Makefile extras/tools/Makefile gfx/Makefile Makefile ude.spec config/StartScript po/Makefile.in intl/Makefile lib/Makefile])
