@@ -16,7 +16,7 @@
 #include "nodes.h"
 #include "menu.h"
 #include "lib/ude-desktop.h"
-#include "MwmUtil.h"
+#include "MwmUtil_fixed.h"
 
 /*** some debugging and developement settings ***/
 

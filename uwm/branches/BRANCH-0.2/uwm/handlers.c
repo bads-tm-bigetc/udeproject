@@ -56,7 +56,7 @@
 #include "widgets.h"
 #include "applications.h"
 
-#include "MwmUtil.h"
+#include "MwmUtil_fixed.h"
 
 extern UDEScreen TheScreen;
 extern Display *disp;

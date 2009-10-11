@@ -26,7 +26,7 @@ uwm_SOURCES = widgets.c \
               wingroups.c \
               uwm.c
 
-noinst_HEADERS= MwmUtil.h \
+noinst_HEADERS= MwmUtil_fixed.h \
                 applications.h \
                 handlers.h \
                 init.h \

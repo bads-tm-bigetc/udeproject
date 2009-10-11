@@ -231,9 +231,10 @@ void EnborderWin(UltimateContext *uc)
 
   if(uc->MotifWMHints){
     if((uc->MotifWMHints->flags & MWM_HINTS_FUNCTIONS)
-       && (uc->MotifWMHints->functions==0))
+       && (uc->MotifWMHints->functions==0)) {
       uc->BorderWidth=0;
       HasTitle = 0;
+    }
     if(uc->MotifWMHints->flags & MWM_HINTS_DECORATIONS) {
       if(uc->MotifWMHints->decorations==0) uc->BorderWidth=0;
       HasTitle = (uc->MotifWMHints->decorations & MWM_DECOR_TITLE);

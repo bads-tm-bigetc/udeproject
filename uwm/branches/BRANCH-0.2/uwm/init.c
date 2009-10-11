@@ -74,7 +74,7 @@
 #include "ude-i18n.h"
 #include "urm.h"
 #include "pix.h"
-#include "MwmUtil.h"
+#include "MwmUtil_fixed.h"
 
 extern char **environ;
 

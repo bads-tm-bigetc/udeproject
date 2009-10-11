@@ -59,10 +59,10 @@ typedef struct {
 #define MWM_DECOR_MINIMIZE      (1L << 5)
 #define MWM_DECOR_MAXIMIZE      (1L << 6)
 
-#define MWM_INPUT_MODELESS 0
-#define MWM_INPUT_PRIMARY_APPLICATION_MODAL 1
-#define MWM_INPUT_SYSTEM_MODAL 2
-#define MWM_INPUT_FULL_APPLICATION_MODAL 3
+#define MWM_INPUT_MODELESS (0)
+#define MWM_INPUT_PRIMARY_APPLICATION_MODAL (1)
+#define MWM_INPUT_SYSTEM_MODAL (2)
+#define MWM_INPUT_FULL_APPLICATION_MODAL (3)
 #define MWM_INPUT_APPLICATION_MODAL MWM_INPUT_PRIMARY_APPLICATION_MODAL
 
 #define MWM_TEAROFF_WINDOW	(1L<<0)
@@ -99,29 +99,29 @@ typedef MotifWmInfo MwmInfo;
  * _MWM_HINTS property
  */
 typedef struct {
-    CARD32 flags;
-    CARD32 functions;
-    CARD32 decorations;
-    INT32 inputMode;
-    CARD32 status;
+    unsigned long flags;
+    unsigned long functions;
+    unsigned long decorations;
+    long inputMode;
+    unsigned long status;
 } PropMotifWmHints;
 
 typedef PropMotifWmHints PropMwmHints;
 
-#define PROP_MOTIF_WM_HINTS_ELEMENTS 5
+#define PROP_MOTIF_WM_HINTS_ELEMENTS (5)
 #define PROP_MWM_HINTS_ELEMENTS PROP_MOTIF_WM_HINTS_ELEMENTS
 
 /*
  * _MWM_INFO property, slight return
  */
 typedef struct {
-    CARD32 flags;
-    CARD32 wmWindow;
+    unsigned long flags;
+    unsigned long wmWindow;
 } PropMotifWmInfo;
 
 typedef PropMotifWmInfo PropMwmInfo;
 
-#define PROP_MOTIF_WM_INFO_ELEMENTS 2
+#define PROP_MOTIF_WM_INFO_ELEMENTS (2)
 #define PROP_MWM_INFO_ELEMENTS PROP_MOTIF_WM_INFO_ELEMENTS
 
 #ifdef __cplusplus
