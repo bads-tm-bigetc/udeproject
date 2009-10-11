@@ -158,7 +158,7 @@ void CatchWindows()
       int format;
       unsigned long number,bytesafter;
       Atom type;
-      CARD32 *data;
+      long *data;
       if(Success!=XGetWindowProperty(disp, children[a], WM_STATE_PROPERTY, 0, 2,
                                      False, WM_STATE_PROPERTY, &type,
 				     &format, &number, &bytesafter,
