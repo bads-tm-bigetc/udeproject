@@ -296,7 +296,7 @@ void PrepareIcons()
 
 char *ReadQuoted(FILE *f) /* allocs mem and writes string to it*/
 {
-  char c, text[256], *p;
+  char c, text[257], *p;
   int i;
 
   text[0] = '\0';
@@ -304,12 +304,13 @@ char *ReadQuoted(FILE *f) /* allocs mem and writes string to it*/
     if(EOF==fscanf(f,"%c",&c)) return(NULL);
   } while(c!='"');
   for(i=0;i<256;i++) {
-    if(EOF==fscanf(f,"%c",&c)) return(NULL); /* unfinished quotation */
+    if(EOF==(c = fgetc(f))) return(NULL); /* unfinished quotation */
     if(c=='\\') {
-      if(EOF==fscanf(f,"%c",&c)) return(NULL); /* allow "s and \s */
+      if(EOF==(c = fgetc(f))) return(NULL); /* allow "s and \s */
     } else if(c=='"') break;
-    sprintf(text,"%s%c",text,c);
+    text[i] = c;
   }
+  text[i] = '\0';
   p=MyCalloc(sizeof(char),strlen(text)+1);
   strcpy(p,text);
   return(p);
