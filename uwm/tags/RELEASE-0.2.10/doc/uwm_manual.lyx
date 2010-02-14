@@ -1,0 +1,725 @@
+#This file was created by <arc> Thu Apr 15 22:33:40 1999
+#LyX 1.0 (C) 1995-1999 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\begin_preamble
+\usepackage{german}
+\clubpenalty=1000
+\widowpenalty=1000
+\displaywidowpenalty=1000
+\end_preamble
+\language english
+\inputencoding latin1
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+uwm Users Manual
+\layout Author
+
+by Christian Ruppert
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents
+
+\end_inset 
+
+
+\layout Standard
+
+
+\latex latex 
+
+\backslash 
+pagebreak
+\layout Section
+
+Introduction
+\layout Subsection
+
+A users' manual for a window manager?
+\layout Standard
+
+Hmmm, now that uwm is more and more growing up I think it is time for some
+ kind of a users manual for all you guys out there who are wondering how
+ and why to use this strange thing which is so different to anything you
+ have ever seen before.
+ In fact I decided to write this manual when I got a mail from our project
+ leader Jan in which he was complaining that a window is always moved in
+ the stacking position it has been before moving it.
+ I realized that uwm is so different that it is almost impossible to find
+ out all its features and use its full power without any advice.
+\layout Subsection
+
+The idea of uwm
+\layout Standard
+
+Well, the idea of uwm is very simple: Make work under X more productive
+ and (after a little bit of training) more intuitive.
+ Developing uwm I did (and still do) not try to copy the look and feel of
+ other window managers for the ude-wm just because everyone knows this.
+ If I wanted to do this it would have been much easier to make fvwm fit
+ to our needs.
+ What I wanted to do was just using my impressions of other different GUIs
+ and my experience working with them to create a more practical and agreeable
+ one.
+ And once you are used to the title bar-less layout of uwm you will not
+ want to miss it anymore (I hope).
+\layout Standard
+
+When you read the following you might want to try most of it at the same
+ time since it is not very easy to learn or even to imagine how uwm will
+ react to a user's input if you only read this documentation.
+ Oh, and you will need a three-button-mouse to use the full power of uwm
+ (although uwm can now also be used with a two-button-mouse and Emulate3Buttons).
+\layout Section
+
+Basic window operations
+\layout Subsection
+
+moving windows
+\layout Standard
+
+To move a window under uwm just hold down the middle mouse button somewhere
+ on the desired window's border while dragging the window to the destination
+ point and then release the button.
+ While dragging (with the middle button pressed) you can raise the dragged
+ window by clicking with the left button as well as lower it by clicking
+ with the right button.
+\layout Subsection
+
+resizing windows
+\layout Standard
+
+To resize a window just hold down the right mouse button somewhere on its
+ border and move the mouse and the appearing rubber band around until size
+ and position are o.k.
+ before you release the button again.
+ While doing this several action can be taken: The window can be risen by
+ pressing the middle button once, it will be restored to its original size
+ by pressing the button once again and re-risen by pressing the button for
+ a third time etc.
+ The other way round a risen window's size can be restored by pressing the
+ middle button once, it will be re-risen when you press it a second time
+ and so on.
+ Pressing the left button while resizing a window with the mouse pointer
+ directly south or north of the window will restore the windows original
+ width, pressing it exactly right or left of the window will restore its
+ original height.
+\layout Subsection
+
+the left mouse button
+\layout Standard
+
+Pressing the left mouse button on a window's border will first of all raise
+ the window to the top of the stack and then display a menu of hexagonal
+ icons which replaces the title bar icons known from other window managers.
+ This is one of uwm's main advantages: You do not have to dig out an almost
+ completely covered window's title-bar - just to close it for example.
+ The menu will disappear again when you release the button so you have to
+ press the button, select an icon and release the button above the selected
+ icon to take the desired action.
+ Possible actions are (starting with the top icon and continuing clockwise):
+\layout Itemize
+
+close window
+\layout Itemize
+
+kill program (when this icon is highlighted another icon will appear on
+ the right side as a security request.
+ To kill a window you have to select this icon)
+\layout Itemize
+
+menu
+\layout Itemize
+
+auto rise / restore size
+\layout Itemize
+
+lower window
+\layout Itemize
+
+iconify window
+\layout Standard
+
+If the mouse button is released without one of the icons selected the window
+ is simply raised to the top.
+\layout Standard
+
+The item 
+\begin_inset Quotes eld
+\end_inset 
+
+menu
+\begin_inset Quotes erd
+\end_inset 
+
+ will start a menu which will enable you to sticky a window or to move it
+ directly to another workspace.
+\layout Standard
+
+If the middle-button is pressed and released again while the window-menu
+ is active, uwm will switch to the previous workspace and take the active
+ window there.
+ This can be done repeatedly.
+ If the right button is pressed the window is taken to the next workspace
+ instead.
+\layout Section
+
+other operations
+\layout Subsection
+
+The Window and Workspace Menu
+\layout Standard
+
+If you click the middle mouse button outside any window the window/workspace
+ menu will appear.
+ If you have more than one workspace you'll find a list of your workspaces
+ there (plus an extra item for sticky windows which are displayed on any
+ workspace).
+ Each item has a sub menu containing a list of the windows currently on
+ the corresponding workspace.
+ Next to each item of the sub menus there is a little switch which is switched
+ on in case the window is visible and switched off if the window is iconified.
+ To de-iconify a window just select its Item.
+ Same thing to raise and activate an already displayed window.
+ If the selected window is not on the active workspace uwm will switch to
+ the workspace it can be found on before de-iconifying or activating it.
+\layout Standard
+
+To switch to a workspace without raising or de-iconifying a window (or even
+ without any windows on it), just release the mouse button above the item
+ of the main menu which opens the sub menu with the windows without moving
+ the pointer into the sub menu.
+\layout Standard
+
+In case there is only one workspace there is no need for a menu for the
+ workspaces and a menu containing all windows on the screen (plus iconified)
+ is directly displayed.
+\layout Subsection
+
+The application-menu
+\layout Standard
+
+Clicking down the right mouse button somewhere outside any window will make
+ an application-menu appear that can be used to call any programs you have
+ installed.
+ Simply hold down the button, select the desired program and release the
+ button.
+ To cancel the menu simply release the button somewhere outside of the menu.
+\layout Subsection
+
+Configuring uwm
+\layout Standard
+
+At the moment uwm-configuration can only be done by editing the corresponding
+ text-files.
+ A graphical configuration program will be available as soon as I got the
+ desktop-server running (I hope very soon).
+\layout Subsubsection
+
+General configuration
+\layout Standard
+
+Please set the environment variable 
+\family typewriter 
+UDEdir
+\family default 
+ to the directory ude is installed to.
+ uwm will thank you for this.
+\layout Standard
+
+General uwm-configuration can be done by changing the file
+\family typewriter 
+ $UDEdir/config/uwmrc
+\family default 
+ in the which should be quite self-explaining.
+ You can keep a personal copy or version of all configuration files in your
+ home-directory in
+\family typewriter 
+ \i \~{ }
+/.ude/config
+\family default 
+ which will be used instead of your systems default files in the ude-directory.
+ You can also have your private language files in /.ude/language.
+\layout Standard
+
+You may use environment variables in filenames and shell commands.
+\layout Standard
+
+For details about the file-formats please take a look at the example-files
+ shipped with your distribution, all options are explained there, a GUI-program
+ to modify the config files will be available when there is enough desktop-funct
+ionality added into uwm/ude so that it can be included into the desktop
+ and can be taken as an example about how to write ude programs.
+\layout Subsubsection
+
+Changing the application menu
+\layout Standard
+
+The file for the menu is defined in the uwm-main-configuration file config/uwmrc.
+ In case no file is found for any reason uwm will give you a simple xterm
+ in the application-menu so that you can do at least minimum work if something
+ goes wrong.
+ The paths uwm will search for the specified file are first
+\family typewriter 
+ \i \~{ }
+/.ude/config
+\family default 
+, in case the file is not found there it will look into
+\family typewriter 
+ $UDEdir/config
+\family default 
+.
+ In case there is still no file found the given path will be interpreted
+ as it is.
+ The name in the example uwmrc is 
+\family typewriter 
+appmenu
+\family default 
+.
+\layout Standard
+
+To use quotes in quoted expressions type 
+\family typewriter 
+
+\backslash 
+
+\begin_inset Quotes erd
+\end_inset 
+
+
+\family default 
+ instead of 
+\family typewriter 
+
+\begin_inset Quotes sld
+\end_inset 
+
+
+\family default 
+, if you want to use a backslash type 
+\family typewriter 
+
+\backslash 
+
+\backslash 
+
+\family default 
+.
+\layout Standard
+
+You can use environment variables in shell commands and filenames.
+\layout Standard
+
+There are five keywords for the menu-configuration-file:
+\layout Description
+
+
+\family typewriter 
+ITEM 
+\begin_inset Quotes eld
+\end_inset 
+
+name
+\begin_inset Quotes erd
+\end_inset 
+
+:
+\begin_inset Quotes eld
+\end_inset 
+
+command
+\begin_inset Quotes erd
+\end_inset 
+
+;
+\family default 
+ will add an item called 
+\begin_inset Quotes eld
+\end_inset 
+
+name
+\begin_inset Quotes erd
+\end_inset 
+
+ that will execute 
+\begin_inset Quotes eld
+\end_inset 
+
+command
+\begin_inset Quotes erd
+\end_inset 
+
+ to the menu or sub menu it belongs to.
+ 
+\begin_inset Quotes eld
+\end_inset 
+
+command
+\begin_inset Quotes erd
+\end_inset 
+
+ can be a complete shell command with the name of the program and several
+ command-line-options.
+ Both 
+\begin_inset Quotes eld
+\end_inset 
+
+name
+\begin_inset Quotes erd
+\end_inset 
+
+ and 
+\begin_inset Quotes eld
+\end_inset 
+
+command
+\begin_inset Quotes erd
+\end_inset 
+
+ have to be quoted.
+\layout Description
+
+
+\family typewriter 
+SUBMENU 
+\begin_inset Quotes eld
+\end_inset 
+
+name
+\begin_inset Quotes erd
+\end_inset 
+
+ { } 
+\family default 
+will add a sub menu called 
+\begin_inset Quotes eld
+\end_inset 
+
+name
+\begin_inset Quotes erd
+\end_inset 
+
+ to the menu or sub menu it belongs to.
+ All items and submenues belonging to this sub menu must be placed between
+ the braces.
+ 
+\begin_inset Quotes eld
+\end_inset 
+
+name
+\begin_inset Quotes erd
+\end_inset 
+
+ must be quoted.
+\layout Description
+
+
+\family typewriter 
+LINE;
+\family default 
+ will add a separation line to the menu it belongs to.
+\layout Description
+
+
+\family typewriter 
+FILE 
+\begin_inset Quotes eld
+\end_inset 
+
+filename
+\begin_inset Quotes erd
+\end_inset 
+
+; 
+\family default 
+Will replace itself by the given file which also has to be a menu-file.
+ This will enable you to include several files into one menu-file.
+ The search-algorithm is the same as for menu-file specified in uwmrc.
+ New Items are not stupidly added to a menu but merged into it i.e.
+ if there's e.g.
+ a global configuration file loaded adding an item 
+\begin_inset Quotes eld
+\end_inset 
+
+gimp
+\begin_inset Quotes erd
+\end_inset 
+
+ to the sub menu 
+\begin_inset Quotes eld
+\end_inset 
+
+graphics
+\begin_inset Quotes erd
+\end_inset 
+
+ this will only be done if there is no item named 
+\begin_inset Quotes eld
+\end_inset 
+
+gimp
+\begin_inset Quotes erd
+\end_inset 
+
+ in this sub menu yet.
+ Please be aware that the position of the 
+\family typewriter 
+FILE
+\family default 
+ command in the hierarchy of the menus takes effect on where the file and
+ its items are added.
+\layout Description
+
+
+\family typewriter 
+PIPE ''command''; 
+\family default 
+Is very similar to 
+\family typewriter 
+FILE
+\family default 
+, except that 
+\begin_inset Quotes eld
+\end_inset 
+
+command
+\begin_inset Quotes erd
+\end_inset 
+
+'s output to stdout is used instead of the file.
+ This will e.g.
+ enable you to write a script (or use the provided one, take a look at 
+\family typewriter 
+dirtomenu
+\family default 
+ in directory 
+\family typewriter 
+extras/tools
+\family default 
+, thanx to Adam Sampson for this) which will search a directory for files
+ of a special program and add menu items to invoke the program with the
+ filenames as parameter.
+ There's almost no limit to the use of this option.
+ However at the moment the option is not available on systems with a missing
+ popen()-function in their libc.
+ If you have interesting scripts or programs for this which you think can
+ be included into the distribution, don't hesitate to send them to us.
+\layout Standard
+
+
+\family typewriter 
+ITEM, FILE 
+\family default 
+and 
+\family typewriter 
+LINE
+\family default 
+ - lines have to be terminated by a semicolon.
+ Everything that should be put into the main menu simply has to be written
+ into the file, submenues are braced.
+ There is an example-file, so simply take a look at it in case there are
+ more questions (I am sure there are!).
+\layout Subsubsection
+
+The StartScript-option
+\layout Standard
+
+In uwmrc you can define a shell-script or a command-line of a program which
+ is to be executed when uwm is started (StartScript=).
+ There have been changes with this option: Since it now also supports command
+ lines for usual shell-commands you have to mark your script as executables
+ (use chmod) and they have to start with #!/shellpath/shellcommand of the
+ desired shell, e.g.
+ #!/bin/sh.
+ 
+\layout Standard
+
+If the line Shell Script=...
+ is missing in uwmrc there will be no script or program executed.
+ uwm will first look for the defined script in your private 
+\family typewriter 
+\i \~{ }
+/ude/config
+\family default 
+-directory, then in the system-
+\family typewriter 
+ude/config
+\family default 
+-directory and then in the command-path.
+ If there are several scripts matching in these paths only the first one
+ which is found will be executed.
+ If there are several StartScript=...-lines found in uwmrc only the last one
+ is used.
+\layout Subsection
+
+The WM-Menu
+\layout Standard
+
+Pressing the left mouse button somewhere in the root-window will make the
+ window-manager-menu appear.
+ 
+\layout Standard
+
+If you press any other mouse-button while the WM-menu is active and no item
+ is selected uwm will switch to the next or previous workspace depending
+ on which button is pressed.
+ Using this repeatedly you can 'zap' through your workspaces.
+\layout Subsubsection
+
+The 'Quit ude' sub menu
+\layout Standard
+
+Just what it's supposed to be, you have to select 'yes' in the sub menu
+ to really quit.
+ this is the only security-request at the moment, so take a little care.
+\layout Subsubsection
+
+The 'restart ude' sub menu
+\layout Standard
+
+With this you can restart uwm, e.g.
+ to start a new version after an update or to reread the configuration files.
+ You can choose whether you want the StartScript to be executed again when
+ ude is restarted or not.
+\layout Subsection
+
+Keyboard shortcuts
+\layout Standard
+
+There are a few keystrokes hard-coded into uwm:
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center \LyXTable
+multicol5
+8 2 0 0 -1 -1 -1 -1
+1 1 0 0
+1 0 0 0
+1 0 0 0
+1 0 0 0
+1 0 0 0
+1 0 0 0
+1 1 0 0
+0 1 0 0
+2 1 0 "" ""
+2 1 1 "" ""
+0 8 1 0 0 0 0 "" ""
+0 8 1 0 0 0 0 "" ""
+0 2 1 0 0 0 0 "" ""
+0 2 1 0 0 0 0 "" ""
+0 8 1 0 0 0 0 "" ""
+0 8 1 0 0 0 0 "" ""
+0 8 1 0 0 0 0 "" ""
+0 8 1 0 0 0 0 "" ""
+0 8 1 0 0 0 0 "" ""
+0 8 1 0 0 0 0 "" ""
+0 8 1 0 0 0 0 "" ""
+0 8 1 0 0 0 0 "" ""
+0 8 1 0 0 0 0 "" ""
+0 8 1 0 0 0 0 "" ""
+0 8 1 0 0 0 0 "" ""
+0 8 1 0 0 0 0 "" ""
+
+Keystroke
+\newline 
+uwm's reaction
+\newline 
+
+\family typewriter 
+\shape smallcaps 
+Ctrl-Alt-Up
+\family default 
+\shape default 
+
+\newline 
+activate previous window visible on workspace.
+\newline 
+
+\family typewriter 
+\shape smallcaps 
+Ctrl-Alt-Down
+\family default 
+\shape default 
+
+\newline 
+activate next window visible on workspace.
+\newline 
+
+\family typewriter 
+\shape smallcaps 
+Ctrl-Alt-Right
+\family default 
+\shape default 
+
+\newline 
+switch to next workspace.
+\newline 
+
+\family typewriter 
+\shape smallcaps 
+Ctrl-Alt-Left
+\family default 
+\shape default 
+
+\newline 
+switch to previous workspace.
+\newline 
+
+\family typewriter 
+\shape smallcaps 
+Ctrl-Alt-PgUp
+\family default 
+\shape default 
+
+\newline 
+Raise active window.
+\newline 
+
+\family typewriter 
+\shape smallcaps 
+Ctrl-Alt-PgDown
+\family default 
+\shape default 
+
+\newline 
+Lower active window.
+\newline 
+
+\family typewriter 
+\shape smallcaps 
+Ctrl-Alt-End
+\family default 
+\shape default 
+
+\newline 
+Iconify active window.
+\layout Standard
+\noindent 
+One day I'll make them configurable...
+\layout Subsection
+
+other
+\layout Standard
+
+there will be various other operations implemented in uwm, lots of them
+ are already prepared, but most of them are not finished yet, so you still
+ have to wait a little bit.
+\the_end
