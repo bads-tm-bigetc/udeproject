@@ -1,4 +1,4 @@
-AC_INIT([uwm], [SNAP_2009_10_09], [arc@users.sf.net])
+AC_INIT([uwm], [0.2.10], [arc@users.sf.net])
 AM_INIT_AUTOMAKE([-Wall])
 AC_USE_SYSTEM_EXTENSIONS
 

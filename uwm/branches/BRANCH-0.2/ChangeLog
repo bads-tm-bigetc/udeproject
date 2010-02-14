@@ -1,3 +1,12 @@
+2010-02-14  Christian Ruppert <arc@users.sf.net>
+	* RELEASE: ude-0.2.10
+	* config/urdb: updated some resources
+	* NEWS: updated to reflect changes since 0.2.9b
+	* configure.am: changed version to 0.2.10
+
+2010-01-02  Christian Ruppert <arc@users.sf.net>
+	* several fixes for 64 bit systems
+
 2006-10-17  Christian Ruppert <arc@users.sf.net>
 	* uwm/init.c: implemented pointer-relative coordinate system by
 	  replacing hotspot hex icon coordinates with an ude extension that

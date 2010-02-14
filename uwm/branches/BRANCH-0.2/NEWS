@@ -1,3 +1,13 @@
+ude-0.2.10:
+
+* 64 bit support
+* Italian language support (thanks to Diego Bertone)
+* some updates to urdb
+* hex icons can have arbitrary sizes and shapes now: The shape is taken from
+  the xpm itself, the position is defined through the xpm extension
+  ude_hex_coords.
+* minor bugfixes.
+
 ude-0.2.9b:
 
 * fixed the following bugs:

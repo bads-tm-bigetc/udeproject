@@ -145,6 +145,43 @@
 *XmList.background: @TEXTBGR@
 *XmList.foreground: @TEXTCOLOR@
 
+! Scribus
+scribus*Entry.background: #CCCCCCCCCCCC
+scribus*Entry.foreground: #000000000000
+scribus*Entry.highlightBackground: #000000000000
+scribus*Entry.highlightColor: #FFFFFFFFFFFF
+scribus*Entry.activeBackground: #000000000000
+scribus*Entry.activeForeground: #FFFFFFFFFFFF
+scribus*Entry.selectBackground: #000000000000
+scribus*Entry.selectForeground: #FFFFFFFFFFFF
+
+scribus*Text.background: #CCCCCCCCCCCC
+scribus*Text.foreground: #000000000000
+scribus*Text.highlightBackground: #000000000000
+scribus*Text.highlightColor: #FFFFFFFFFFFF
+scribus*Text.activeBackground: #000000000000
+scribus*Text.activeForeground: #FFFFFFFFFFFF
+scribus*Text.selectBackground: #000000000000
+scribus*Text.selectForeground: #FFFFFFFFFFFF
+
+scribus*Listbox.background: #CCCCCCCCCCCC
+scribus*Listbox.foreground: #000000000000
+scribus*Listbox.highlightBackground: #000000000000
+scribus*Listbox.highlightColor: #FFFFFFFFFFFF
+scribus*Listbox.activeBackground: #000000000000
+scribus*Listbox.activeForeground: #FFFFFFFFFFFF
+scribus*Listbox.selectBackground: #000000000000
+scribus*Listbox.selectForeground: #FFFFFFFFFFFF
+
+scribus*Canvas.background: #CCCCCCCCCCCC
+scribus*Canvas.foreground: #000000000000
+scribus*Canvas.highlightBackground: #000000000000
+scribus*Canvas.highlightColor: #FFFFFFFFFFFF
+scribus*Canvas.activeBackground: #000000000000
+scribus*Canvas.activeForeground: #FFFFFFFFFFFF
+scribus*Canvas.selectBackground: #000000000000
+scribus*Canvas.selectForeground: #FFFFFFFFFFFF
+
 ! Tcl/Tk
 
 *Toplevel.background: @BACKGROUND@
@@ -460,20 +497,25 @@ Editres*Panner.Background: @BACKGROUND@
 
 ! Ddd
 
-Ddd*foreground:			   @STANDARDTEXT@
-Ddd*background:			   @BACKGROUND@
-Ddd*XmText.background:		   @TEXTBGR@
-Ddd*XmTextField.background:	   @TEXTBGR@
-Ddd*GraphEdit.background:	   @TEXTBGR@
-Ddd*XmList.background:		   @TEXTBGR@
-Ddd*XmText.foreground:		   @TEXTCOLOR@
-Ddd*XmTextField.foreground:	   @TEXTCOLOR@
-Ddd*GraphEdit.foreground:	   @TEXTCOLOR@
-Ddd*XmList.foreground:		   @TEXTCOLOR@
-Ddd*topShadowColor:		   @LIGHTCOLOR@
-Ddd*bottomShadowColor:		   @SHADOWCOLOR@
-Ddd*defaultFont:       @TEXTFONT@
-Ddd*variableWidthFont: @STANDARDFONT@
+ddd*foreground:                   @STANDARDTEXT@
+ddd*background:                   @BACKGROUND@
+ddd*XmText.background:            @TEXTBGR@
+ddd*XmTextField.background:       @TEXTBGR@
+ddd*GraphEdit.background:         @TEXTBGR@
+ddd*XmList.background:            @TEXTBGR@
+ddd*XmText.foreground:            @TEXTCOLOR@
+ddd*XmTextField.foreground:       @TEXTCOLOR@
+ddd*GraphEdit.foreground:         @TEXTCOLOR@
+ddd*XmList.foreground:            @TEXTCOLOR@
+ddd*topShadowColor:               @LIGHTCOLOR@
+ddd*bottomShadowColor:            @SHADOWCOLOR@
+ddd*defaultFont:                  @TEXTFONT@
+ddd*variableWidthFont:            @STANDARDFONT@
+ddd*graph_edit.background:        @BACKGROUND@
+ddd*graph_edit.foreground:        @STANDARDTEXT@
+ddd*graph_edit.gridColor:         @SHADOWCOLOR@
+ddd*graph_edit.topShadowColor:    @LIGHTCOLOR@
+ddd*graph_edit.bottomShadowColor: @SHADOWCOLOR@
 
 ! XTerm
 
@@ -494,3 +536,10 @@ rxvt.foreground: @TEXTCOLOR@
 ! xfig
 xfig*canvasbackground: white
 xfig*canvasforeground: black
+
+! gnuplot
+gnuplot*background:  @TEXTBGR@
+gnuplot*textColor:   @TEXTCOLOR@
+gnuplot*borderColor: @TEXTCOLOR@
+gnuplot*axisColor:   @TEXTCOLOR@
+
