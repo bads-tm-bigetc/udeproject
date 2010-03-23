@@ -21,7 +21,7 @@ AC_CHECK_HEADERS([fcntl.h strings.h unistd.h time.h locale.h])
 AC_FUNC_FORK
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([memset strchr strstr uname popen])
+AC_CHECK_FUNCS([memset strchr strstr uname popen nanosleep putenv])
 AC_TYPE_PID_T
 
 AC_ARG_ENABLE([backingstore],
