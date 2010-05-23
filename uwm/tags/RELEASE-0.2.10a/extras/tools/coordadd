@@ -1,0 +1,26 @@
+#!/bin/sh
+
+if [ $# -ne 3 ] ; then
+  echo "usage: $0 <filename> <x_offset> <y_offset>"
+  echo "adds uwm hex icon coordinates (relative to hex menu center) to xpm files"
+  exit 1
+fi
+
+sed "$(printf '
+/static[[:space:]]\\+char/{
+  :l
+  s/\\([[:space:]]\\+XPMEXT[[:space:]]*\\)\\?"[[:space:]]*,/ XPMEXT",/
+  t q
+  N
+  b l
+  :q
+}
+s/"[^"]*XPMEXT[[:space:]]\\+ude_hex_coords[^"]*"[[:space:]]*,//
+/\\([[:space:]]*"XPMENDEXT"\\)\\?}[[:space:]]*;[[:space:]]*$/{
+  s//,/
+  a\\
+"XPMEXT ude_hex_coords %d %d",\\
+"XPMENDEXT"};
+}
+/^[[:space:],]*$/d
+' $2 $3)" < $1 > $1.uwm
