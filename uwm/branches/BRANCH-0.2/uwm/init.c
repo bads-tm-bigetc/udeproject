@@ -356,151 +356,148 @@ ReadMenuFile (FILE *mf)
   Node *n;
   short useTitle = (TheScreen.desktop.flags & UDESubMenuTitles);
   
-  while (EOF != fscanf (mf, "%s", s))
-    {
-      if((s[0] == '#')||(s[0] == '%'))
-	{
-	  while(s[0]!='\n')
-	    if(EOF==fscanf(mf,"%c",s))
-	      break;
-	}
-      else
-	for (a=0; a<MENUKEYS; a++)
-	  if(!strncmp (s, menukeys[a], strlen(menukeys[a])))
-	    {
-	      switch(a)
-		{
-		case SUBMENU:
-		  NodeInsert(Stack,men);
-		  if(!(t=ReadQuoted(mf)))
-		    {
-		      fprintf(TheScreen.errout,"UWM: error in Menu-file -- ignored");
-		      break;
-		    }
+  while (EOF != fscanf (mf, "%s", s)) {
+    if((s[0] == '#')||(s[0] == '%')) {
+      while(s[0]!='\n') {
+        if(EOF==fscanf(mf,"%c",s)) {
+          break;
+        }
+      }
+    } else {
+      for (a=0; a<MENUKEYS; a++) {
+        if(!strncmp (s, menukeys[a], strlen(menukeys[a]))) {
+          switch(a) {
+            case SUBMENU:
+                NodeInsert(Stack,men);
+                if(!(t=ReadQuoted(mf))) {
+                  fprintf(TheScreen.errout,
+                          "UWM: error in Menu-file -- ignored");
+                  break;
+                }
 
-		  n=NULL;
-		  while((n=NodeNext(men->Items,n)))
-		    if(!strcmp(t,((MenuItem *)(n->data))->name))
-		      break;
-		  
-		  if(n && (((MenuItem *)(n->data))->type==I_SUBMENU))
-		    {
-		      men=((MenuItem *)(n->data))->data;
-		    }
-		  else
-		    {
-		      if(!(men=MenuCreate(useTitle ? t : NULL)))
-			SeeYa(1,"FATAL: out of Memory!(Submenu)");
-		      AppendMenuItem(Stack->first->data,t,men,I_SUBMENU);
-		    }
-		  
-		  do
-		    if(EOF==fscanf(mf,"%c",&c))
-		      {
-			fprintf(TheScreen.errout,
-				"UWM: error in Menu-file -- ignored");
-			free(t);
-			break;
-		      }
-		  while(c!='{');
-		  free(t);
-		  break;
-		  
-		case ITEM: 
-		  if(!(u=ReadQuoted(mf)))
-		    {
-		      fprintf(TheScreen.errout,
-			      "UWM: error in Menu-file -- ignored");
-		      break;
-		    }
-		  do
-		    if(EOF==fscanf(mf,"%c",&c))
-		      {
-			fprintf(TheScreen.errout,
-				"UWM: error in Menu-file -- ignored");
-			free(u);
-			break;
-		      }
-		  while(c!=':');
-		  if(!(t=ReadQuoted(mf)))
-		    {
-		      fprintf(TheScreen.errout,
-			      "UWM: error in Menu-file -- ignored");
-		      free(u);
-		      break;
-		    }
-		  
-		  n=NULL;
-		  while((n=NodeNext(men->Items,n)))
-		    if(!strcmp(u,((MenuItem *)(n->data))->name))
-		      break;
+                n=NULL;
+                while((n=NodeNext(men->Items,n))) {
+                  if((((MenuItem *)(n->data))->type==I_SUBMENU)
+                     && (!strcmp(t,((MenuItem *)(n->data))->name))) {
+                    break;
+                  }
+                }
+                if(n) {
+                  men=((MenuItem *)(n->data))->data;
+                } else {
+                  if(!(men=MenuCreate(useTitle ? t : NULL))) {
+                    SeeYa(1,"FATAL: out of Memory!(Submenu)");
+                  }
+                  AppendMenuItem(Stack->first->data,t,men,I_SUBMENU);
+                }
 
-		  if(!(n && (((MenuItem *)(n->data))->type==I_SELECT)))
-		    {
-		      app=MyCalloc(sizeof(AppStruct),1);
-		      app->command=t;
-		      AppendMenuItem(men,u,app,I_SELECT);
-		    }
-		  free(u);
-		  break;
-		  
-		case LINE:
-		  if((n=NodePrev(men->Items,NULL))
-		     && (((MenuItem *)(n->data))->type != I_LINE))
-		    AppendMenuItem(men,NULL,NULL,I_LINE);
-		  break;  /* only one line at a time */
-		  
-		case PAREN_CLOSE:   /* } end of submenu */
-		  if(Stack->first)
-		    {
-		      men=Stack->first->data;
-		      NodeDelete(Stack,Stack->first);
-		    }
-		  else
-		    fprintf(TheScreen.errout,
-			    "UWM: error in Menu-file -- ignored.\n");
-		  break;
-		  
-		case FILE_KEY:
-		case PIPE:
-		  if(!(t=ReadQuoted(mf)))
-		    {
-		      fprintf(TheScreen.errout,
-			      "UWM: error in Menu-file -- ignored");
-		      break;
-		    }
-		  strncpy(v,t,255);v[255]='\0';
-		  free(t);
-		  if(a == FILE_KEY) DereferenceENV(v);
-		  if(a == FILE_KEY)
-		    {
-		      if(!(nmf=MyOpen(v,TheScreen.cppincpaths)))
-                        fprintf(TheScreen.errout,
-                                "UWM: file not found: %s.\n",v);
-                    }
-		  else
-		    {
+                do {
+                  if(EOF==fscanf(mf,"%c",&c)) {
+                    fprintf(TheScreen.errout,
+                            "UWM: error in Menu-file -- ignored");
+                    free(t);
+                    break;
+                  }
+                } while(c!='{');
+                free(t);
+                break;
+
+            case ITEM: 
+                if(!(u=ReadQuoted(mf))) {
+                  fprintf(TheScreen.errout,
+                          "UWM: error in Menu-file -- ignored");
+                  break;
+                }
+                do {
+                  if(EOF==fscanf(mf,"%c",&c)) {
+                    fprintf(TheScreen.errout,
+                            "UWM: error in Menu-file -- ignored");
+                    free(u);
+                    break;
+                  }
+                } while(c!=':');
+                if(!(t=ReadQuoted(mf))) {
+                    fprintf(TheScreen.errout,
+                            "UWM: error in Menu-file -- ignored");
+                    free(u);
+                    break;
+                }
+
+                n=NULL;
+                while((n=NodeNext(men->Items,n))) {
+                  if((((MenuItem *)(n->data))->type==I_SELECT)
+                     && (!strcmp(u,((MenuItem *)(n->data))->name))) {
+                    break;
+                  }
+                }
+                if(!n) {
+                  app=MyCalloc(sizeof(AppStruct),1);
+                  app->command=t;
+                  AppendMenuItem(men,u,app,I_SELECT);
+                } else {
+                  free(t);
+                }
+                free(u);
+                break;
+                
+             case LINE:
+                if((n=NodePrev(men->Items,NULL))
+                   && (((MenuItem *)(n->data))->type != I_LINE)) {
+                  AppendMenuItem(men,NULL,NULL,I_LINE);
+                }
+                break;  /* only one line at a time */
+                
+             case PAREN_CLOSE:   /*  end of submenu */
+                if(Stack->first) {
+                  men=Stack->first->data;
+                  NodeDelete(Stack,Stack->first);
+                } else {
+                  fprintf(TheScreen.errout,
+                          "UWM: error in Menu-file -- ignored.\n");
+                }
+                break;
+                
+             case FILE_KEY:
+             case PIPE:
+                if(!(t=ReadQuoted(mf))) {
+                  fprintf(TheScreen.errout,
+                          "UWM: error in Menu-file -- ignored");
+                  break;
+                }
+                strncpy(v,t,255);v[255]='\0';
+                free(t);
+                if(a == FILE_KEY) DereferenceENV(v);
+                if(a == FILE_KEY) {
+                  if(!(nmf=MyOpen(v,TheScreen.cppincpaths)))
+                    fprintf(TheScreen.errout,
+                            "UWM: file not found: %s.\n",v);
+                } else {
 #ifdef HAVE_POPEN
-		      if(!(nmf=popen(v,"r")))
-			fprintf(TheScreen.errout,
-				"UWM: couldn't open pipe process: %s\n",t);
+                  if(!(nmf=popen(v,"r"))) {
+                    fprintf(TheScreen.errout,
+                            "UWM: couldn't open pipe process: %s\n",t);
+                  }
 #else
-		      fprintf(TheScreen.errout,
-			      "UWM: PIPE not supported on your system\n");
+                  fprintf(TheScreen.errout,
+                            "UWM: PIPE not supported on your system\n");
 #endif
-		    }
-		  if(nmf)
-		    {
-		      ReadMenuFile(nmf);
-		      if(a==4) fclose(nmf);
+                  }
+                if(nmf) {
+                  ReadMenuFile(nmf);
+                  if(a==4) {
+                    fclose(nmf);
 #ifdef HAVE_POPEN
-		      else pclose(nmf);
+                  } else {
+                     pclose(nmf);
 #endif
-		    }
-		  break;
-		}
-	    }
+                  }
+                }
+                break;
+          }
+        }
+      }
     }
+  }
 }
 
 void CreateAppsMenu(char *filename)
@@ -845,482 +842,482 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
   while(fgets (s, 255, uwmrc))
     {
       if (*s && (s[strlen (s) - 1] == '\n'))
-	s[strlen(s)-1]= '\0';
+        s[strlen(s)-1]= '\0';
       if ((s[0] != '#')||(s[0] != '%'))
-	for (a=0; a < KEYWORDS; a++)
-	  if(!strncmp(s, Keywords[a], strlen (Keywords[a])))
-	    {
-	      p= strchr(s, '=');
-	      if(p)
-		{
-		  p++;
-		  if(strlen (p))
-		    switch(a)
-		      {
-		      case BorderWidth:
-			TheScreen.BorderWidth1=atoi(p);
-			break;
-		      case TitleHeight:
-			TheScreen.TitleHeight=atoi(p);
-			break;
-		      case ScreenColor:
-			if(ParseColor (p, &r, &g, &b))
-			  {
-			    fprintf(TheScreen.errout,
-				    _("UWM: error in config-file. Ignored.\n"));
-			    break;
-			  }
-			FreeColor(TheScreen.Background
+        for (a=0; a < KEYWORDS; a++)
+          if(!strncmp(s, Keywords[a], strlen (Keywords[a])))
+            {
+              p= strchr(s, '=');
+              if(p)
+                {
+                  p++;
+                  if(strlen (p))
+                    switch(a)
+                      {
+                      case BorderWidth:
+                        TheScreen.BorderWidth1=atoi(p);
+                        break;
+                      case TitleHeight:
+                        TheScreen.TitleHeight=atoi(p);
+                        break;
+                      case ScreenColor:
+                        if(ParseColor (p, &r, &g, &b))
+                          {
+                            fprintf(TheScreen.errout,
+                                    _("UWM: error in config-file. Ignored.\n"));
+                            break;
+                          }
+                        FreeColor(TheScreen.Background
                                   [TheScreen.desktop.ActiveWorkSpace]);
-			TheScreen.SetBackground[TheScreen.desktop.
+                        TheScreen.SetBackground[TheScreen.desktop.
                                                 ActiveWorkSpace] = 1;
-			TheScreen.Background[TheScreen.desktop.ActiveWorkSpace]
+                        TheScreen.Background[TheScreen.desktop.ActiveWorkSpace]
                                             = AllocColor(r, g, b);
-			break;
-		      case ScreenPixmap:
-			DereferenceENV(p);
-			p=RLSpace(p);
-			FreeXPMBackPixmap(TheScreen.desktop.ActiveWorkSpace);
-			if(!LoadPic(p, &TheScreen.BackPixmap[TheScreen.desktop.\
+                        break;
+                      case ScreenPixmap:
+                        DereferenceENV(p);
+                        p=RLSpace(p);
+                        FreeXPMBackPixmap(TheScreen.desktop.ActiveWorkSpace);
+                        if(!LoadPic(p, &TheScreen.BackPixmap[TheScreen.desktop.\
                                     ActiveWorkSpace], &TheScreen.\
-				    BackPixmapAttributes[TheScreen.desktop.\
-				    ActiveWorkSpace])){
-			  fprintf(TheScreen.errout,\
-				 "UWM: Background could not be loaded: %s\n",p);
-			  TheScreen.BackPixmap[TheScreen.desktop.\
+                                    BackPixmapAttributes[TheScreen.desktop.\
+                                    ActiveWorkSpace])){
+                          fprintf(TheScreen.errout,\
+                                 "UWM: Background could not be loaded: %s\n",p);
+                          TheScreen.BackPixmap[TheScreen.desktop.\
                                                ActiveWorkSpace]=None;
-			}
-			break;
-		      case InactiveWin:
-			if(ParseColor(p,&r,&g,&b)) {
-			  fprintf(TheScreen.errout,\
-				  _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			FreeColor(TheScreen.InactiveBorder[TheScreen.desktop.\
-							  ActiveWorkSpace]);
-			FreeColor(TheScreen.InactiveLight[TheScreen.desktop.\
-							 ActiveWorkSpace]);
-			FreeColor(TheScreen.InactiveShadow[TheScreen.desktop.\
-							  ActiveWorkSpace]);
-			AllocColors(r,g,b,
-				    &TheScreen.InactiveBorder[TheScreen.\
+                        }
+                        break;
+                      case InactiveWin:
+                        if(ParseColor(p,&r,&g,&b)) {
+                          fprintf(TheScreen.errout,\
+                                  _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        FreeColor(TheScreen.InactiveBorder[TheScreen.desktop.\
+                                                          ActiveWorkSpace]);
+                        FreeColor(TheScreen.InactiveLight[TheScreen.desktop.\
+                                                         ActiveWorkSpace]);
+                        FreeColor(TheScreen.InactiveShadow[TheScreen.desktop.\
+                                                          ActiveWorkSpace]);
+                        AllocColors(r,g,b,
+                                    &TheScreen.InactiveBorder[TheScreen.\
                                     desktop.ActiveWorkSpace],\
-				    &TheScreen.InactiveLight[TheScreen.\
+                                    &TheScreen.InactiveLight[TheScreen.\
                                     desktop.ActiveWorkSpace],\
-				    &TheScreen.InactiveShadow[TheScreen.\
+                                    &TheScreen.InactiveShadow[TheScreen.\
                                     desktop.ActiveWorkSpace]);
-			break;
-		      case ActiveWin:
-			if(ParseColor(p,&r,&g,&b)) {
-			  fprintf(TheScreen.errout,\
-				  _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			FreeColor(TheScreen.ActiveBorder[TheScreen.desktop.\
+                        break;
+                      case ActiveWin:
+                        if(ParseColor(p,&r,&g,&b)) {
+                          fprintf(TheScreen.errout,\
+                                  _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        FreeColor(TheScreen.ActiveBorder[TheScreen.desktop.\
                                   ActiveWorkSpace]);
-			FreeColor(TheScreen.ActiveLight[TheScreen.desktop.\
+                        FreeColor(TheScreen.ActiveLight[TheScreen.desktop.\
                                   ActiveWorkSpace]);
-			FreeColor(TheScreen.ActiveShadow[TheScreen.desktop.\
+                        FreeColor(TheScreen.ActiveShadow[TheScreen.desktop.\
                                   ActiveWorkSpace]);
-			AllocColors(r,g,b,
-				    &TheScreen.ActiveBorder[TheScreen.desktop.\
+                        AllocColors(r,g,b,
+                                    &TheScreen.ActiveBorder[TheScreen.desktop.\
                                     ActiveWorkSpace],\
-				    &TheScreen.ActiveLight[TheScreen.desktop.\
+                                    &TheScreen.ActiveLight[TheScreen.desktop.\
                                     ActiveWorkSpace],\
-				    &TheScreen.ActiveShadow[TheScreen.desktop.\
+                                    &TheScreen.ActiveShadow[TheScreen.desktop.\
                                     ActiveWorkSpace]);
-			break;
-		      case MenuFont:
-			{ XFontStruct *Font;
-			p=RLSpace(p);
-			if((Font=XLoadQueryFont(disp,p))){
-			  XFreeFont(disp,TheScreen.MenuFont);
+                        break;
+                      case MenuFont:
+                        { XFontStruct *Font;
+                        p=RLSpace(p);
+                        if((Font=XLoadQueryFont(disp,p))){
+                          XFreeFont(disp,TheScreen.MenuFont);
                           strncpy(TheScreen.desktop.StandardFont,p,256);
                           TheScreen.desktop.StandardFont[255]=0;
-			  TheScreen.MenuFont=Font;
-			}
-			}
-			break;
-		      case BackColor:
-			if(ParseColor(p,&r,&g,&b)) {
-			  fprintf(TheScreen.errout,\
-				  _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			FreeColor(TheScreen.Colors[TheScreen.desktop.\
+                          TheScreen.MenuFont=Font;
+                        }
+                        }
+                        break;
+                      case BackColor:
+                        if(ParseColor(p,&r,&g,&b)) {
+                          fprintf(TheScreen.errout,\
+                                  _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        FreeColor(TheScreen.Colors[TheScreen.desktop.\
                                   ActiveWorkSpace][UDE_Back].pixel);
-			FreeColor(TheScreen.Colors[TheScreen.desktop.\
+                        FreeColor(TheScreen.Colors[TheScreen.desktop.\
                                   ActiveWorkSpace][UDE_Light].pixel);
-			FreeColor(TheScreen.Colors[TheScreen.desktop.\
+                        FreeColor(TheScreen.Colors[TheScreen.desktop.\
                                   ActiveWorkSpace][UDE_Shadow].pixel);
-			AllocColors(r,g,b,\
-				    &TheScreen.Colors[TheScreen.desktop.\
+                        AllocColors(r,g,b,\
+                                    &TheScreen.Colors[TheScreen.desktop.\
                                     ActiveWorkSpace][UDE_Back],\
-				    &TheScreen.Colors[TheScreen.desktop.\
+                                    &TheScreen.Colors[TheScreen.desktop.\
                                     ActiveWorkSpace][UDE_Light],\
-				    &TheScreen.Colors[TheScreen.desktop.\
+                                    &TheScreen.Colors[TheScreen.desktop.\
                                     ActiveWorkSpace][UDE_Shadow]);
-			break;
-		      case FontColor:
-			if(ParseColor(p,&r,&g,&b)) {
-			  fprintf(TheScreen.errout,\
-				  _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			FreeColor(TheScreen.Colors[TheScreen.desktop.\
+                        break;
+                      case FontColor:
+                        if(ParseColor(p,&r,&g,&b)) {
+                          fprintf(TheScreen.errout,\
+                                  _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        FreeColor(TheScreen.Colors[TheScreen.desktop.\
                                   ActiveWorkSpace][UDE_StandardText].pixel);
-			AllocXColor(r,g,b,&TheScreen.Colors[TheScreen.desktop.
+                        AllocXColor(r,g,b,&TheScreen.Colors[TheScreen.desktop.
                                     ActiveWorkSpace][UDE_StandardText]);
-			break;
-		      case MenuFile:
-			p=RLSpace(p);
-			strncpy(MenuFileName,p,255);
-			break;
-		      case StartScript:
-			if(InitS.StartScript[0]!='\n'){
-			  p=RLSpace(p);
-			  strncpy(InitS.StartScript,p,255);
-			  DereferenceENV(InitS.StartScript);
-			}
-			break;
-		      case RubberMove:
-			InitS.RubberMove=atoi(p);
-			break;
-		      case MenuSize:
-			if(GetTriple(p,&InitS.MenuBorderWidth,\
+                        break;
+                      case MenuFile:
+                        p=RLSpace(p);
+                        strncpy(MenuFileName,p,255);
+                        break;
+                      case StartScript:
+                        if(InitS.StartScript[0]!='\n'){
+                          p=RLSpace(p);
+                          strncpy(InitS.StartScript,p,255);
+                          DereferenceENV(InitS.StartScript);
+                        }
+                        break;
+                      case RubberMove:
+                        InitS.RubberMove=atoi(p);
+                        break;
+                      case MenuSize:
+                        if(GetTriple(p,&InitS.MenuBorderWidth,\
                                      &InitS.MenuXOffset,&InitS.MenuYOffset))
                            fprintf(TheScreen.errout,\
-				   _("UWM: error in config-file. Ignored.\n"));
-			break;
-		      case NarrowBorderWidth:
-			TheScreen.BorderWidth2=atoi(p);
-			break;
-		      case UWMMenuButton:
-			b=atoi(p);  /* never trust a user to death 
-				       (i.e. segmentation fault) */
-			if((b<4)&&(b>0)) InitS.menuType[b-1] = 'U';
-			break;
-		      case DeiconifyButton:
-			b=atoi(p);
-			if((b<4)&&(b>0)) InitS.menuType[b-1] = 'D';
-			break;
-		      case AppMenuButton:
-			b=atoi(p);
-			if((b<4)&&(b>0)) InitS.menuType[b-1] = 'A';
-			break;
+                                   _("UWM: error in config-file. Ignored.\n"));
+                        break;
+                      case NarrowBorderWidth:
+                        TheScreen.BorderWidth2=atoi(p);
+                        break;
+                      case UWMMenuButton:
+                        b=atoi(p);  /* never trust a user to death 
+                                       (i.e. segmentation fault) */
+                        if((b<4)&&(b>0)) InitS.menuType[b-1] = 'U';
+                        break;
+                      case DeiconifyButton:
+                        b=atoi(p);
+                        if((b<4)&&(b>0)) InitS.menuType[b-1] = 'D';
+                        break;
+                      case AppMenuButton:
+                        b=atoi(p);
+                        if((b<4)&&(b>0)) InitS.menuType[b-1] = 'A';
+                        break;
                      case SubMenuTitles:
                        TheScreen.desktop.flags = (atoi(p)!=0) 
                                    ? TheScreen.desktop.flags|UDESubMenuTitles
                                    : TheScreen.desktop.flags&~UDESubMenuTitles;
                         break;
-		      case TransientMenues:
-			TheScreen.desktop.flags = (atoi(p)!=0) 
+                      case TransientMenues:
+                        TheScreen.desktop.flags = (atoi(p)!=0) 
                                    ? TheScreen.desktop.flags|UDETransientMenus
                                    : TheScreen.desktop.flags&~UDETransientMenus;
-			break;
-		      case WinMenuButton:
-			b=atoi(p);
-			if((b<4)&&(b>0))
-			  InitS.BorderButtons[b-1]=InitS.WMMenuButtons[b-1]='M';
-			if(!(p=strchr(p,';'))){
-			  b=b%3;
-			  InitS.WMMenuButtons[b] = 'Z';
-			  b=(b+1)%3;
-			  InitS.WMMenuButtons[b] = 'X';
-			  fprintf(TheScreen.errout,"You're still using old WinMenuButton-format in uwmrc - please update\n");
-			  break;
-			}
-			p++;
-			b=atoi(p);
-			if((b<4)&&(b>0)) InitS.WMMenuButtons[b-1] = 'Z';
-			if(!(p=strchr(p,';'))){
-			  fprintf(TheScreen.errout,\
-				   _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			p++;
-			b=atoi(p);
-			if((b<4)&&(b>0)) InitS.WMMenuButtons[b-1] = 'X';
-			break;
-			break;
-		      case DragButtons:
-			b=atoi(p);
-			if((b<4)&&(b>0))
-			  InitS.BorderButtons[b-1]=InitS.DragButtons[b-1]='D';
-			if(!(p=strchr(p,';'))){
-			  fprintf(TheScreen.errout,\
-				   _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			p++;
-			b=atoi(p);
-			if((b<4)&&(b>0)) InitS.DragButtons[b-1] = 'R';
-			if(!(p=strchr(p,';'))){
-			  fprintf(TheScreen.errout,\
-				   _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			p++;
-			b=atoi(p);
-			if((b<4)&&(b>0)) InitS.DragButtons[b-1] = 'L';
-			break;
-		      case ResizeButtons:
-			b=atoi(p);
-			if((b<4)&&(b>0))
-			  InitS.BorderButtons[b-1]=InitS.ResizeButtons[b-1]='R';
-			if(!(p=strchr(p,';'))){
-			  fprintf(TheScreen.errout,\
-				   _("UWM: error in config-file. Ignored.\n"));
-                     break;
-			}
-			p++;
-			b=atoi(p);
-			if((b<4)&&(b>0)) InitS.ResizeButtons[b-1] = 'A';
-			if(!(p=strchr(p,';'))){
-			  fprintf(TheScreen.errout,\
-				   _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			p++;
-			b=atoi(p);
-			if((b<4)&&(b>0)) InitS.ResizeButtons[b-1] = 'U';
-			break;
-		      case WorkSpaces:
-			if((b=atoi(p))>0)
-			  AllocWSS(b);
-			break;
-		      case WorkSpaceName:
-			p=RLSpace(p);
-			strncpy(TheScreen.WorkSpace[TheScreen.desktop.\
-                                ActiveWorkSpace],p,31);
-			break;
-		      case WorkSpaceNr:
-			b=atoi(p);
-			if(b>=TheScreen.desktop.WorkSpaces)
-                           b=TheScreen.desktop.WorkSpaces-1;
-			TheScreen.desktop.ActiveWorkSpace=b;
-			break;
-		      case PlacementStrategy:
-			InitS.PlacementStrategy=atoi(p);
-			break;
-		      case PlacementThreshold:
-			InitS.PlacementThreshold=atol(p);
-			break;
-		      case ScreenCommand:
-			p=RLSpace(p);
-			TheScreen.BackCommand[TheScreen.desktop.ActiveWorkSpace]
-                                           = MyCalloc(1,strlen(p)+sizeof(char));
-			strcpy(TheScreen.BackCommand\
-                                         [TheScreen.desktop.ActiveWorkSpace],p);
-			fprintf(stderr,"read %d as %s\n",\
-                                TheScreen.desktop.ActiveWorkSpace,p);
-			break;
-		      case ReadFrom:
-			DereferenceENV(p);
-			p=RLSpace(p);
-			if(!(secuwmrc=MyOpen(p,TheScreen.cppincpaths))){
-			  fprintf(TheScreen.errout,\
-                                  "UWM: file not found: %s.\n",p);
-			  break;
-			}
-			if(secuwmrc){
-			  ReadConfigFile(secuwmrc,MenuFileName);
-			  fclose(secuwmrc);
+                        break;
+                      case WinMenuButton:
+                        b=atoi(p);
+                        if((b<4)&&(b>0))
+                          InitS.BorderButtons[b-1]=InitS.WMMenuButtons[b-1]='M';
+                        if(!(p=strchr(p,';'))){
+                          b=b%3;
+                          InitS.WMMenuButtons[b] = 'Z';
+                          b=(b+1)%3;
+                          InitS.WMMenuButtons[b] = 'X';
+                          fprintf(TheScreen.errout,"You're still using old WinMenuButton-format in uwmrc - please update\n");
+                          break;
                         }
-			break;     
-		      case BevelFactor:
-			TheScreen.FrameBevelFactor=atof(p);
-			if(TheScreen.FrameBevelFactor==0)
-			  TheScreen.FrameBevelFactor=1;   /* avoid 0div. */
-			break;
-		      case FrameBevelWidth:
-			TheScreen.FrameBevelWidth=atoi(p);
-			break;
-		      case OpaqueMoveSize:
-			InitS.OpaqueMoveSize=atol(p);
-			break;
-		      case TitleFont:
-			{ XFontStruct *Font;
-			p=RLSpace(p);
-			if((Font=XLoadQueryFont(disp,p))){
-			  XFreeFont(disp,TheScreen.TitleFont);
-			  TheScreen.TitleFont=Font;
-			}
-			}
-			break;
-		      case ActiveTitle:
-			if(ParseColor(p,&r,&g,&b)) {
-			  fprintf(TheScreen.errout,\
-				  _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			FreeColor(TheScreen.ActiveTitleFont\
-				  [TheScreen.desktop.ActiveWorkSpace]);
-			TheScreen.ActiveTitleFont[TheScreen.desktop.\
+                        p++;
+                        b=atoi(p);
+                        if((b<4)&&(b>0)) InitS.WMMenuButtons[b-1] = 'Z';
+                        if(!(p=strchr(p,';'))){
+                          fprintf(TheScreen.errout,\
+                                   _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        p++;
+                        b=atoi(p);
+                        if((b<4)&&(b>0)) InitS.WMMenuButtons[b-1] = 'X';
+                        break;
+                        break;
+                      case DragButtons:
+                        b=atoi(p);
+                        if((b<4)&&(b>0))
+                          InitS.BorderButtons[b-1]=InitS.DragButtons[b-1]='D';
+                        if(!(p=strchr(p,';'))){
+                          fprintf(TheScreen.errout,\
+                                   _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        p++;
+                        b=atoi(p);
+                        if((b<4)&&(b>0)) InitS.DragButtons[b-1] = 'R';
+                        if(!(p=strchr(p,';'))){
+                          fprintf(TheScreen.errout,\
+                                   _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        p++;
+                        b=atoi(p);
+                        if((b<4)&&(b>0)) InitS.DragButtons[b-1] = 'L';
+                        break;
+                      case ResizeButtons:
+                        b=atoi(p);
+                        if((b<4)&&(b>0))
+                          InitS.BorderButtons[b-1]=InitS.ResizeButtons[b-1]='R';
+                        if(!(p=strchr(p,';'))){
+                          fprintf(TheScreen.errout,\
+                                   _("UWM: error in config-file. Ignored.\n"));
+                     break;
+                        }
+                        p++;
+                        b=atoi(p);
+                        if((b<4)&&(b>0)) InitS.ResizeButtons[b-1] = 'A';
+                        if(!(p=strchr(p,';'))){
+                          fprintf(TheScreen.errout,\
+                                   _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        p++;
+                        b=atoi(p);
+                        if((b<4)&&(b>0)) InitS.ResizeButtons[b-1] = 'U';
+                        break;
+                      case WorkSpaces:
+                        if((b=atoi(p))>0)
+                          AllocWSS(b);
+                        break;
+                      case WorkSpaceName:
+                        p=RLSpace(p);
+                        strncpy(TheScreen.WorkSpace[TheScreen.desktop.\
+                                ActiveWorkSpace],p,31);
+                        break;
+                      case WorkSpaceNr:
+                        b=atoi(p);
+                        if(b>=TheScreen.desktop.WorkSpaces)
+                           b=TheScreen.desktop.WorkSpaces-1;
+                        TheScreen.desktop.ActiveWorkSpace=b;
+                        break;
+                      case PlacementStrategy:
+                        InitS.PlacementStrategy=atoi(p);
+                        break;
+                      case PlacementThreshold:
+                        InitS.PlacementThreshold=atol(p);
+                        break;
+                      case ScreenCommand:
+                        p=RLSpace(p);
+                        TheScreen.BackCommand[TheScreen.desktop.ActiveWorkSpace]
+                                           = MyCalloc(1,strlen(p)+sizeof(char));
+                        strcpy(TheScreen.BackCommand\
+                                         [TheScreen.desktop.ActiveWorkSpace],p);
+                        fprintf(stderr,"read %d as %s\n",\
+                                TheScreen.desktop.ActiveWorkSpace,p);
+                        break;
+                      case ReadFrom:
+                        DereferenceENV(p);
+                        p=RLSpace(p);
+                        if(!(secuwmrc=MyOpen(p,TheScreen.cppincpaths))){
+                          fprintf(TheScreen.errout,\
+                                  "UWM: file not found: %s.\n",p);
+                          break;
+                        }
+                        if(secuwmrc){
+                          ReadConfigFile(secuwmrc,MenuFileName);
+                          fclose(secuwmrc);
+                        }
+                        break;     
+                      case BevelFactor:
+                        TheScreen.FrameBevelFactor=atof(p);
+                        if(TheScreen.FrameBevelFactor==0)
+                          TheScreen.FrameBevelFactor=1;   /* avoid 0div. */
+                        break;
+                      case FrameBevelWidth:
+                        TheScreen.FrameBevelWidth=atoi(p);
+                        break;
+                      case OpaqueMoveSize:
+                        InitS.OpaqueMoveSize=atol(p);
+                        break;
+                      case TitleFont:
+                        { XFontStruct *Font;
+                        p=RLSpace(p);
+                        if((Font=XLoadQueryFont(disp,p))){
+                          XFreeFont(disp,TheScreen.TitleFont);
+                          TheScreen.TitleFont=Font;
+                        }
+                        }
+                        break;
+                      case ActiveTitle:
+                        if(ParseColor(p,&r,&g,&b)) {
+                          fprintf(TheScreen.errout,\
+                                  _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        FreeColor(TheScreen.ActiveTitleFont\
+                                  [TheScreen.desktop.ActiveWorkSpace]);
+                        TheScreen.ActiveTitleFont[TheScreen.desktop.\
                                   ActiveWorkSpace]=AllocColor(r,g,b);
-			break;
-		      case InactiveTitle:
-			if(ParseColor(p,&r,&g,&b)) {
-			  fprintf(TheScreen.errout,\
-				  _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			FreeColor(TheScreen.InactiveTitleFont\
-				  [TheScreen.desktop.ActiveWorkSpace]);
-			TheScreen.InactiveTitleFont[TheScreen.desktop.\
+                        break;
+                      case InactiveTitle:
+                        if(ParseColor(p,&r,&g,&b)) {
+                          fprintf(TheScreen.errout,\
+                                  _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        FreeColor(TheScreen.InactiveTitleFont\
+                                  [TheScreen.desktop.ActiveWorkSpace]);
+                        TheScreen.InactiveTitleFont[TheScreen.desktop.\
                                     ActiveWorkSpace]=AllocColor(r,g,b);
-			break;
-		      case FrameFlags:
-			InitS.BorderTitleFlags=(char)atoi(p);
-			break;
-		      case OtherWMs:
-			token = strtok(p, ",");
-			while (token) {
-			  InitS.OtherWmCount++;
-			  if(!(InitS.OtherWms=realloc(InitS.OtherWms,\
-			          InitS.OtherWmCount*sizeof(char *))))
-			    SeeYa(1,"FATAL: out of Mem!");
-			  
-			  token=RLSpace(token);
-			  InitS.OtherWms[InitS.OtherWmCount-1] =
+                        break;
+                      case FrameFlags:
+                        InitS.BorderTitleFlags=(char)atoi(p);
+                        break;
+                      case OtherWMs:
+                        token = strtok(p, ",");
+                        while (token) {
+                          InitS.OtherWmCount++;
+                          if(!(InitS.OtherWms=realloc(InitS.OtherWms,\
+                                  InitS.OtherWmCount*sizeof(char *))))
+                            SeeYa(1,"FATAL: out of Mem!");
+                          
+                          token=RLSpace(token);
+                          InitS.OtherWms[InitS.OtherWmCount-1] =
                                          MyCalloc(strlen(token)+1,sizeof(char));
-			  strcpy(InitS.OtherWms[InitS.OtherWmCount-1], token);
-			  token=strtok(NULL, ",");
-			}                                  
-			break;
-		      case MaxWinWidth:
-			TheScreen.MaxWinWidth=atoi(p);
-			break;
-		      case MaxWinHeight:
-			TheScreen.MaxWinHeight=atoi(p);
-			break;
-		      case StopScript:
-			if(InitS.StopScript[0]!='\n'){
-			  p=RLSpace(p);
-			  strncpy(InitS.StopScript,p,255);
-			  DereferenceENV(InitS.StopScript);
-			}
-			break;
+                          strcpy(InitS.OtherWms[InitS.OtherWmCount-1], token);
+                          token=strtok(NULL, ",");
+                        }                                  
+                        break;
+                      case MaxWinWidth:
+                        TheScreen.MaxWinWidth=atoi(p);
+                        break;
+                      case MaxWinHeight:
+                        TheScreen.MaxWinHeight=atoi(p);
+                        break;
+                      case StopScript:
+                        if(InitS.StopScript[0]!='\n'){
+                          p=RLSpace(p);
+                          strncpy(InitS.StopScript,p,255);
+                          DereferenceENV(InitS.StopScript);
+                        }
+                        break;
                       case WarpPointerToNewWinH:
-			InitS.WarpPointerToNewWinH=atoi(p);
-			if((InitS.WarpPointerToNewWinH < -2) ||
-			   (InitS.WarpPointerToNewWinH > 100))
-			  InitS.WarpPointerToNewWinH=-1;
-			break;
+                        InitS.WarpPointerToNewWinH=atoi(p);
+                        if((InitS.WarpPointerToNewWinH < -2) ||
+                           (InitS.WarpPointerToNewWinH > 100))
+                          InitS.WarpPointerToNewWinH=-1;
+                        break;
                       case WarpPointerToNewWinV:
-			InitS.WarpPointerToNewWinV=atoi(p);
-			if((InitS.WarpPointerToNewWinV < -2) ||
-			   (InitS.WarpPointerToNewWinV > 100))
-			  InitS.WarpPointerToNewWinV=-1;
-			break;
+                        InitS.WarpPointerToNewWinV=atoi(p);
+                        if((InitS.WarpPointerToNewWinV < -2) ||
+                           (InitS.WarpPointerToNewWinV > 100))
+                          InitS.WarpPointerToNewWinV=-1;
+                        break;
                       case InactiveText:
-			if(ParseColor(p,&r,&g,&b)) {
-			  fprintf(TheScreen.errout,\
-				  _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			FreeColor(TheScreen.Colors[TheScreen.desktop.\
+                        if(ParseColor(p,&r,&g,&b)) {
+                          fprintf(TheScreen.errout,\
+                                  _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        FreeColor(TheScreen.Colors[TheScreen.desktop.\
                                   ActiveWorkSpace][UDE_InactiveText].pixel);
-			AllocXColor(r,g,b,&TheScreen.Colors[TheScreen.desktop.\
+                        AllocXColor(r,g,b,&TheScreen.Colors[TheScreen.desktop.\
                                     ActiveWorkSpace][UDE_InactiveText]);
-		        break;
+                        break;
                       case HighlightedText:
-			if(ParseColor(p,&r,&g,&b)) {
-			  fprintf(TheScreen.errout,\
-				  _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			FreeColor(TheScreen.Colors[TheScreen.desktop.\
+                        if(ParseColor(p,&r,&g,&b)) {
+                          fprintf(TheScreen.errout,\
+                                  _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        FreeColor(TheScreen.Colors[TheScreen.desktop.\
                                   ActiveWorkSpace][UDE_HighlightedText].pixel);
-			AllocXColor(r,g,b,&TheScreen.Colors[TheScreen.desktop.\
+                        AllocXColor(r,g,b,&TheScreen.Colors[TheScreen.desktop.\
                                     ActiveWorkSpace][UDE_HighlightedText]);
                         break;
                       case HighlightedBgr:
-			if(ParseColor(p,&r,&g,&b)) {
-			  fprintf(TheScreen.errout,\
-				  _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			FreeColor(TheScreen.Colors[TheScreen.desktop.\
+                        if(ParseColor(p,&r,&g,&b)) {
+                          fprintf(TheScreen.errout,\
+                                  _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        FreeColor(TheScreen.Colors[TheScreen.desktop.\
                                   ActiveWorkSpace][UDE_HighlightedBgr].pixel);
-			AllocXColor(r,g,b,&TheScreen.Colors[TheScreen.desktop.\
+                        AllocXColor(r,g,b,&TheScreen.Colors[TheScreen.desktop.\
                                     ActiveWorkSpace][UDE_HighlightedBgr]);
                         break;
                       case TextColor:
-			if(ParseColor(p,&r,&g,&b)) {
-			  fprintf(TheScreen.errout,\
-				  _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			FreeColor(TheScreen.Colors[TheScreen.desktop.\
+                        if(ParseColor(p,&r,&g,&b)) {
+                          fprintf(TheScreen.errout,\
+                                  _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        FreeColor(TheScreen.Colors[TheScreen.desktop.\
                                   ActiveWorkSpace][UDE_TextColor].pixel);
-			AllocXColor(r,g,b,&TheScreen.Colors[TheScreen.desktop.\
+                        AllocXColor(r,g,b,&TheScreen.Colors[TheScreen.desktop.\
                                     ActiveWorkSpace][UDE_TextColor]);
                         break;
                       case TextBgr:
-			if(ParseColor(p,&r,&g,&b)) {
-			  fprintf(TheScreen.errout,\
-				  _("UWM: error in config-file. Ignored.\n"));
-			  break;
-			}
-			FreeColor(TheScreen.Colors[TheScreen.desktop.\
+                        if(ParseColor(p,&r,&g,&b)) {
+                          fprintf(TheScreen.errout,\
+                                  _("UWM: error in config-file. Ignored.\n"));
+                          break;
+                        }
+                        FreeColor(TheScreen.Colors[TheScreen.desktop.\
                                   ActiveWorkSpace][UDE_TextBgr].pixel);
-			AllocXColor(r,g,b,&TheScreen.Colors[TheScreen.desktop.\
+                        AllocXColor(r,g,b,&TheScreen.Colors[TheScreen.desktop.\
                                     ActiveWorkSpace][UDE_TextBgr]);
                         break;
-		      case BevelWidth:
-			TheScreen.desktop.BevelWidth=atoi(p);
-			break;
-		      case ResourceFile:
-			DereferenceENV(p);
-			p=RLSpace(p);
-			ReadResourceDBFromFile(p);
-			break;
-		      case SnapDistance:
-			InitS.SnapDistance=atoi(p);
-			break;
-		      case HexPath:
-			p=RLSpace(p);
-			strncpy(InitS.HexPath,p,255);
-			DereferenceENV(InitS.HexPath);
-			break;
-		      case InactiveFont:
-			{ XFontStruct *Font;
-			p=RLSpace(p);
-			if((Font=XLoadQueryFont(disp,p))){
-			  XFreeFont(disp,Font);
+                      case BevelWidth:
+                        TheScreen.desktop.BevelWidth=atoi(p);
+                        break;
+                      case ResourceFile:
+                        DereferenceENV(p);
+                        p=RLSpace(p);
+                        ReadResourceDBFromFile(p);
+                        break;
+                      case SnapDistance:
+                        InitS.SnapDistance=atoi(p);
+                        break;
+                      case HexPath:
+                        p=RLSpace(p);
+                        strncpy(InitS.HexPath,p,255);
+                        DereferenceENV(InitS.HexPath);
+                        break;
+                      case InactiveFont:
+                        { XFontStruct *Font;
+                        p=RLSpace(p);
+                        if((Font=XLoadQueryFont(disp,p))){
+                          XFreeFont(disp,Font);
                           strncpy(TheScreen.desktop.InactiveFont,p,256);
                           TheScreen.desktop.InactiveFont[255]=0;
-			}
-			}
-			break;
-		      case HighlightFont:
-			{ XFontStruct *Font;
-			p=RLSpace(p);
-			if((Font=XLoadQueryFont(disp,p))){
-			  XFreeFont(disp,Font);
+                        }
+                        }
+                        break;
+                      case HighlightFont:
+                        { XFontStruct *Font;
+                        p=RLSpace(p);
+                        if((Font=XLoadQueryFont(disp,p))){
+                          XFreeFont(disp,Font);
                           strncpy(TheScreen.desktop.HighlightFont,p,256);
                           TheScreen.desktop.HighlightFont[255]=0;
-			}
-			}
-			break;
-		      case TextFont:
-			{ XFontStruct *Font;
-			p=RLSpace(p);
-			if((Font=XLoadQueryFont(disp,p))){
-			  XFreeFont(disp,Font);
+                        }
+                        }
+                        break;
+                      case TextFont:
+                        { XFontStruct *Font;
+                        p=RLSpace(p);
+                        if((Font=XLoadQueryFont(disp,p))){
+                          XFreeFont(disp,Font);
                           strncpy(TheScreen.desktop.TextFont,p,256);
                           TheScreen.desktop.TextFont[255]=0;
-			}
-			}
-			break;
-		      case BehaviourFlags:
-			InitS.BehaviourFlags=atoi(p);
-			break;
-		      }
-		}
-	    }
+                        }
+                        }
+                        break;
+                      case BehaviourFlags:
+                        InitS.BehaviourFlags=atoi(p);
+                        break;
+                      }
+                }
+            }
     }
 }
 
@@ -1520,8 +1517,8 @@ void InitUWM()
       for(a=0;a<10;a++){
         printf(".");fflush(stdout);
         if((b=XCheckWindowEvent(disp, otherwmswin, StructureNotifyMask, &event))
-	   && (event.type == DestroyNotify)
-	   && (event.xdestroywindow.window == otherwmswin)) break;
+           && (event.type == DestroyNotify)
+           && (event.xdestroywindow.window == otherwmswin)) break;
         if(a < 9) sleep(1);
       }
       printf("\n");
@@ -1529,13 +1526,13 @@ void InitUWM()
         printf("UWM: Other WM still active,\n");
         if(InitS.icccmFlags & ICF_HOSTILE) {
           printf("     getting hostile.\n");
-	  XKillClient(disp, otherwmswin);
+          XKillClient(disp, otherwmswin);
         } else {
           SeeYa(1,"start uwm with --Hostile option to try harder to replace the wm\n\
     ATTENTION: replacing another running wm might terminate your X-session,\n\
                only use this option if you really know what you are doing!\n\
 UWM ");
-	}
+        }
       }
     } else {
      SeeYa(1,"start uwm with --TryHard option to try to replace the wm\n\
@@ -1593,9 +1590,9 @@ UWM ");
       
       e= RLSpace(env);
       if('/' != (*(strchr (e, '\0') - sizeof (char))))
-	sprintf(TheScreen.udedir,"%s/",e);
+        sprintf(TheScreen.udedir,"%s/",e);
       else
-	sprintf(TheScreen.udedir,"%s",e);
+        sprintf(TheScreen.udedir,"%s",e);
   }
 
   TheScreen.cppincpaths = malloc(sizeof(char) * (1 + strlen("-I ")
@@ -1667,7 +1664,7 @@ UWM ");
   xgcv.cap_style=CapButt;
   TheScreen.MenuLightGC=XCreateGC(disp, TheScreen.root, GCFunction
                                   | GCForeground | GCCapStyle | GCLineWidth
-				  | GCLineStyle, &xgcv);
+                                  | GCLineStyle, &xgcv);
   xgcv.function=GXcopy;
   xgcv.foreground=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]
                                   [UDE_Shadow].pixel;
@@ -1676,7 +1673,7 @@ UWM ");
   xgcv.cap_style=CapButt;
   TheScreen.MenuShadowGC=XCreateGC(disp, TheScreen.root, GCFunction
                                   | GCForeground | GCCapStyle | GCLineWidth
-				  | GCLineStyle, &xgcv);
+                                  | GCLineStyle, &xgcv);
   xgcv.function=GXcopy;
   xgcv.foreground=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]
                                   [UDE_Back].pixel;
@@ -1685,7 +1682,7 @@ UWM ");
   xgcv.cap_style=CapButt;
   TheScreen.MenuBackGC=XCreateGC(disp, TheScreen.root, GCFunction
                                  | GCForeground | GCCapStyle | GCLineWidth
-				 | GCLineStyle, &xgcv);
+                                 | GCLineStyle, &xgcv);
   xgcv.function=GXcopy;
   xgcv.foreground=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]\
                                              [UDE_StandardText].pixel;
@@ -1710,7 +1707,7 @@ UWM ");
            TheScreen.root, True, GrabModeAsync, GrabModeAsync);
   XGrabButton(disp, AnyButton, UWM_MODIFIERS, TheScreen.root,
               True, ButtonPressMask | ButtonReleaseMask, GrabModeAsync,
-	      GrabModeAsync, None, None);
+              GrabModeAsync, None, None);
 
   /* set up ude stuff (broadcast color and desktop information) */
   TheScreen.UDE_WORKSPACES_PROPERTY = XInternAtom(disp,\
