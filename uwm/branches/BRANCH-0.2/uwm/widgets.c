@@ -164,8 +164,7 @@ void DrawTitle(UltimateContext *uc)
                   ? TheScreen.ActiveTitleFont[TheScreen.desktop.ActiveWorkSpace]
                   : TheScreen.InactiveTitleFont\
                     [TheScreen.desktop.ActiveWorkSpace];
-  xgcv.font=TheScreen.TitleFont->fid;
-  TextGC=XCreateGC(disp,uc->frame,GCFunction|GCForeground|GCFont,&xgcv);
+  TextGC=XCreateGC(disp,uc->frame,GCFunction|GCForeground,&xgcv);
  
   XClearWindow(disp,uc->title.win);
 
@@ -180,7 +179,7 @@ void DrawTitle(UltimateContext *uc)
     if(InitS.BorderTitleFlags & BT_GROOVE){
       XDrawLine(disp, uc->title.win, LightGC,
                 (InitS.BorderTitleFlags & BT_CENTER_TITLE) ? 2 : 0,
-	        uc->title.height-2, uc->title.width-2, uc->title.height-2);
+                uc->title.height-2, uc->title.width-2, uc->title.height-2);
       XDrawLine(disp, uc->title.win, LightGC, uc->title.width-2, 0,
                 uc->title.width-2, uc->title.height-2);
       XDrawPoint(disp, uc->title.win, LightGC, uc->title.width-1, 0);
@@ -195,9 +194,9 @@ void DrawTitle(UltimateContext *uc)
        (InitS.BorderTitleFlags & BT_LINE)) {
       XDrawLine(disp, uc->title.win, TheScreen.blackcontext,
                 (InitS.BorderTitleFlags & BT_CENTER_TITLE) 
-	        ? 0 : (uc->BorderWidth - i - 1),
+                ? 0 : (uc->BorderWidth - i - 1),
                 uc->title.height - 1, uc->title.width - 1,
-		uc->title.height - 1);
+                uc->title.height - 1);
       XDrawLine(disp, uc->title.win, TheScreen.blackcontext,
                 uc->title.width - 1,
                 uc->BorderWidth - i - 1 + TheScreen.TitleHeight,
@@ -208,13 +207,17 @@ void DrawTitle(UltimateContext *uc)
                   uc->title.height - 1);
     }
   }
-  if(uc->title.name) XDrawString(disp, uc->title.win, TextGC,
-		           ((uc->flags & SHAPED)
-			    || (InitS.BorderTitleFlags & BT_CENTER_TITLE))
-			   ? 5 : 2, ((uc->flags & SHAPED) ? 3 : 0)
-			   + TheScreen.TitleFont->ascent, uc->title.name,
-			   strlen(uc->title.name));
-                                               
+  if(uc->title.name) {
+    XRectangle r;
+    XwcTextExtents(TheScreen.TitleFont, uc->title.name, wcslen(uc->title.name),
+                   NULL, &r);
+    XwcDrawString(disp, uc->title.win, TheScreen.TitleFont, TextGC,
+                  ((uc->flags & SHAPED)
+                  || (InitS.BorderTitleFlags & BT_CENTER_TITLE))
+                  ? 5 : 2, ((uc->flags & SHAPED) ? 3 : 0) - r.y,
+                  uc->title.name, wcslen(uc->title.name));
+  }
+
   XFreeGC(disp, LightGC);
   XFreeGC(disp, ShadowGC);
   XFreeGC(disp, TextGC);

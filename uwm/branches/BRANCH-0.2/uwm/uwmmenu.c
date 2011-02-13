@@ -94,7 +94,7 @@ void RestartProc3(MenuItem *item)
   char name[256];
 
   printf("closing down uwm: * cleaning up\n");
-  strncpy(name,item->name,255);
+  wcstombs(name, item->name, 255); name[255] = '\0';
   CleanUp(True);
   printf("                  * starting %s\n",name);
   execlp(name,name,NULL);
@@ -131,39 +131,40 @@ void CreateUWMMenu()
   int j;
   short useTitle = (TheScreen.desktop.flags & UDESubMenuTitles);
 
-  really= MenuCreate (_("Really?!"));
+  really= mbMenuCreate (_("Really?!"));
   if(!really)
     SeeYa(1,"FATAL: out of memory!");
-  TheScreen.UWMMenu= MenuCreate (_("UWM Menu"));
+  TheScreen.UWMMenu= mbMenuCreate (_("UWM Menu"));
   if(!TheScreen.UWMMenu)
     SeeYa(1,"FATAL: out of memory!");
 
   /* quit ude */ 
-  AppendMenuItem (really, _("No!"), NULL, I_SELECT);
-  AppendMenuItem (really, _("Yes!"), QuitProc, I_SELECT);
+  mbAppendMenuItem (really, _("No!"), NULL, I_SELECT);
+  mbAppendMenuItem (really, _("Yes!"), QuitProc, I_SELECT);
 
-  AppendMenuItem (TheScreen.UWMMenu, _("Quit UDE"), really, I_SUBMENU);
+  mbAppendMenuItem (TheScreen.UWMMenu, _("Quit UDE"), really, I_SUBMENU);
 
   /* restart */
-  really= MenuCreate(useTitle ? _("Restart UDE") : NULL);
+  really= mbMenuCreate(useTitle ? _("Restart UDE") : NULL);
   if(!really)
     SeeYa(1,"FATAL: out of memory!");
-  AppendMenuItem (really, _("Reexecute StartScript"), RestartProc1, I_SELECT);
-  AppendMenuItem (really, _("No execute StartScript"), RestartProc2, I_SELECT);
+  mbAppendMenuItem(really, _("Reexecute StartScript"), RestartProc1, I_SELECT);
+  mbAppendMenuItem(really, _("No execute StartScript"),
+                   RestartProc2, I_SELECT);
 
-  AppendMenuItem (TheScreen.UWMMenu, _("Restart UDE"), really, I_SUBMENU);
+  mbAppendMenuItem (TheScreen.UWMMenu, _("Restart UDE"), really, I_SUBMENU);
 
   /* submenu restart "Other WM" */
   if(InitS.OtherWmCount)
     {
-      others= MenuCreate(useTitle ? _("Launch another WM") : NULL);
+      others= mbMenuCreate(useTitle ? _("Launch another WM") : NULL);
       if(!others)
 	SeeYa(1,"FATAL: out of memory!");
       for (j = 0; j < InitS.OtherWmCount; j++)
 	{
-	  AppendMenuItem(others, InitS.OtherWms[j], RestartProc3, I_SELECT);
+	  mbAppendMenuItem(others, InitS.OtherWms[j], RestartProc3, I_SELECT);
 	}
-      AppendMenuItem(really, _("Launch another WM"), others, I_SUBMENU);
+      mbAppendMenuItem(really, _("Launch another WM"), others, I_SUBMENU);
     }
 }
 

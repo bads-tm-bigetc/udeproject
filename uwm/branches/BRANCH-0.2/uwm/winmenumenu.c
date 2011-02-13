@@ -69,23 +69,25 @@ void WinMenuMenu(UltimateContext *TheWin,int x, int y)
   MenuItem *item;
   short useTitle = (TheScreen.desktop.flags & UDESubMenuTitles);
 
-  if(!(men = TheWin->title.name ? MenuCreate(TheWin->title.name) : MenuCreate("")))
+  if(!(men = TheWin->title.name ? wcMenuCreate(TheWin->title.name)
+                                : wcMenuCreate(NULL))) {
     SeeYa(1,"FATAL: out of memory!");
+  }
 
   if(TheScreen.desktop.WorkSpaces > 1)
     {
-      AppendMenuItem(men, _("Sticky window"), &sticky,\
-		     (TheWin->WorkSpace==-1) ? I_SWITCH_ON: I_SWITCH_OFF);
+      mbAppendMenuItem(men, _("Sticky window"), &sticky,\
+                     (TheWin->WorkSpace==-1) ? I_SWITCH_ON: I_SWITCH_OFF);
 
-      wsmen = MenuCreate((TheWin->title.name && useTitle)
-                         ? TheWin->title.name : NULL);
+      wsmen = wcMenuCreate((TheWin->title.name && useTitle)
+                           ? TheWin->title.name : NULL);
       if(!wsmen)
-	SeeYa(1,"FATAL: out of memory!");
+        SeeYa(1,"FATAL: out of memory!");
       for (a=0; a<TheScreen.desktop.WorkSpaces; a++)
-	 if (a != TheScreen.desktop.ActiveWorkSpace)
-	   AppendMenuItem (wsmen, TheScreen.WorkSpace[a], &wsprocs[a],
-			   I_SELECT);
-      AppendMenuItem (men, _("Move to WorkSpace"), wsmen, I_SUBMENU);
+         if (a != TheScreen.desktop.ActiveWorkSpace)
+           wcAppendMenuItem (wsmen, TheScreen.WorkSpace[a], &wsprocs[a],
+                           I_SELECT);
+      mbAppendMenuItem (men, _("Move to WorkSpace"), wsmen, I_SUBMENU);
     }
 
 /*  AppendMenuItem(men,TheScreen.Texts.WinMenuMenu.AlwaysOnTop,NULL,I_SELECT);*/

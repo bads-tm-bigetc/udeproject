@@ -7,6 +7,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 
+wchar_t *wcs(char* s);
 void UpdateDesktop();
 void ShowMenu(int menuNumber, int x, int y);
 void BorderButton(int a,UltimateContext *uc,int x,int y,int x_root,int y_root);

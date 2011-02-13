@@ -82,7 +82,7 @@
 #define I_MENU 5
 #define I_REALLY 6
 
-typedef char WSName[32];
+typedef wchar_t WSName[32];
 
 typedef struct
 { int Screen;
@@ -126,12 +126,12 @@ typedef struct
   unsigned long *InactiveBorder, *InactiveLight, *InactiveShadow;
   unsigned long *ActiveBorder, *ActiveLight, *ActiveShadow;
   unsigned long *ActiveTitleFont, *InactiveTitleFont;
-  XFontStruct *TitleFont;
+  XFontSet TitleFont;
   char **BackCommand;
   Pixmap *BackPixmap;
   XpmAttributes *BackPixmapAttributes;
   XContext MenuContext, MenuFrameContext;
-  XFontStruct *MenuFont;
+  XFontSet MenuFont;
   GC MenuTextGC, MenuLightGC, MenuShadowGC, MenuBackGC;
   UDEColors *Colors;
   UDEDesktop desktop;
@@ -179,7 +179,7 @@ typedef struct _UltimateContext
 
   struct {
     int x, y, width, height;
-    char *name, *iconname;
+    wchar_t *name, *iconname;
     Window win;  /* a child of the frame containing the window's title string */
   } title;
 

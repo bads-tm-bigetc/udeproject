@@ -70,7 +70,7 @@ void BroadcastWorkSpacesInfo()
       for(b=0;b<UDE_MAXCOLORS;b++) 
         XQueryColors(disp, TheScreen.colormap,
                      TheScreen.Colors[a], UDE_MAXCOLORS);
-      strncpy(workspace_exchange[a].name, TheScreen.WorkSpace[a], 32);
+      wcsncpy(workspace_exchange[a].name, TheScreen.WorkSpace[a], 32);
       memcpy(workspace_exchange[a].WorkspaceColors, TheScreen.Colors[a],
              sizeof(UDEColors));
     }

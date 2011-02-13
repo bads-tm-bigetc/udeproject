@@ -70,6 +70,17 @@ Cursor pgrabmice[PGRABLEVEL];
 Window pgrabwins[PGRABLEVEL];
 int grabstat=0,pgrabstat=-1;
 
+wchar_t *wcs(char* s)
+{
+  size_t l = mbstowcs(NULL, s, 0);
+  wchar_t *o = calloc(l+1, sizeof(wchar_t));
+  if(o) {
+    mbstowcs(o, s, l+1);
+    return o;
+  } else {
+    SeeYa(1, "FATAL: Out of memory!");
+  }
+}
 
 void RaiseWin(UltimateContext *uc)
 {

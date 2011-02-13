@@ -29,6 +29,7 @@
 #ifndef _UDE_DISPLAY_H
 #define _UDE_DISPLAY_H
 
+#include <wchar.h>
 #include <X11/Xlib.h>
 
 #include "ude-internals.h"
@@ -65,7 +66,7 @@ struct _UDEWin {
 typedef struct _UDEWorkspaceExchange UDEWorkspaceExchange;
 
 struct _UDEWorkspaceExchange {
-  char name[32];
+  wchar_t name[32];
   UDEColors WorkspaceColors;
 };
 

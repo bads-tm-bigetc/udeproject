@@ -127,14 +127,15 @@ void UpdateName(UltimateContext *uc)
   if(!XGetWMName(disp, uc->win, &prop)) {
     uc->title.name = NULL;
   } else {
-    char **stringlist;
+    wchar_t **stringlist;
     int count;
-    if(XTextPropertyToStringList(&prop, &stringlist, &count) && (count > 0)) {
-      uc->title.name = calloc(strlen(stringlist[0]) + 1, sizeof(char));
+    if((XwcTextPropertyToTextList(disp, &prop, &stringlist, &count) >= 0)
+       && (count > 0)) {
+      uc->title.name = calloc(wcslen(stringlist[0]) + 1, sizeof(wchar_t));
       if(uc->title.name) {
-        strcpy(uc->title.name, stringlist[0]);
+        wcscpy(uc->title.name, stringlist[0]);
       }
-      XFreeStringList(stringlist);
+      XwcFreeStringList(stringlist);
     } else {
       uc->title.name = NULL;
     }
@@ -144,27 +145,28 @@ void UpdateName(UltimateContext *uc)
   if(uc->title.win != None){
     if(uc->title.name) {
       int x, y, width, height;
+      XRectangle r;
       x = uc->title.x;
       y = uc->title.y;
       width = uc->title.width;
       height = uc->title.height;
+      XwcTextExtents(TheScreen.TitleFont, uc->title.name,
+                     wcslen(uc->title.name), NULL, &r);
       XResizeWindow(disp, uc->title.win,
-		    uc->title.width = (XTextWidth(TheScreen.TitleFont,
-                    uc->title.name, strlen(uc->title.name))
-		    + (((InitS.BorderTitleFlags & BT_CENTER_TITLE) 
-		        || (uc->flags & SHAPED)) ? 9 : 6)),
-                    uc->title.height = (TheScreen.TitleFont->ascent
-                    + TheScreen.TitleFont->descent 
-		    + ((uc->flags & SHAPED) ? 6 : 3)));
+                    uc->title.width = (r.width
+                    + (((InitS.BorderTitleFlags & BT_CENTER_TITLE)
+                        || (uc->flags & SHAPED)) ? 9 : 6)),
+                    uc->title.height = (r.height
+                    + ((uc->flags & SHAPED) ? 6 : 3)));
       if((InitS.BorderTitleFlags & BT_CENTER_TITLE) || (uc->flags & SHAPED))
         XMoveWindow(disp, uc->title.win,
-	            uc->title.x = ((uc->Attr.width - uc->title.width) / 2),
+                    uc->title.x = ((uc->Attr.width - uc->title.width) / 2),
                     uc->title.y = ((uc->flags & SHAPED) ? 0
-		    : (uc->BorderWidth - TheScreen.FrameBevelWidth - 1) / 2
+                    : (uc->BorderWidth - TheScreen.FrameBevelWidth - 1) / 2
                     + TheScreen.FrameBevelWidth));
       if((!((uc->title.width == width) && (uc->title.height == height)
           && (uc->title.x == x) && (uc->title.y == y))) && (uc->flags & SHAPED))
-	 ShapeFrame(uc);
+         ShapeFrame(uc);
       DrawTitle(uc);
     } else XResizeWindow(disp,uc->title.win,0,0);
   }
@@ -174,7 +176,7 @@ void UpdateName(UltimateContext *uc)
 void UpdateIconName(UltimateContext *uc)
 {
   XTextProperty prop;
-  char **stringlist;
+  wchar_t **stringlist;
   int count;
 
   if(uc->title.iconname) free(uc->title.iconname);
@@ -182,10 +184,11 @@ void UpdateIconName(UltimateContext *uc)
     uc->title.iconname = NULL;
     return;
   }
-  if(XTextPropertyToStringList(&prop, &stringlist, &count) && (count > 0)){
-    uc->title.iconname = calloc(strlen(stringlist[0]) + 1, sizeof(char));
-    if(uc->title.iconname) strcpy(uc->title.iconname, stringlist[0]);
-    XFreeStringList(stringlist);
+  if((XwcTextPropertyToTextList(disp, &prop, &stringlist, &count) >= 0)
+     && (count > 0)){
+    uc->title.iconname = calloc(wcslen(stringlist[0]) + 1, sizeof(wchar_t));
+    if(uc->title.iconname) wcscpy(uc->title.iconname, stringlist[0]);
+    XwcFreeStringList(stringlist);
   } else uc->title.iconname = NULL;
   XFree(prop.value);
 

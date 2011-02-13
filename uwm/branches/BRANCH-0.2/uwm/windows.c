@@ -568,20 +568,22 @@ void DeiconifyMenu(int x, int y)
   Menu *men, **wspaces=NULL, *sticky;
   MenuItem *item;
   short useTitle = (TheScreen.desktop.flags & UDESubMenuTitles);
+  wchar_t *t;
 
-  men=MenuCreate(_("Windows Menu"));
-  if(!men)
+  men=mbMenuCreate(_("Windows Menu"));
+  if(!men) {
     SeeYa(1, "FATAL: out of memory!");
+  }
 
   wspaces=MyCalloc(TheScreen.desktop.WorkSpaces,sizeof(Menu *));
   if(TheScreen.desktop.WorkSpaces>1){
     for(a=0;a<TheScreen.desktop.WorkSpaces;a++){
-      wspaces[a]=MenuCreate(useTitle ? TheScreen.WorkSpace[a] : NULL);
-      AppendMenuItem(men,TheScreen.WorkSpace[a],wspaces[a],I_SUBMENU);
+      wspaces[a]=wcMenuCreate(useTitle ? TheScreen.WorkSpace[a] : NULL);
+      wcAppendMenuItem(men,TheScreen.WorkSpace[a],wspaces[a],I_SUBMENU);
     }
-    AppendMenuItem (men, NULL, NULL, I_LINE);
-    sticky = MenuCreate (useTitle ? _("Sticky Windows") : NULL);
-    AppendMenuItem (men, _("Sticky Windows"), sticky, I_SUBMENU);
+    wcAppendMenuItem (men, NULL, NULL, I_LINE);
+    sticky = mbMenuCreate(useTitle ? _("Sticky Windows") : NULL);
+    mbAppendMenuItem (men, _("Sticky Windows"), sticky, I_SUBMENU);
   } else {
     wspaces[0]=men;
     sticky = men;
@@ -590,18 +592,19 @@ void DeiconifyMenu(int x, int y)
   GrabServer();  /* Make sure no window gets destroyed meanwhile */
 
   ucn=NULL;
+  t = wcs(_(">nameless window<"));
   while((ucn = NodeNext(TheScreen.UltimateList,ucn))){
     UltimateContext *uc;
     uc=ucn->data;
     if((IsNormal(uc)) || (IsIconic(uc))) {
-      AppendMenuItem((uc->WorkSpace == -1) ? sticky : wspaces[uc->WorkSpace],
+      wcAppendMenuItem((uc->WorkSpace == -1) ? sticky : wspaces[uc->WorkSpace],
                      (IsIconic(uc) && uc->title.iconname) ? uc->title.iconname
 		     : (uc->title.name ? uc->title.name 
-		        : (uc->title.iconname ? uc->title.iconname 
-			   : _(">nameless window<"))),
+		        : (uc->title.iconname ? uc->title.iconname : t)),
 		     uc, (IsIconic(uc)) ? I_SWITCH_OFF : I_SWITCH_ON);
     }
   }
+  free(t);
 
   if((item = StartMenu(men, x, y, True, NULL))){
     if(SWITCHTYPE(item->type)){
