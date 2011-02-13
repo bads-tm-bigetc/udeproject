@@ -120,10 +120,27 @@ void Updatera(UltimateContext *uc)
 
 void UpdateName(UltimateContext *uc)
 {
-  char *name;
-  if(!XFetchName(disp, uc->win, &name)) name = NULL;
-  if(uc->title.name) XFree(uc->title.name);
-  uc->title.name = name;
+  XTextProperty prop;
+  if(uc->title.name) {
+    free(uc->title.name);
+  }
+  if(!XGetWMName(disp, uc->win, &prop)) {
+    uc->title.name = NULL;
+  } else {
+    char **stringlist;
+    int count;
+    if(XTextPropertyToStringList(&prop, &stringlist, &count) && (count > 0)) {
+      uc->title.name = calloc(strlen(stringlist[0]) + 1, sizeof(char));
+      if(uc->title.name) {
+        strcpy(uc->title.name, stringlist[0]);
+      }
+      XFreeStringList(stringlist);
+    } else {
+      uc->title.name = NULL;
+    }
+    XFree(prop.value);
+  }
+
   if(uc->title.win != None){
     if(uc->title.name) {
       int x, y, width, height;
