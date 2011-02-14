@@ -385,7 +385,6 @@ ReadMenuFile (FILE *mf)
       for (a=0; a<MENUKEYS; a++) {
         if(!strncmp (s, menukeys[a], strlen(menukeys[a]))) {
           switch(a) {
-            wchar_t *wt;
             case SUBMENU:
                 NodeInsert(Stack,men);
                 if(!(t=ReadQuoted(mf))) {
@@ -395,21 +394,19 @@ ReadMenuFile (FILE *mf)
                 }
 
                 n=NULL;
-                wt = wcs(t);
                 while((n=NodeNext(men->Items,n))) {
                   if((((MenuItem *)(n->data))->type==I_SUBMENU)
-                     && (!wcscmp(wt,((MenuItem *)(n->data))->name))) {
+                     && (!strcmp(t,((MenuItem *)(n->data))->name))) {
                     break;
                   }
                 }
-                free(wt);
                 if(n) {
                   men=((MenuItem *)(n->data))->data;
                 } else {
-                  if(!(men=mbMenuCreate(useTitle ? t : NULL))) {
+                  if(!(men=MenuCreate(useTitle ? t : NULL))) {
                     SeeYa(1,"FATAL: out of Memory!(Submenu)");
                   }
-                  mbAppendMenuItem(Stack->first->data,t,men,I_SUBMENU);
+                  AppendMenuItem(Stack->first->data,t,men,I_SUBMENU);
                 }
 
                 do {
@@ -445,18 +442,16 @@ ReadMenuFile (FILE *mf)
                 }
 
                 n=NULL;
-                wt = wcs(u);
                 while((n=NodeNext(men->Items,n))) {
                   if((((MenuItem *)(n->data))->type==I_SELECT)
-                     && (!wcscmp(wt,((MenuItem *)(n->data))->name))) {
+                     && (!strcmp(u,((MenuItem *)(n->data))->name))) {
                     break;
                   }
                 }
-                free(wt);
                 if(!n) {
                   app=MyCalloc(sizeof(AppStruct),1);
                   app->command=t;
-                  mbAppendMenuItem(men,u,app,I_SELECT);
+                  AppendMenuItem(men,u,app,I_SELECT);
                 } else {
                   free(t);
                 }
@@ -466,7 +461,7 @@ ReadMenuFile (FILE *mf)
              case LINE:
                 if((n=NodePrev(men->Items,NULL))
                    && (((MenuItem *)(n->data))->type != I_LINE)) {
-                  mbAppendMenuItem(men,NULL,NULL,I_LINE);
+                  AppendMenuItem(men,NULL,NULL,I_LINE);
                 }
                 break;  /* only one line at a time */
                 
@@ -532,7 +527,7 @@ void CreateAppsMenu(char *filename)
   if(!Stack)
     SeeYa(1,"FATAL: out of Memory! (menu stack)");
 
-  men=TheScreen.AppsMenu=mbMenuCreate(_("Application Menu"));
+  men=TheScreen.AppsMenu=MenuCreate(_("Application Menu"));
   if(!men)
     SeeYa(1,"FATAL: out of Memory! (ApplicationMenu)");
 
@@ -542,7 +537,7 @@ void CreateAppsMenu(char *filename)
     fprintf(TheScreen.errout,"UWM: menu file not found, using default.\n");
     app=MyCalloc(sizeof(AppStruct),1);
     app->command="xterm -bg tan4 -fg wheat1 -fn 7x14";
-    mbAppendMenuItem(TheScreen.AppsMenu,"xterm",app,I_SELECT);
+    AppendMenuItem(TheScreen.AppsMenu,"xterm",app,I_SELECT);
     return;
   }
 
@@ -734,7 +729,7 @@ void AllocWSS(short wss)
       TheScreen.BackCommand[a]=NULL;
       TheScreen.BackPixmap[a]=None;
       sprintf(ts, "%d", a);
-      mbstowcs(TheScreen.WorkSpace[a], ts, 32);
+      strncpy(TheScreen.WorkSpace[a], ts, 32);
     }
   TheScreen.desktop.WorkSpaces=wss;
 }
@@ -1114,7 +1109,7 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
                         break;
                       case WorkSpaceName:
                         p=RLSpace(p);
-                        mbstowcs(TheScreen.WorkSpace[TheScreen.desktop.\
+                        strncpy(TheScreen.WorkSpace[TheScreen.desktop.\
                                  ActiveWorkSpace],p,31);
                         break;
                       case WorkSpaceNr:

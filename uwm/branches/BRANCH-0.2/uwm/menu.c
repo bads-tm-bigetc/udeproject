@@ -94,20 +94,29 @@ Menu *RootMenu(Menu *men)
   return(men);
 }
 
-Menu *_MenuCreate(wchar_t *name)
+Menu *MenuCreate(char *name)
 {
   Menu *menu;
   XSetWindowAttributes wattr;
+  size_t l;
 
   if(!(menu=malloc(sizeof(Menu)))) return (NULL);
 
-  menu->name = name;
+  if(name) {
+    l = strlen(name);
+    menu->name = MyCalloc(l + 1, sizeof(char));
+    strcpy(menu->name, name);
+  } else {
+    l = 0;
+    menu->name = NULL;
+  }
+
   if(!(menu->Items=NodeListCreate()))
     SeeYa(1,"FATAL: out of memory!");
   menu->font=TheScreen.MenuFont;
   if(menu->name) {
     XRectangle r;
-    XwcTextExtents(menu->font, name, wcslen(name), NULL, &r);
+    XmbTextExtents(menu->font, name, l, NULL, &r);
     menu->width = r.width + 4 * MENUBORDERW + 2*MENUXOFS;
     menu->TitleHeight = r.height + 2 * MENUBORDERW + 2*MENUYOFS;
     menu->TitleAscent = r.y;
@@ -136,25 +145,6 @@ Menu *_MenuCreate(wchar_t *name)
   return(menu);
 }
 
-Menu *mbMenuCreate(char *name) {
-  if(name) {
-    return(_MenuCreate(wcs(name)));
-  } else {
-    return(_MenuCreate(NULL));
-  }
-}
-
-Menu *wcMenuCreate(wchar_t *name) {
-  wchar_t *n;
-  if(name) {
-    n = MyCalloc(wcslen(name)+1, sizeof(wchar_t));
-    wcscpy(n, name);
-  } else {
-    n = NULL;
-  }
-  return(_MenuCreate(n));
-}
-
 void RemoveMenuBottomLines(Menu *men)
 {
   Node *n;
@@ -173,7 +163,7 @@ void RemoveMenuBottomLines(Menu *men)
 }
 
 
-void _AppendMenuItem(Menu *menu,wchar_t *name,void *data,short type)
+void AppendMenuItem(Menu *menu,char *name,void *data,short type)
 {
   MenuItem *item;
   XSetWindowAttributes wattr;
@@ -190,10 +180,11 @@ void _AppendMenuItem(Menu *menu,wchar_t *name,void *data,short type)
     if(name) free(name);
   } else {
     XRectangle r;
-    item->name=name;
+    item->name=MyCalloc(strlen(name)+1,sizeof(char));
+    strcpy(item->name,name);
     item->data=data;
 
-    XwcTextExtents(menu->font, item->name, wcslen(item->name), NULL, &r);
+    XmbTextExtents(menu->font, item->name, strlen(item->name), NULL, &r);
     width = r.width + 4 * MENUBORDERW + 2*MENUXOFS;
     item->height = r.height + 2 * MENUBORDERW + 2 * MENUYOFS;
     item->ascent = r.y;
@@ -234,26 +225,6 @@ void _AppendMenuItem(Menu *menu,wchar_t *name,void *data,short type)
   XResizeWindow(disp,menu->win,menu->width,menu->height);
 }
 
-void wcAppendMenuItem(Menu *menu,wchar_t *name,void *data,short type)
-{
-  wchar_t *n;
-  if(name) {
-    n = MyCalloc(wcslen(name)+1, sizeof(wchar_t));
-    wcscpy(n, name);
-  } else {
-    n = NULL;
-  }
-  _AppendMenuItem(menu, n, data, type);
-}
-void mbAppendMenuItem(Menu *menu,char *name,void *data,short type)
-{
-  if(name) {
-    _AppendMenuItem(menu, wcs(name), data, type);
-  } else {
-    _AppendMenuItem(menu, NULL, data, type);
-  }
-}
-
 
 void DestroyMenu(Menu *menu)
 {
@@ -281,9 +252,9 @@ void DestroyMenu(Menu *menu)
 void DrawItem(MenuItem *item, short deactivate)
 {
   XClearWindow(disp,item->win);
-  XwcDrawString(disp, item->win, item->menu->font, TheScreen.MenuTextGC,
+  XmbDrawString(disp, item->win, item->menu->font, TheScreen.MenuTextGC,
                 MENUXOFS + MENUBORDERW, MENUYOFS + MENUBORDERW - item->ascent,
-                item->name, wcslen(item->name));
+                item->name, strlen(item->name));
   if(item->type==I_SUBMENU) {
     XDrawLine(disp, item->win, TheScreen.MenuTextGC,
               item->menu->width - 4 * MENUBORDERW, item->height / 2,
@@ -332,10 +303,10 @@ void DrawMenuFrame(Menu *menu, int items)
     DrawBevel(menu->win, MENUBORDERW, MENUBORDERW, menu->width-MENUBORDERW-1,
               menu->TitleHeight + MENUBORDERW - 1, MENUBORDERW,
               TheScreen.MenuShadowGC, TheScreen.MenuLightGC);
-    XwcDrawString(disp, menu->win, menu->font, TheScreen.MenuTextGC,
+    XmbDrawString(disp, menu->win, menu->font, TheScreen.MenuTextGC,
                   MENUXOFS + 2 * MENUBORDERW,
                   MENUYOFS + 2 * MENUBORDERW - menu->TitleAscent,
-                  menu->name, wcslen(menu->name));
+                  menu->name, strlen(menu->name));
   }
 
   mi=NULL;

@@ -15,7 +15,7 @@
 #define SWITCHTYPE(A) (((A)>>1)==1)
 
 typedef struct _MenuItem{
-  wchar_t *name;
+  char *name;
   short type;
   void *data;        /* pointer for item-dependent data */
   Window win;
@@ -24,7 +24,7 @@ typedef struct _MenuItem{
 } MenuItem;
 
 typedef struct _Menu{
-  wchar_t *name;
+  char *name;
   NodeList *Items;   /* Data of type MenuItem *  */
   XFontSet font;
   Window win;
@@ -33,10 +33,8 @@ typedef struct _Menu{
   int width,height,TitleHeight,TitleAscent;
 } Menu;
 
-Menu *mbMenuCreate(char *name);
-Menu *wcMenuCreate(wchar_t *name);
-void mbAppendMenuItem(Menu *menu, char *name,void *data,short type);
-void wcAppendMenuItem(Menu *menu, wchar_t *name,void *data,short type);
+Menu *MenuCreate(char *name);
+void AppendMenuItem(Menu *menu, char *name,void *data,short type);
 void RemoveMenuBottomLines(Menu *men);
 MenuItem *StartMenu(Menu *menu,int x,int y,Bool q,void (*prc)(XEvent *event, MenuItem *selected));
 void DestroyMenu(Menu *menu);

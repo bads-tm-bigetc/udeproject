@@ -209,13 +209,13 @@ void DrawTitle(UltimateContext *uc)
   }
   if(uc->title.name) {
     XRectangle r;
-    XwcTextExtents(TheScreen.TitleFont, uc->title.name, wcslen(uc->title.name),
-                   NULL, &r);
-    XwcDrawString(disp, uc->title.win, TheScreen.TitleFont, TextGC,
+    size_t l = strlen(uc->title.name);
+    XmbTextExtents(TheScreen.TitleFont, uc->title.name, l, NULL, &r);
+    XmbDrawString(disp, uc->title.win, TheScreen.TitleFont, TextGC,
                   ((uc->flags & SHAPED)
                   || (InitS.BorderTitleFlags & BT_CENTER_TITLE))
                   ? 5 : 2, ((uc->flags & SHAPED) ? 3 : 0) - r.y,
-                  uc->title.name, wcslen(uc->title.name));
+                  uc->title.name, l);
   }
 
   XFreeGC(disp, LightGC);

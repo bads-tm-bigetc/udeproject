@@ -127,15 +127,15 @@ void UpdateName(UltimateContext *uc)
   if(!XGetWMName(disp, uc->win, &prop)) {
     uc->title.name = NULL;
   } else {
-    wchar_t **stringlist;
+    char **stringlist;
     int count;
-    if((XwcTextPropertyToTextList(disp, &prop, &stringlist, &count) >= 0)
+    if((XmbTextPropertyToTextList(disp, &prop, &stringlist, &count) >= 0)
        && (count > 0)) {
-      uc->title.name = calloc(wcslen(stringlist[0]) + 1, sizeof(wchar_t));
+      uc->title.name = calloc(strlen(stringlist[0]) + 1, sizeof(char));
       if(uc->title.name) {
-        wcscpy(uc->title.name, stringlist[0]);
+        strcpy(uc->title.name, stringlist[0]);
       }
-      XwcFreeStringList(stringlist);
+      XFreeStringList(stringlist);
     } else {
       uc->title.name = NULL;
     }
@@ -150,8 +150,8 @@ void UpdateName(UltimateContext *uc)
       y = uc->title.y;
       width = uc->title.width;
       height = uc->title.height;
-      XwcTextExtents(TheScreen.TitleFont, uc->title.name,
-                     wcslen(uc->title.name), NULL, &r);
+      XmbTextExtents(TheScreen.TitleFont, uc->title.name,
+                     strlen(uc->title.name), NULL, &r);
       XResizeWindow(disp, uc->title.win,
                     uc->title.width = (r.width
                     + (((InitS.BorderTitleFlags & BT_CENTER_TITLE)
@@ -176,7 +176,7 @@ void UpdateName(UltimateContext *uc)
 void UpdateIconName(UltimateContext *uc)
 {
   XTextProperty prop;
-  wchar_t **stringlist;
+  char **stringlist;
   int count;
 
   if(uc->title.iconname) free(uc->title.iconname);
@@ -184,11 +184,11 @@ void UpdateIconName(UltimateContext *uc)
     uc->title.iconname = NULL;
     return;
   }
-  if((XwcTextPropertyToTextList(disp, &prop, &stringlist, &count) >= 0)
+  if((XmbTextPropertyToTextList(disp, &prop, &stringlist, &count) >= 0)
      && (count > 0)){
-    uc->title.iconname = calloc(wcslen(stringlist[0]) + 1, sizeof(wchar_t));
-    if(uc->title.iconname) wcscpy(uc->title.iconname, stringlist[0]);
-    XwcFreeStringList(stringlist);
+    uc->title.iconname = calloc(strlen(stringlist[0]) + 1, sizeof(char));
+    if(uc->title.iconname) strcpy(uc->title.iconname, stringlist[0]);
+    XFreeStringList(stringlist);
   } else uc->title.iconname = NULL;
   XFree(prop.value);
 

@@ -88,7 +88,7 @@ unsigned int lx,ly,lwidth,lheight;
 }
 
 void StopRubber(lx,ly,lwidth,lheight)
-unsigned int *lx,*ly,*lwidth,*lheight;
+int *lx,*ly,*lwidth,*lheight;
 {
   XDrawRectangle(disp,TheScreen.root,TheScreen.rubbercontext,\
                                 x+lo,y+lo,width-ro,height-ro);

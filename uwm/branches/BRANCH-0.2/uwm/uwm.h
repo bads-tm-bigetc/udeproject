@@ -82,7 +82,7 @@
 #define I_MENU 5
 #define I_REALLY 6
 
-typedef wchar_t WSName[32];
+typedef char WSName[32];
 
 typedef struct
 { int Screen;
@@ -179,7 +179,7 @@ typedef struct _UltimateContext
 
   struct {
     int x, y, width, height;
-    wchar_t *name, *iconname;
+    char *name, *iconname;
     Window win;  /* a child of the frame containing the window's title string */
   } title;
 
