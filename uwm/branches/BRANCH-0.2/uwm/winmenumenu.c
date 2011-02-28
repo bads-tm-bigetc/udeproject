@@ -34,7 +34,7 @@
 #include "special.h"
 #include "menu.h"
 #include "workspaces.h"
-#include "ude-i18n.h"
+#include "i18n.h"
 
 extern UDEScreen TheScreen;
 

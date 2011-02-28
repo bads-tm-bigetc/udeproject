@@ -1,3 +1,23 @@
+2011-02-28  Christian Ruppert  <arc@users.sf.net>
+	* uwm/menu.h, uwm/menu.c, uwm/widgets.c: fixed international string x
+	  coordinates.
+	* lib, uwm/*: removed obsolete lib subdirectory
+	* uwm/urm.c, uwm/urm.h: some optimizations, prepared for
+	  internationalized charsets.
+	* doc/Makefile.am: temporarily deactivated html documentation,
+	  latex2html is no longer maintained and should be replaced.
+	* doc: removed obsolete files
+
+2011-02-28  gettextize  <bug-gnu-gettext@gnu.org>
+	* Makefile.am (SUBDIRS): Remove intl.
+	(ACLOCAL_AMFLAGS): New variable.
+	* configure.ac (AC_OUTPUT): Remove intl/Makefile.
+	(AM_GNU_GETTEXT_VERSION): Bump to 0.17.
+
+2011-02-14  Christian Ruppert <arc@users.sf.net>
+	* uwm/*: Converted font and string handling to internationalized
+	         version (using multibyte strings)
+
 2010-02-14  Christian Ruppert <arc@users.sf.net>
 	* RELEASE: ude-0.2.10
 	* config/urdb: updated some resources

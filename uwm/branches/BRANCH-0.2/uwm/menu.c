@@ -115,17 +115,13 @@ Menu *MenuCreate(char *name)
     SeeYa(1,"FATAL: out of memory!");
   menu->font=TheScreen.MenuFont;
   if(menu->name) {
-    XRectangle r;
-    XmbTextExtents(menu->font, name, l, NULL, &r);
-    menu->width = r.width + 4 * MENUBORDERW + 2*MENUXOFS;
-    menu->TitleHeight = r.height + 2 * MENUBORDERW + 2*MENUYOFS;
-    menu->TitleAscent = r.y;
+    XmbTextExtents(menu->font, name, l, NULL, &menu->TitleExtents);
+    menu->width = menu->TitleExtents.width + 4 * MENUBORDERW + 2 * MENUXOFS;
+    menu->height = menu->TitleExtents.height + 4 * MENUBORDERW + 2 * MENUYOFS;
   } else {
     menu->width = 4 * MENUBORDERW + 2*MENUXOFS;
-    menu->TitleHeight = 0;
-    menu->TitleAscent = 0;
+    menu->height = 2 * MENUBORDERW;
   }
-  menu->height = menu->TitleHeight + 2 * MENUBORDERW;
 
   wattr.background_pixel=TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace]\
                                                             [UDE_Back].pixel;
@@ -167,7 +163,6 @@ void AppendMenuItem(Menu *menu,char *name,void *data,short type)
 {
   MenuItem *item;
   XSetWindowAttributes wattr;
-  int width;
 
   item=MyCalloc(1,sizeof(MenuItem));
   item->y=menu->height;
@@ -179,25 +174,26 @@ void AppendMenuItem(Menu *menu,char *name,void *data,short type)
     item->name=NULL;
     if(name) free(name);
   } else {
-    XRectangle r;
+    int width;
     item->name=MyCalloc(strlen(name)+1,sizeof(char));
     strcpy(item->name,name);
     item->data=data;
 
-    XmbTextExtents(menu->font, item->name, strlen(item->name), NULL, &r);
-    width = r.width + 4 * MENUBORDERW + 2*MENUXOFS;
-    item->height = r.height + 2 * MENUBORDERW + 2 * MENUYOFS;
-    item->ascent = r.y;
-    if(item->type==I_SUBMENU) width+=7*MENUBORDERW;
+    XmbTextExtents(menu->font, item->name, strlen(item->name), NULL,
+                   &item->TextExtents);
+    width = item->TextExtents.width + 4 * MENUBORDERW + 2*MENUXOFS;
+    item->height = item->TextExtents.height + 2 * MENUBORDERW + 2 * MENUYOFS;
+    if(item->type==I_SUBMENU) width += 7 * MENUBORDERW;
     if((item->type==I_SWITCH_ON)||(item->type==I_SWITCH_OFF))
-      width+=6*MENUBORDERW;
-    if(width>menu->width) {
+      width += 6 * MENUBORDERW;
+    if(width > menu->width) {
       Node *mi=NULL;
-      menu->width=width;
-      while((mi=NodeNext(menu->Items,mi))) {
+      menu->width = width;
+      while((mi=NodeNext(menu->Items, mi))) {
         MenuItem *i = mi->data;
         if(i->type != I_LINE) {
-          XResizeWindow(disp, i->win, menu->width-2*MENUBORDERW, i->height);
+          XResizeWindow(disp, i->win, menu->width - 2 * MENUBORDERW,
+                        i->height);
         }
       }
     }
@@ -215,7 +211,7 @@ void AppendMenuItem(Menu *menu,char *name,void *data,short type)
 
     XSelectInput(disp, item->win, EnterWindowMask|ExposureMask);
 
-    menu->height+=item->height;
+    menu->height += item->height;
 
     XSaveContext(disp,item->win,TheScreen.MenuContext,(XPointer)item);
   }
@@ -253,7 +249,8 @@ void DrawItem(MenuItem *item, short deactivate)
 {
   XClearWindow(disp,item->win);
   XmbDrawString(disp, item->win, item->menu->font, TheScreen.MenuTextGC,
-                MENUXOFS + MENUBORDERW, MENUYOFS + MENUBORDERW - item->ascent,
+                MENUXOFS + MENUBORDERW - item->TextExtents.x,
+                MENUYOFS + MENUBORDERW - item->TextExtents.y,
                 item->name, strlen(item->name));
   if(item->type==I_SUBMENU) {
     XDrawLine(disp, item->win, TheScreen.MenuTextGC,
@@ -265,28 +262,27 @@ void DrawItem(MenuItem *item, short deactivate)
               item->menu->width - 4 * MENUBORDERW, item->height / 2);
   }
   if(item->type==I_SWITCH_OFF) {
-    DrawBevel(item->win,item->menu->width-9*MENUBORDERW,\
-                 item->height/2-2*MENUBORDERW,\
-                      item->menu->width-5*MENUBORDERW-1,\
-               item->height/2+2*MENUBORDERW-1,\
-                        MENUBORDERW,TheScreen.MenuLightGC,\
-                                   TheScreen.MenuShadowGC);
+    DrawBevel(item->win,item->menu->width-9*MENUBORDERW,
+              item->height / 2 - 2 * MENUBORDERW,
+              item->menu->width-5*MENUBORDERW-1,
+              item->height / 2 + 2 * MENUBORDERW - 1,
+              MENUBORDERW, TheScreen.MenuLightGC, TheScreen.MenuShadowGC);
   }
   if(item->type==I_SWITCH_ON) {
     DrawBevel(item->win,item->menu->width-9*MENUBORDERW,\
-                 item->height/2-2*MENUBORDERW,\
+                 item->height / 2 - 2 * MENUBORDERW,\
                       item->menu->width-5*MENUBORDERW-1,\
-               item->height/2+2*MENUBORDERW-1,\
+               item->height / 2 + 2 * MENUBORDERW - 1,\
                        MENUBORDERW,TheScreen.MenuShadowGC,\
                                     TheScreen.MenuLightGC);
     XFillRectangle(disp,item->win,TheScreen.MenuTextGC,\
                      item->menu->width-8*MENUBORDERW,\
-                item->height/2-MENUBORDERW,\
+                item->height / 2 - MENUBORDERW,\
                          2*MENUBORDERW,2*MENUBORDERW);
   }
   if(!deactivate && (item == selectedMenuItem))
     DrawBevel(item->win,0,0,item->menu->width-2*MENUBORDERW-1,\
-                         item->height-1,MENUBORDERW,\
+                         item->height - 1, MENUBORDERW,\
                      TheScreen.MenuShadowGC,TheScreen.MenuLightGC);
 }
 
@@ -297,15 +293,15 @@ void DrawMenuFrame(Menu *menu, int items)
 
   XClearWindow(disp,menu->win);
 
-  DrawBevel(menu->win,0,0,menu->width-1,menu->height-1,MENUBORDERW,\
+  DrawBevel(menu->win,0,0,menu->width-1,menu->height - 1,MENUBORDERW,\
                                       TheScreen.MenuLightGC,TheScreen.MenuShadowGC);
   if(menu->name) {
     DrawBevel(menu->win, MENUBORDERW, MENUBORDERW, menu->width-MENUBORDERW-1,
-              menu->TitleHeight + MENUBORDERW - 1, MENUBORDERW,
-              TheScreen.MenuShadowGC, TheScreen.MenuLightGC);
+              menu->TitleExtents.height + 3 * MENUBORDERW + 2 * MENUYOFS- 1,
+              MENUBORDERW, TheScreen.MenuShadowGC, TheScreen.MenuLightGC);
     XmbDrawString(disp, menu->win, menu->font, TheScreen.MenuTextGC,
-                  MENUXOFS + 2 * MENUBORDERW,
-                  MENUYOFS + 2 * MENUBORDERW - menu->TitleAscent,
+                  MENUXOFS + 2 * MENUBORDERW - menu->TitleExtents.x,
+                  MENUYOFS + 2 * MENUBORDERW - menu->TitleExtents.y,
                   menu->name, strlen(menu->name));
   }
 

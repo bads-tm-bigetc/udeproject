@@ -45,7 +45,7 @@
 #include "widgets.h"
 #include "placement.h"
 #include "special.h"
-#include "ude-i18n.h"
+#include "i18n.h"
 #include "wingroups.h"
 #include "windows.h"
 

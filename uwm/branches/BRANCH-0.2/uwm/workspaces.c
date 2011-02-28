@@ -59,28 +59,10 @@ pid_t ScreenCommandPID=0;
 void BroadcastWorkSpacesInfo()
 {
   int a,b;
-  UDEWorkspaceExchange *workspace_exchange;
-
-  workspace_exchange = MyCalloc(TheScreen.desktop.WorkSpaces,
-                                sizeof(UDEWorkspaceExchange));
-  if(workspace_exchange)
-  {
-    for(a=0;a<TheScreen.desktop.WorkSpaces;a++)
-    {
-      for(b=0;b<UDE_MAXCOLORS;b++) 
-        XQueryColors(disp, TheScreen.colormap,
-                     TheScreen.Colors[a], UDE_MAXCOLORS);
-      strncpy(workspace_exchange[a].name, TheScreen.WorkSpace[a], 32);
-      memcpy(workspace_exchange[a].WorkspaceColors, TheScreen.Colors[a],
-             sizeof(UDEColors));
-    }
-    XChangeProperty(disp, TheScreen.root, TheScreen.UDE_WORKSPACES_PROPERTY,
-                    TheScreen.UDE_WORKSPACES_PROPERTY, 8, PropModeReplace,
-                    (unsigned char *) workspace_exchange,
-                    sizeof(UDEWorkspaceExchange)* TheScreen.desktop.WorkSpaces);
-    free(workspace_exchange);
-  } else {
-    fprintf(TheScreen.errout,"UWM: coldn't allocate memory to broadcast workspace color information.\n");
+  for(a=0;a<TheScreen.desktop.WorkSpaces;a++) {
+    for(b=0;b<UDE_MAXCOLORS;b++) 
+      XQueryColors(disp, TheScreen.colormap,
+                   TheScreen.Colors[a], UDE_MAXCOLORS);
   }
   SetResourceDB();
 }

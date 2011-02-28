@@ -1,4 +1,4 @@
-AC_INIT([uwm], [0.2.10], [arc@users.sf.net])
+AC_INIT([uwm], [0.2.10a], [arc@users.sf.net])
 AM_INIT_AUTOMAKE([-Wall])
 AC_USE_SYSTEM_EXTENSIONS
 
@@ -12,7 +12,7 @@ AC_PROG_MAKE_SET
 AC_PROG_YACC
 
 AM_GNU_GETTEXT
-AM_GNU_GETTEXT_VERSION(0.17)
+AM_GNU_GETTEXT_VERSION([0.17])
 
 AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
@@ -63,4 +63,4 @@ AC_CHECK_LIB([Xmu], [XmuGetHostname],, AC_MSG_ERROR([uwm requires libXmu.]),
 
 
 AC_CONFIG_HEADERS([config.h])
-AC_OUTPUT([uwm/Makefile config/Makefile doc/Makefile doc/html/Makefile extras/Makefile extras/tools/Makefile gfx/Makefile Makefile ude.spec config/StartScript po/Makefile.in intl/Makefile lib/Makefile])
+AC_OUTPUT([uwm/Makefile config/Makefile doc/Makefile doc/html/Makefile extras/Makefile extras/tools/Makefile gfx/Makefile Makefile ude.spec config/StartScript po/Makefile.in])

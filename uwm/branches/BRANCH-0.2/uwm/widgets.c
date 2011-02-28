@@ -212,9 +212,9 @@ void DrawTitle(UltimateContext *uc)
     size_t l = strlen(uc->title.name);
     XmbTextExtents(TheScreen.TitleFont, uc->title.name, l, NULL, &r);
     XmbDrawString(disp, uc->title.win, TheScreen.TitleFont, TextGC,
-                  ((uc->flags & SHAPED)
-                  || (InitS.BorderTitleFlags & BT_CENTER_TITLE))
-                  ? 5 : 2, ((uc->flags & SHAPED) ? 3 : 0) - r.y,
+                  (((uc->flags & SHAPED)
+                    || (InitS.BorderTitleFlags & BT_CENTER_TITLE))
+                   ? 5 : 2) - r.x, ((uc->flags & SHAPED) ? 3 : 0) - r.y,
                   uc->title.name, l);
   }
 

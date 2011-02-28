@@ -38,7 +38,7 @@
 #include "init.h"
 #include "workspaces.h"
 #include "menu.h"
-#include "ude-i18n.h"
+#include "i18n.h"
 
 extern UDEScreen TheScreen;
 extern InitStruct InitS;

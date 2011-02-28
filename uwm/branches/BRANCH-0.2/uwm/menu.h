@@ -19,7 +19,8 @@ typedef struct _MenuItem{
   short type;
   void *data;        /* pointer for item-dependent data */
   Window win;
-  int y,height,ascent;
+  int y, height;
+  XRectangle TextExtents;
   struct _Menu *menu;
 } MenuItem;
 
@@ -30,7 +31,8 @@ typedef struct _Menu{
   Window win;
   int x,y;
   struct _Menu *parent;
-  int width,height,TitleHeight,TitleAscent;
+  XRectangle TitleExtents;
+  int width, height;
 } Menu;
 
 Menu *MenuCreate(char *name);

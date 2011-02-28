@@ -1,6 +1,7 @@
 #ifndef UWM_URM_H
 #define UWM_URM_H
 
+#define MAXNUMS (11)
 #define MAXEXTRAS (15)
 #define BACKGROUND (0)
 #define LIGHTCOLOR (1)

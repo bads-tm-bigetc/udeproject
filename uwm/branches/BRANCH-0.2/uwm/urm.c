@@ -46,7 +46,6 @@
 #include <X11/Xmu/SysUtil.h>
 
 #include "uwm.h"
-#include "lib/ude-desktop.h"
 #include "init.h"
 #include "special.h"
 #include "urm.h"
@@ -345,8 +344,7 @@ int ReadResourceDBFromFile(char *filename)
   while(EOF!=(s=fgetc(file))) {
     char *data, u;
     switch(s) {
-      case '#':  /*** remove comments and preprocessor lines ***/
-      case '%':
+      case '%':  /*** remove comments and preprocessor lines ***/
       case '!':  while('\n'!=fgetc(file)); /* remove rest of line */
       case '\n': if(!resourcename) break;
                  resource = ResourceDB;
@@ -398,8 +396,10 @@ void SetResourceDB()
   UDEXrdbEntry *resource = ResourceDB;
   unsigned long size = 1;
   char *string1, *string2;
-  char xtras[MAXEXTRAS][256];
+  char *xtras[MAXEXTRAS];
+  char nums[MAXNUMS][16];
   XTextProperty prop;
+  int a;
 
   if(!resource) return;
 
@@ -407,21 +407,24 @@ void SetResourceDB()
                  TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace][I].green,\
                  TheScreen.Colors[TheScreen.desktop.ActiveWorkSpace][I].blue
 
-  sprintf(xtras[BACKGROUND],"#%.4X%.4X%.4X",COLOR(UDE_Back));
-  sprintf(xtras[LIGHTCOLOR],"#%.4X%.4X%.4X",COLOR(UDE_Light));
-  sprintf(xtras[SHADOWCOLOR],"#%.4X%.4X%.4X",COLOR(UDE_Shadow));
-  sprintf(xtras[STANDARDTEXT],"#%.4X%.4X%.4X",COLOR(UDE_StandardText));
-  sprintf(xtras[INACTIVETEXT],"#%.4X%.4X%.4X",COLOR(UDE_InactiveText));
-  sprintf(xtras[HIGHLIGHTEDTEXT],"#%.4X%.4X%.4X",COLOR(UDE_HighlightedText));
-  sprintf(xtras[HIGHLIGHTEDBGR],"#%.4X%.4X%.4X",COLOR(UDE_HighlightedBgr));
-  sprintf(xtras[TEXTCOLOR],"#%.4X%.4X%.4X",COLOR(UDE_TextColor));
-  sprintf(xtras[TEXTBGR],"#%.4X%.4X%.4X",COLOR(UDE_TextBgr));
-  sprintf(xtras[BEVELWIDTH],"%d",TheScreen.desktop.BevelWidth);
-  sprintf(xtras[FLAGS],"%X",TheScreen.desktop.flags);
-  sprintf(xtras[STANDARDFONT],"%s",TheScreen.desktop.StandardFont);
-  sprintf(xtras[INACTIVEFONT],"%s",TheScreen.desktop.InactiveFont);
-  sprintf(xtras[HIGHLIGHTFONT],"%s",TheScreen.desktop.HighlightFont);
-  sprintf(xtras[TEXTFONT],"%s",TheScreen.desktop.TextFont);
+  sprintf(nums[BACKGROUND],"#%.4X%.4X%.4X",COLOR(UDE_Back));
+  sprintf(nums[LIGHTCOLOR],"#%.4X%.4X%.4X",COLOR(UDE_Light));
+  sprintf(nums[SHADOWCOLOR],"#%.4X%.4X%.4X",COLOR(UDE_Shadow));
+  sprintf(nums[STANDARDTEXT],"#%.4X%.4X%.4X",COLOR(UDE_StandardText));
+  sprintf(nums[INACTIVETEXT],"#%.4X%.4X%.4X",COLOR(UDE_InactiveText));
+  sprintf(nums[HIGHLIGHTEDTEXT],"#%.4X%.4X%.4X",COLOR(UDE_HighlightedText));
+  sprintf(nums[HIGHLIGHTEDBGR],"#%.4X%.4X%.4X",COLOR(UDE_HighlightedBgr));
+  sprintf(nums[TEXTCOLOR],"#%.4X%.4X%.4X",COLOR(UDE_TextColor));
+  sprintf(nums[TEXTBGR],"#%.4X%.4X%.4X",COLOR(UDE_TextBgr));
+  sprintf(nums[BEVELWIDTH],"%d",TheScreen.desktop.BevelWidth);
+  sprintf(nums[FLAGS],"%X",TheScreen.desktop.flags);
+  for(a = 0; a < MAXNUMS; a++) {
+    xtras[a] = nums[a];
+  }
+  xtras[STANDARDFONT]  = TheScreen.desktop.StandardFont;
+  xtras[INACTIVEFONT]  = TheScreen.desktop.InactiveFont;
+  xtras[HIGHLIGHTFONT] = TheScreen.desktop.HighlightFont;
+  xtras[TEXTFONT]      = TheScreen.desktop.TextFont;
 
 #undef COLOR
 

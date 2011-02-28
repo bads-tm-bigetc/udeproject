@@ -15,7 +15,6 @@
 
 #include "nodes.h"
 #include "menu.h"
-#include "lib/ude-desktop.h"
 #include "MwmUtil_fixed.h"
 
 /*** some debugging and developement settings ***/
@@ -57,6 +56,32 @@
 #define UWM_MODIFIERS (ControlMask | Mod1Mask)
 
 /*** used structures ***/ 
+
+#define UDE_MAXCOLORS 9
+#define UDE_Back 0
+#define UDE_Light 1
+#define UDE_Shadow 2
+#define UDE_StandardText 3
+#define UDE_InactiveText 4
+#define UDE_HighlightedText 5
+#define UDE_HighlightedBgr 6
+#define UDE_TextColor 7
+#define UDE_TextBgr 8
+typedef XColor UDEColor;
+typedef UDEColor UDEColors[UDE_MAXCOLORS];
+
+
+/** user preferences flags (item flags): **/
+#define UDETransientMenus (1<<0) /* are menues transient or not? */
+#define UDESubMenuTitles  (1<<1) /* do submenus have titles or not? */
+typedef struct {
+  unsigned short flags;
+  unsigned int BevelWidth;
+  short ActiveWorkSpace, WorkSpaces;
+  char StandardFont[256], InactiveFont[256], HighlightFont[256], TextFont[256];
+     /* font names to be passed to XLoadQueryFont() */
+} UDEDesktop;
+
 
 /* UDEScreen describes the managed screen */
 #define CURSORS 12
