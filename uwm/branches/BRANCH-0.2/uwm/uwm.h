@@ -78,7 +78,8 @@ typedef struct {
   unsigned short flags;
   unsigned int BevelWidth;
   short ActiveWorkSpace, WorkSpaces;
-  char StandardFont[256], InactiveFont[256], HighlightFont[256], TextFont[256];
+  char *StandardFont, *InactiveFont, *HighlightFont, *TextFont;
+  char *StandardFontSet, *InactiveFontSet, *HighlightFontSet, *TextFontSet;
      /* font names to be passed to XLoadQueryFont() */
 } UDEDesktop;
 

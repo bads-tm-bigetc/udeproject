@@ -51,6 +51,14 @@
 !		the font used for highlighted text ("HighlightFont").
 !	@TEXTFONT@
 !		the font used for text windows ("TextFont").
+!	@STANDARDFONTSET@
+!		the standard font set ("MenuFont").
+!	@INACTIVEFONTSET@
+!		the font set for inactive buttons etc ("InactiveFont").
+!	@HIGHLIGHTFONTSET@
+!		the font set used for highlighted text ("HighlightFont").
+!	@TEXTFONTSET@
+!		the font set used for text windows ("TextFont").
 !
 ! for comments use hash (´#´), ´!´ or ´%´ as first (!) character of
 ! the line.
@@ -61,7 +69,10 @@
 *lowlight: @SHADOWCOLOR@
 *highlight: @LIGHTCOLOR@
 *Font: @STANDARDFONT@
+*FontSet: @STANDARDFONTSET@
+*FontList: @STANDARDFONTSET@
 *font: @STANDARDFONT@
+*fontSet: @STANDARDFONTSET@
 
 ! some selected Xt-resources
 *AsciiSink.background: @TEXTBGR@
@@ -295,7 +306,9 @@ scribus*Canvas.selectForeground: #FFFFFFFFFFFF
 ! Gvim
 
 Vim*menuBar*font: @STANDARDFONT@
+Vim*menuBar*fontSet: @STANDARDFONTSET@
 Vim*font: @TEXTFONT@
+Vim*fontSet: @TEXTFONTSET@
 Vim*reverseVideo: True
 Vim*background: @TEXTBGR@
 Vim*foreground: @TEXTCOLOR@
@@ -306,9 +319,8 @@ Vim*menuForeground: @STANDARDTEXT@
 Vim*tooltipBackground: @BACKGROUND@
 Vim*tooltipForeground: @STANDARDTEXT@
 Vim*menuFont: @STANDARDFONT@
-Vim*menuFontSet: @STANDARDFONT@
+Vim*menuFontSet: @STANDARDFONTSET@
 Vim*tooltipFont: @STANDARDFONT@
-Vim*tooltipFontSet: @STANDARDFONT@
 Vim*borderWidth: @BEVELWIDTH@
 
 ! Emacs
@@ -332,6 +344,7 @@ Emacs*backgroundToolBarColor:	@BACKGROUND@
 Emacs*toolBarShadowThickness:	0
  
 Emacs*font:			@TEXTFONT@
+Emacs*fontSet:			@TEXTFONTSET@
 Emacs*menubar*Font:		@STANDARDFONT@
 Emacs*popup*Font:		@STANDARDFONT@
 Emacs*Dialog*Font:		@STANDARDFONT@
@@ -462,12 +475,12 @@ ml*log*textSW.text.background: @TEXTBGR@
 ml*log*textSW.text.foreground: @TEXTCOLOR@
 ml*selectColor: @BACKGROUND@
 ml*highlightColor: @BACKGROUND@
-ml*textSW*fontList: @TEXTFONT@
+ml*textSW*fontList: @TEXTFONTSET@
 !ml*helpwin*textSW*fontList: FONTLIST
 !ml*log*textSW*fontList: FONTLIST
-ml.form.listSW*fontList: @TEXTFONT@
-ml*read*listSW*fontList: @TEXTFONT@
-ml*read*headerSW*fontList: @TEXTFONT@
+ml.form.listSW*fontList: @TEXTFONTSET@
+ml*read*listSW*fontList: @TEXTFONTSET@
+ml*read*headerSW*fontList: @TEXTFONTSET@
 ml.form.height: 550
 ml.form.width: 650
 ml*focusPolicy:			pointer
@@ -511,6 +524,7 @@ ddd*topShadowColor:               @LIGHTCOLOR@
 ddd*bottomShadowColor:            @SHADOWCOLOR@
 ddd*defaultFont:                  @TEXTFONT@
 ddd*variableWidthFont:            @STANDARDFONT@
+ddd*variableWidthFontSET:         @STANDARDFONTSET@
 ddd*graph_edit.background:        @BACKGROUND@
 ddd*graph_edit.foreground:        @STANDARDTEXT@
 ddd*graph_edit.gridColor:         @SHADOWCOLOR@

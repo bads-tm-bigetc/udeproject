@@ -949,13 +949,20 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
                         break;
                       case MenuFont:
                         { XFontSet Font;
-                        p=RLSpace(p);
-                        if((Font=LoadQueryFontSet(disp,p))){
-                          XFreeFontSet(disp,TheScreen.MenuFont);
-                          strncpy(TheScreen.desktop.StandardFont,p,256);
-                          TheScreen.desktop.StandardFont[255]=0;
-                          TheScreen.MenuFont=Font;
-                        }
+                          char *c;
+                          p=RLSpace(p);
+                          if((Font=LoadQueryFontSet(disp,p))){
+                            XFreeFontSet(disp,TheScreen.MenuFont);
+                            free(TheScreen.desktop.StandardFontSet);
+                            TheScreen.desktop.StandardFontSet = MyStrdup(p);
+                            if((c = strchr(p, ','))) {
+                              *c = '\0';
+                              p=RLSpace(p);
+                            }
+                            free(TheScreen.desktop.StandardFont);
+                            TheScreen.desktop.StandardFont = MyStrdup(p);
+                            TheScreen.MenuFont=Font;
+                          }
                         }
                         break;
                       case BackColor:
@@ -1158,11 +1165,11 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
                         break;
                       case TitleFont:
                         { XFontSet Font;
-                        p=RLSpace(p);
-                        if((Font=LoadQueryFontSet(disp,p))){
-                          XFreeFontSet(disp,TheScreen.TitleFont);
-                          TheScreen.TitleFont=Font;
-                        }
+                          p=RLSpace(p);
+                          if((Font=LoadQueryFontSet(disp,p))){
+                            XFreeFontSet(disp,TheScreen.TitleFont);
+                            TheScreen.TitleFont=Font;
+                          }
                         }
                         break;
                       case ActiveTitle:
@@ -1303,32 +1310,53 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
                         break;
                       case InactiveFont:
                         { XFontSet Font;
-                        p=RLSpace(p);
-                        if((Font=LoadQueryFontSet(disp,p))){
-                          XFreeFontSet(disp,Font);
-                          strncpy(TheScreen.desktop.InactiveFont,p,256);
-                          TheScreen.desktop.InactiveFont[255]=0;
-                        }
+                          char *c;
+                          p=RLSpace(p);
+                          if((Font=LoadQueryFontSet(disp,p))){
+                            XFreeFontSet(disp,Font);
+                            free(TheScreen.desktop.InactiveFontSet);
+                            TheScreen.desktop.InactiveFontSet = MyStrdup(p);
+                            if((c = strchr(p, ','))) {
+                              *c = '\0';
+                              p=RLSpace(p);
+                            }
+                            free(TheScreen.desktop.InactiveFont);
+                            TheScreen.desktop.InactiveFont = MyStrdup(p);
+                          }
                         }
                         break;
                       case HighlightFont:
                         { XFontSet Font;
-                        p=RLSpace(p);
-                        if((Font=LoadQueryFontSet(disp,p))){
-                          XFreeFontSet(disp,Font);
-                          strncpy(TheScreen.desktop.HighlightFont,p,256);
-                          TheScreen.desktop.HighlightFont[255]=0;
-                        }
+                          char *c;
+                          p=RLSpace(p);
+                          if((Font=LoadQueryFontSet(disp,p))){
+                            XFreeFontSet(disp,Font);
+                            free(TheScreen.desktop.HighlightFontSet);
+                            TheScreen.desktop.HighlightFontSet = MyStrdup(p);
+                            if((c = strchr(p, ','))) {
+                              *c = '\0';
+                              p=RLSpace(p);
+                            }
+                            free(TheScreen.desktop.HighlightFont);
+                            TheScreen.desktop.HighlightFont = MyStrdup(p);
+                          }
                         }
                         break;
                       case TextFont:
                         { XFontSet Font;
-                        p=RLSpace(p);
-                        if((Font=LoadQueryFontSet(disp,p))){
-                          XFreeFontSet(disp,Font);
-                          strncpy(TheScreen.desktop.TextFont,p,256);
-                          TheScreen.desktop.TextFont[255]=0;
-                        }
+                          char *c;
+                          p=RLSpace(p);
+                          if((Font=LoadQueryFontSet(disp,p))){
+                            XFreeFontSet(disp,Font);
+                            free(TheScreen.desktop.TextFontSet);
+                            TheScreen.desktop.TextFontSet = MyStrdup(p);
+                            if((c = strchr(p, ','))) {
+                              *c = '\0';
+                              p=RLSpace(p);
+                            }
+                            free(TheScreen.desktop.TextFont);
+                            TheScreen.desktop.TextFont = MyStrdup(p);
+                          }
                         }
                         break;
                       case BehaviourFlags:
@@ -1357,9 +1385,6 @@ void InitDefaults()
   TheScreen.desktop.ActiveWorkSpace=0;
   TheScreen.desktop.WorkSpaces=0;
   TheScreen.desktop.flags=UDETransientMenus;
-  TheScreen.desktop.StandardFont[0]=0;
-  TheScreen.desktop.HighlightFont[0]=0;
-  TheScreen.desktop.InactiveFont[0]=0;
   TheScreen.desktop.BevelWidth=2;
   TheScreen.SetBackground= 0;
   TheScreen.Background=TheScreen.InactiveBorder=TheScreen.ActiveBorder=NULL;
@@ -1379,42 +1404,54 @@ void InitDefaults()
     fprintf(TheScreen.errout,"UWM: Standard Title-font does not exist,");
     fprintf(TheScreen.errout," loading fixed.\n");
   }
-  sprintf(TheScreen.desktop.StandardFont,
-          "-*-lucida-medium-r-*-sans-12-*-*-*-*-*-*-*");
-  if(!(TheScreen.MenuFont=LoadQueryFontSet(disp,
-                                           TheScreen.desktop.StandardFont))){
-    sprintf(TheScreen.desktop.StandardFont,"fixed");
-    TheScreen.MenuFont=LoadQueryFontSet(disp,TheScreen.desktop.StandardFont);
-    fprintf(TheScreen.errout,"UWM: Standard Font does not exist,");
-    fprintf(TheScreen.errout," loading fixed.\n");
-  }
-  sprintf(TheScreen.desktop.InactiveFont,
-          "-*-lucida-medium-r-*-sans-12-*-*-*-*-*-*-*");
+  TheScreen.desktop.InactiveFont
+                      = MyStrdup("-*-lucida-medium-i-*-sans-12-*-*-*-*-*-*-*");
   if(!(TheScreen.MenuFont=LoadQueryFontSet(disp,
                                            TheScreen.desktop.InactiveFont))){
-    sprintf(TheScreen.desktop.InactiveFont,"fixed");
-    TheScreen.MenuFont=LoadQueryFontSet(disp,TheScreen.desktop.InactiveFont);
+    free(TheScreen.desktop.InactiveFont);
+    TheScreen.desktop.InactiveFont = MyStrdup("fixed");
+    TheScreen.MenuFont = LoadQueryFontSet(disp,TheScreen.desktop.InactiveFont);
     fprintf(TheScreen.errout,"UWM: Standard Inactive Font does not exist,");
     fprintf(TheScreen.errout," loading fixed.\n");
   }
-  sprintf(TheScreen.desktop.HighlightFont,
-          "-*-lucida-medium-r-*-sans-12-*-*-*-*-*-*-*");
+  if(TheScreen.MenuFont) XFreeFontSet(disp, TheScreen.MenuFont);
+  TheScreen.desktop.HighlightFont
+                      = MyStrdup("-*-lucida-medium-r-*-sans-12-*-*-*-*-*-*-*");
   if(!(TheScreen.MenuFont=LoadQueryFontSet(disp,
                                            TheScreen.desktop.HighlightFont)))
   {
-    sprintf(TheScreen.desktop.HighlightFont,"fixed");
+    free(TheScreen.desktop.HighlightFont);
+    TheScreen.desktop.HighlightFont = MyStrdup("fixed");
     TheScreen.MenuFont=LoadQueryFontSet(disp,TheScreen.desktop.HighlightFont);
     fprintf(TheScreen.errout,"UWM: Standard Highlight Font does not exist,");
     fprintf(TheScreen.errout," loading fixed.\n");
   }
-  sprintf(TheScreen.desktop.TextFont,
-          "-*-lucida-medium-r-*-sans-12-*-*-*-*-*-*-*");
+  if(TheScreen.MenuFont) XFreeFontSet(disp, TheScreen.MenuFont);
+  TheScreen.desktop.TextFont
+            = MyStrdup("-*-lucidatypewriter-medium-r-*-sans-12-*-*-*-*-*-*-*");
   if(!(TheScreen.MenuFont=LoadQueryFontSet(disp,TheScreen.desktop.TextFont))){
-    sprintf(TheScreen.desktop.TextFont,"fixed");
+    free(TheScreen.desktop.TextFont);
+    TheScreen.desktop.TextFont = MyStrdup("fixed");
     TheScreen.MenuFont=LoadQueryFontSet(disp,TheScreen.desktop.TextFont);
     fprintf(TheScreen.errout,"UWM: Standard Text Font does not exist,");
     fprintf(TheScreen.errout," loading fixed.\n");
   }
+  if(TheScreen.MenuFont) XFreeFontSet(disp, TheScreen.MenuFont);
+  TheScreen.desktop.StandardFont
+                      = MyStrdup("-*-lucida-medium-r-*-sans-12-*-*-*-*-*-*-*");
+  if(!(TheScreen.MenuFont=LoadQueryFontSet(disp,
+                                           TheScreen.desktop.StandardFont))){
+    free(TheScreen.desktop.StandardFont);
+    TheScreen.desktop.StandardFont = MyStrdup("fixed");
+    TheScreen.MenuFont=LoadQueryFontSet(disp,TheScreen.desktop.StandardFont);
+    fprintf(TheScreen.errout,"UWM: Standard Font does not exist,");
+    fprintf(TheScreen.errout," loading fixed.\n");
+  }
+  TheScreen.desktop.StandardFontSet = MyStrdup(TheScreen.desktop.StandardFont);
+  TheScreen.desktop.InactiveFontSet = MyStrdup(TheScreen.desktop.InactiveFont);
+  TheScreen.desktop.HighlightFontSet
+                                   = MyStrdup(TheScreen.desktop.HighlightFont);
+  TheScreen.desktop.TextFontSet = MyStrdup(TheScreen.desktop.TextFont);
 
   InitS.menuType[0]='U';
   InitS.menuType[1]='D';

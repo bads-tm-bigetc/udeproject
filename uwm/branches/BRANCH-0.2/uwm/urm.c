@@ -293,7 +293,11 @@ const char *xtranames[MAXEXTRAS] = { "@BACKGROUND@",
                                      "@STANDARDFONT@",
                                      "@INACTIVEFONT@",
                                      "@HIGHLIGHTFONT@",
-                                     "@TEXTFONT@"};
+                                     "@TEXTFONT@",
+                                     "@STANDARDFONTSET@",
+                                     "@INACTIVEFONTSET@",
+                                     "@HIGHLIGHTFONTSET@",
+                                     "@TEXTFONTSET@"};
 char *uderesources[MAXEXTRAS] = {"ude.background",
                                  "ude.lightcolor",
                                  "ude.shadowcolor",
@@ -308,7 +312,11 @@ char *uderesources[MAXEXTRAS] = {"ude.background",
                                  "ude.standardfont",
                                  "ude.inactivefont",
                                  "ude.highlightfont",
-                                 "ude.textfont"};
+                                 "ude.textfont",
+                                 "ude.standardfontset",
+                                 "ude.inactivefontset",
+                                 "ude.highlightfontset",
+                                 "ude.textfontset"};
 
 static UDEXrdbEntry *ResourceDB = NULL;
 
@@ -421,10 +429,14 @@ void SetResourceDB()
   for(a = 0; a < MAXNUMS; a++) {
     xtras[a] = nums[a];
   }
-  xtras[STANDARDFONT]  = TheScreen.desktop.StandardFont;
-  xtras[INACTIVEFONT]  = TheScreen.desktop.InactiveFont;
-  xtras[HIGHLIGHTFONT] = TheScreen.desktop.HighlightFont;
-  xtras[TEXTFONT]      = TheScreen.desktop.TextFont;
+  xtras[STANDARDFONT]     = TheScreen.desktop.StandardFont;
+  xtras[INACTIVEFONT]     = TheScreen.desktop.InactiveFont;
+  xtras[HIGHLIGHTFONT]    = TheScreen.desktop.HighlightFont;
+  xtras[TEXTFONT]         = TheScreen.desktop.TextFont;
+  xtras[STANDARDFONTSET]  = TheScreen.desktop.StandardFontSet;
+  xtras[INACTIVEFONTSET]  = TheScreen.desktop.InactiveFontSet;
+  xtras[HIGHLIGHTFONTSET] = TheScreen.desktop.HighlightFontSet;
+  xtras[TEXTFONTSET]      = TheScreen.desktop.TextFontSet;
 
 #undef COLOR
 
