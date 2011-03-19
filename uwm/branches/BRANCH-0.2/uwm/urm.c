@@ -352,6 +352,10 @@ int ReadResourceDBFromFile(char *filename)
   while(EOF!=(s=fgetc(file))) {
     char *data, u;
     switch(s) {
+      case '#':  if(resourcename) {
+                    Add2CharBuf(s);
+                    break;
+                 }
       case '%':  /*** remove comments and preprocessor lines ***/
       case '!':  while('\n'!=fgetc(file)); /* remove rest of line */
       case '\n': if(!resourcename) break;
