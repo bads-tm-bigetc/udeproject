@@ -345,19 +345,20 @@ int ReadResourceDBFromFile(char *filename)
     }
   }
   
-  if(!(file = MyOpen(filename,TheScreen.urdbcppopts))) return(0);
+  if(!(file = MyOpen(filename, TheScreen.urdbcppopts))) return(0);
 
   resourcename =NULL;
 
   while(EOF!=(s=fgetc(file))) {
-    char *data, u;
+    char *data;
+    int u;
     switch(s) {
       case '#':  if(resourcename) {
                     Add2CharBuf(s);
                     break;
                  }
       case '%':  /*** remove comments and preprocessor lines ***/
-      case '!':  while('\n'!=fgetc(file)); /* remove rest of line */
+      case '!':  while('\n'!=(u=fgetc(file))); break; /* remove rest of line */
       case '\n': if(!resourcename) break;
                  resource = ResourceDB;
                  while(resource && strcmp(resource->name,resourcename))
@@ -393,7 +394,8 @@ int ReadResourceDBFromFile(char *filename)
                    default:   Add2CharBuf('\\');
                               Add2CharBuf(u);
                               break;
-                 } break;
+                 }
+                 break;
       default: Add2CharBuf(s);
     }
   }
