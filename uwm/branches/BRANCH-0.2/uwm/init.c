@@ -303,7 +303,8 @@ XFontSet LoadQueryFontSet(Display *disp, char *font_list, const char *fonttype)
                       &missing_count, NULL);
   if(missing_charsets) {
     if(fonttype) {
-      fprintf(TheScreen.errout, "Warning loading %s:\n", fonttype);
+      fprintf(TheScreen.errout, "Warning loading %s (%s):\n",
+              fonttype, font_list);
       for(missing_count = missing_count; missing_count > 0; missing_count--) {
         fprintf(TheScreen.errout, "  Missing charset for your locale: %s\n",
                 missing_charsets[missing_count - 1]);
