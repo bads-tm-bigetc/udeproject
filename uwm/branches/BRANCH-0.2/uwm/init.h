@@ -20,6 +20,7 @@ typedef struct {
   char StartScript[256];
   char StopScript[256];
   char HexPath[256];
+  char MenuFileName[256];
   char RubberMove;
   unsigned long OpaqueMoveSize;
   int MenuBorderWidth,MenuXOffset,MenuYOffset;

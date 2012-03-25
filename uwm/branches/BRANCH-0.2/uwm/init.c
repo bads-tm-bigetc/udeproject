@@ -855,7 +855,7 @@ enum KeyNames {
 };
 
 /*** read config file ***/
-void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
+void ReadConfigFile(FILE *uwmrc)
 {
   char s[256],*p,*token;
   int b,r,g;
@@ -1003,7 +1003,7 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
                         break;
                       case MenuFile:
                         p=RLSpace(p);
-                        strncpy(MenuFileName,p,255);
+                        strncpy(InitS.MenuFileName,p,255);
                         break;
                       case StartScript:
                         if(InitS.StartScript[0]!='\n'){
@@ -1153,7 +1153,7 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
                           break;
                         }
                         if(secuwmrc){
-                          ReadConfigFile(secuwmrc,MenuFileName);
+                          ReadConfigFile(secuwmrc);
                           fclose(secuwmrc);
                         }
                         break;     
@@ -1380,7 +1380,6 @@ void ReadConfigFile(FILE *uwmrc, char *MenuFileName)
 void InitDefaults()
 {
   FILE *uwmrc;
-  char MenuFileName[256];
 
 /*** set values to default before reading config file. ***/
 
@@ -1487,9 +1486,9 @@ void InitDefaults()
     CreateAppsMenu("appmenu");
     return;
   } 
-  ReadConfigFile(uwmrc,MenuFileName);
+  ReadConfigFile(uwmrc);
   fclose(uwmrc);
-  CreateAppsMenu(MenuFileName);
+  CreateAppsMenu(InitS.MenuFileName);
 }
 
 void InitUWM()

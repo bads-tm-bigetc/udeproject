@@ -102,6 +102,19 @@ void RestartProc3(MenuItem *item)
   RestartUWM(False, True);
 }
 
+void ReloadMenu(MenuItem* item)
+{
+  DestroyMenu(TheScreen.AppsMenu);
+  FILE *uwmrc;
+  if(!(uwmrc=MyOpen("uwmrc",TheScreen.cppincpaths))) {
+    fprintf(TheScreen.errout,"UWM: no config file found, using defaults.\n");
+    CreateAppsMenu("appmenu");
+    return;
+  } 
+  fclose(uwmrc);
+  CreateAppsMenu(InitS.MenuFileName);
+}
+
 void ZapWS(XEvent *event,MenuItem *selected)
 {
   if(selected) return; /* only react if no item is selected */
@@ -159,13 +172,16 @@ void CreateUWMMenu()
     {
       others= MenuCreate(useTitle ? _("Launch another WM") : NULL);
       if(!others)
-	SeeYa(1,"FATAL: out of memory!");
+        SeeYa(1,"FATAL: out of memory!");
       for (j = 0; j < InitS.OtherWmCount; j++)
-	{
-	  AppendMenuItem(others, InitS.OtherWms[j], RestartProc3, I_SELECT);
-	}
+        {
+          AppendMenuItem(others, InitS.OtherWms[j], RestartProc3, I_SELECT);
+        }
       AppendMenuItem(really, _("Launch another WM"), others, I_SUBMENU);
     }
+    
+  AppendMenuItem(TheScreen.UWMMenu, _("Reload application menu"),ReloadMenu,
+                 I_SELECT);
 }
 
 void WMMenu(int x,int y)
