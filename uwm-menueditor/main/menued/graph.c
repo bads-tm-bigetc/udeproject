@@ -11,11 +11,12 @@
 #define graycolor 0x7E7E7E
 
 XObject *win,*diagwin, *fopen_err_win;
-XObject *pathframe, *controlframe, *curdirframe, *descframe;
+XObject *pathframe, *controlframe, *curdirframe, *descframe,*scrollframe, *supcurdirframe;
 XObject *typelabel, *namelabel, *commlabel, *diallabel;
 XObject *namebox, *commbox;
 XObject *curobj;
 XObject *btnmoveup,*btnmovedown,*btndelete;
+XObject *scrollframebar;
 extern char *MenuNodeText[MENUNODECNT];
 pmenunode cur;
 list cmenu,cpath,abtn,opfiles;
@@ -247,8 +248,42 @@ void update_command(XObject* obj, XPointer cbdata)
 		strncpy(c->info2,obj->textbox.buffer,obj->textbox.buffer_size);
 	}
 }
-extern XContext xctxt;
-extern Display *dis;
+
+void move_scrollbar(XObject* obj, XPointer cbdata)
+{
+	int vis_cnt=scrollframe->obj.height/20;
+	if(curmenu->count<=vis_cnt)
+	{
+		x_object_move(curdirframe,0,0);
+	}
+	else if(x_scrollbar_get_value(obj) == obj->scroll.maxval)
+	{
+		x_object_move(curdirframe,0,-curmenu->count*20+scrollframe->obj.height);
+	}
+	else
+	{
+		x_object_move(curdirframe,0,-x_scrollbar_get_value(obj)*20);
+	}
+		
+}
+
+void update_scrollbar(Bool reset)
+{
+	int vis_cnt=scrollframe->obj.height/20;
+	if(curmenu->count<=vis_cnt)
+		x_scrollbar_set_range(scrollframebar,0,0,0);
+	else
+	{
+		if(reset)
+			x_scrollbar_set_range(scrollframebar,0,curmenu->count - vis_cnt, 0);
+		else
+		{
+			int curpos= (-curdirframe->frame.y+20-1)/20;
+			x_scrollbar_set_range(scrollframebar,0,curmenu->count - vis_cnt, curpos);
+		}
+	}
+}
+
 void clearmenulist(plist l)
 {
 	XObject *button;
@@ -265,8 +300,11 @@ void update_currentlist()
 	x_frame_set_visible(curdirframe,False);
 	clearmenulist(curmenu);
 	clearmenulist(additbtn);
+	
 	appendsubmenutolist(curmenu,additbtn,cur->childlist);
 	x_frame_set_visible(curdirframe,True);
+	resize_curdir();
+	update_scrollbar(False);
 }
 
 Bool create_object(XObject* obj,XEvent ev,XPointer cbdata)
@@ -298,13 +336,24 @@ Bool create_object(XObject* obj,XEvent ev,XPointer cbdata)
 	appendnodetolist(curmenu,additbtn,cur->childlist->tail->prev);
 	XObject* btn=(XObject*)(curmenu->tail->prev->data);
 	item_press(btn,ev,btn->obj.cbdata);
+	resize_curdir();
+	update_scrollbar(False);
+	x_scrollbar_set_value(scrollframebar,scrollframebar->scroll.maxval);
 	*changed=True;
 	return False;
+}
+
+void resize_curdir()
+{
+	unsigned h=curmenu->count*20;
+	if(h<40) h=40;
+	x_object_resize(curdirframe,curdirframe->obj.width,h);
 }
 
 Bool item_press(XObject* obj,XEvent ev,XPointer cbd)
 {
 	int id;
+	Bool temp;
 	pnode it=cur->childlist->head->next;
 	for(id=0;!it->dummy;it=it->next,id++)
 		if(it->data==cbd) break;
@@ -314,6 +363,7 @@ Bool item_press(XObject* obj,XEvent ev,XPointer cbd)
 	curobj=obj;
 	x_frame_set_visible(descframe,True);
 	pmenunode cbdata=(pmenunode) cbd;
+	temp=*changed;
 	switch(cbdata->type)
 	{
 	case SUBMENU:
@@ -368,6 +418,7 @@ Bool item_press(XObject* obj,XEvent ev,XPointer cbd)
 	default:
 		break;
 	}
+	*changed=temp;
 	return False;
 }
 
@@ -443,6 +494,7 @@ Bool delete_cur_item(XObject* btn,XEvent ev,void* cbdata )
 		update_currentlist();
 		curinlist=-1;
 		x_frame_set_visible(descframe,False);
+		update_scrollbar(False);
 	}
 	return False;
 }
@@ -488,12 +540,15 @@ Bool resize(XObject* obj,XEvent e, void* cbdata)
 	if(w<200) w=200;
 	if(h<100) h=100;
 	x_object_resize(descframe,w,h);
-	x_object_resize(curdirframe,curdirframe->obj.width,h);
+	x_object_resize(supcurdirframe,supcurdirframe->obj.width,h);
+	x_object_resize(scrollframe,scrollframe->obj.width,h-10);
+	x_object_resize(scrollframebar,scrollframebar->obj.width,h-10);
 	x_object_move(btndelete,w-btndelete->obj.width-10,h-btndelete->obj.height-10);
 	x_object_move(btnmovedown,w-btnmovedown->obj.width-10,btndelete->button.y-btnmovedown->obj.height-2);
 	x_object_move(btnmoveup,w-btnmoveup->obj.width-10,btnmovedown->button.y-btnmoveup->obj.height-2);
 	x_object_resize(namebox,w-namebox->textbox.x-10,namebox->obj.height);
 	x_object_resize(commbox,w-commbox->textbox.x-10,commbox->obj.height);
+	update_scrollbar(False);
 	return False;
 }
 
@@ -512,10 +567,16 @@ void fill_window(pmenunode top, char *path)
 	x_window_set_destroy_event(win,(Callback)quit);
 	x_window_set_configure(win,(Callback)resize);
 
-	curdirframe=x_frame_create(win,10,40,150,400,True,0,0,bcolor,None);
+	supcurdirframe=x_frame_create(win,10,40,180,400,True,0,0,bcolor,None);
+	scrollframebar=x_scrollbar_create(supcurdirframe,157,5,15,380,True,False,0,0,0,None);
+	x_scrollbar_set_changed(scrollframebar,move_scrollbar);
+	
+	scrollframe=x_frame_create(supcurdirframe,5,5,150,380,True,0,0,bcolor,None);
+
+	curdirframe=x_frame_create(scrollframe,0,0,150,400,True,0,0,bcolor,None);
 	appendsubmenutolist(curmenu,additbtn,top->childlist);
 
-	descframe=x_frame_create(win,165,40,630-165,400,False,1,0,bcolor,None);
+	descframe=x_frame_create(win,190,40,630-180,400,False,1,0,bcolor,None);
 	lbl=x_label_create(descframe,20,20,"Type:",True,None);
 	namelabel=x_label_create(descframe,20,lbl->label.y+lbl->obj.height+5,"Name:",True,None);
 	commlabel=x_label_create(descframe,20,namelabel->label.y+namelabel->obj.height+5,"Command:",True,None);
@@ -582,4 +643,6 @@ void fill_window(pmenunode top, char *path)
 
 	btn=x_button_create(fopen_err_win,(fopen_err_win->obj.width-50)/2,fopen_err_win->obj.height-25,50,20,True,"OK",0,graycolor,0xFFFFFF,bcolor,INTTOPOINTER(0));
 	x_button_set_button_press(btn,(Callback)send_response);
+	resize_curdir();
+	update_scrollbar(True);
 }

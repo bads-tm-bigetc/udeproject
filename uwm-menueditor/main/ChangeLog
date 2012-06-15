@@ -1,0 +1,8 @@
+version 0.2:
+- Improved management of graphic contexts: Now there will be created only one 
+unique context for a single color
+- Now question about saving changes will appear only if there were some
+manipulations with items of menu ( like adding, or deleting, or typing into 
+textboxes )
+- Added widget Scrollbar
+- Now if list of submenu doesn't fit in window, you can scroll it with scrollbar

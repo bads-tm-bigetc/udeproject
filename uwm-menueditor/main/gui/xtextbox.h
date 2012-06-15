@@ -2,6 +2,7 @@
 #define XTEXTBOX_H_
 
 #include "xobject.h"
+#include "xtoolsgc.h"
 
 XObject* x_textbox_create(XObject* parent, int x, int y, unsigned width, unsigned height, Bool visible,
 		XPointer cbdata);

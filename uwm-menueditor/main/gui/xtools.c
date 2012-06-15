@@ -5,7 +5,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "tree.h"
 #include "xtools.h"
+#include "xtoolsgc.h"
 
 Display* dis;
 XContext xctxt;
@@ -29,6 +31,8 @@ Bool responded;
 int response;
 
 char buff[256];
+Tree gctree;
+
 void x_init()
 {
 	xctxt=XUniqueContext();
@@ -45,6 +49,7 @@ void x_init()
 	modalwindow=NULL;
 	responded=False;
 	response=0;
+	tree_init( &gctree, xtoolsgc_cmp );
 }
 
 void x_clear_modal()
@@ -152,6 +157,9 @@ void x_handle_event(XEvent event)
 					break;
 				case XTEXTBOX:
 					x_textbox_handle_event(obj,event);
+					break;
+				case XSCROLL:
+					x_scrollbar_handle_event(obj,event);
 					break;
 				}
 			}

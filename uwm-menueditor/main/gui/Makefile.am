@@ -11,9 +11,15 @@ libgui_la_SOURCES = xbutton.c \
                  xlabel.h  \
                  xobject.c \
                  xobject.h \
+                 xscroll.c \
+                 xscroll.h \
                  xtextbox.c\
                  xtextbox.h\
                  xtools.c  \
                  xtools.h  \
+                 xtoolsgc.c \
+                 xtoolsgc.h \
                  xwindow.c \
-                 xwindow.h
+                 xwindow.h \
+                 tree.c \
+                 tree.h

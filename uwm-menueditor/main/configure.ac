@@ -1,5 +1,5 @@
 AC_PREREQ([2.68])
-AC_INIT([uwm-menued], [0.1], [knightLA@yandex.ru])
+AC_INIT([uwm-menued], [0.2], [knightLA@yandex.ru])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([menued/main.c])
 AC_CONFIG_MACRO_DIR([m4])

@@ -1,4 +1,6 @@
 #include "xbutton.h"
+#include "xdraw.h"
+#include "xtoolsgc.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,7 +17,6 @@ XObject* x_button_create(XObject *parent,int x,int y, unsigned width,
 		                unsigned long black, unsigned long gray, unsigned long white,
 		                unsigned long background,XPointer cbdata)
 {
-	XGCValues val;
 	XObject *b=(XObject*) calloc(1,sizeof(XObject));
 	if(!b)
 	{
@@ -45,27 +46,9 @@ XObject* x_button_create(XObject *parent,int x,int y, unsigned width,
 		exit(OUT_OF_MEMORY);
 	}
 	strcpy(b->button.text,caption);
-	val.foreground=white;
-	b->button.White=XCreateGC(dis,b->button.obj.win,GCForeground,&val);
-	if(!b->button.White)
-	{
-		fprintf(stderr,"Failed to create graphic context\n");
-		exit(2);
-	}
-	val.foreground=black;
-	b->button.Black=XCreateGC(dis,b->button.obj.win,GCForeground,&val);
-	if(!b->button.Black)
-	{
-		fprintf(stderr,"Failed to create graphic context\n");
-		exit(2);
-	}
-	val.foreground=gray;
-	b->button.Gray=XCreateGC(dis,b->button.obj.win,GCForeground,&val);
-	if(!b->button.Gray)
-	{
-		fprintf(stderr,"Failed to create graphic context\n");
-		exit(2);
-	}
+	b->button.White=x_gc_create( b, white, 0, LineSolid );
+	b->button.Black=x_gc_create( b, black, 0, LineSolid );
+	b->button.Gray =x_gc_create( b, gray, 0, LineSolid );
 	b->button.text_width=XTextWidth(font,b->button.text,strlen(b->button.text));
 	b->button.font_ascent=font->ascent;
 	XSelectInput(dis,b->button.obj.win,KeyPressMask|ExposureMask|ButtonPressMask|
@@ -94,21 +77,21 @@ void x_button_redraw_border(XObject* b)
 {
 	if(b->button.mouse_on&&b->button.mouse_down)
 	{
-		XDrawLine(dis,b->button.obj.win,b->button.Black,0,0,b->obj.width-1,0);
-		XDrawLine(dis,b->button.obj.win,b->button.Black,0,0,0,b->obj.height-1);
-		XDrawLine(dis,b->button.obj.win,b->button.Gray,1,1,b->obj.width-2,1);
-		XDrawLine(dis,b->button.obj.win,b->button.Gray,1,1,1,b->obj.height-2);
-		XDrawLine(dis,b->button.obj.win,b->button.White,b->obj.width-1,0,b->obj.width-1,b->obj.height-1);
-		XDrawLine(dis,b->button.obj.win,b->button.White,0,b->obj.height-1,b->obj.width-1,b->obj.height-1);
+		x_draw_line(b,b->button.Black,0,0,b->obj.width-1,0);	  
+		x_draw_line(b,b->button.Black,0,0,0,b->obj.height-1);
+		x_draw_line(b,b->button.Gray,1,1,b->obj.width-2,1);
+		x_draw_line(b,b->button.Gray,1,1,1,b->obj.height-2);
+		x_draw_line(b,b->button.White,b->obj.width-1,0,b->obj.width-1,b->obj.height-1);
+		x_draw_line(b,b->button.White,0,b->obj.height-1,b->obj.width-1,b->obj.height-1);
 	}
 	else
 	{
-		XDrawLine(dis,b->button.obj.win,b->button.White,0,0,b->obj.width-1,0);
-		XDrawLine(dis,b->button.obj.win,b->button.White,0,0,0,b->obj.height-1);
-		XDrawLine(dis,b->button.obj.win,b->button.Gray,b->obj.width-2,1,b->obj.width-2,b->obj.height-2);
-		XDrawLine(dis,b->button.obj.win,b->button.Gray,1,b->obj.height-2,b->obj.width-2,b->obj.height-2);
-		XDrawLine(dis,b->button.obj.win,b->button.Black,b->obj.width-1,0,b->obj.width-1,b->obj.height-1);
-		XDrawLine(dis,b->button.obj.win,b->button.Black,0,b->obj.height-1,b->obj.width-1,b->obj.height-1);
+		x_draw_line(b,b->button.White,0,0,b->obj.width-1,0);
+		x_draw_line(b,b->button.White,0,0,0,b->obj.height-1);
+		x_draw_line(b,b->button.Gray,b->obj.width-2,1,b->obj.width-2,b->obj.height-2);
+		x_draw_line(b,b->button.Gray,1,b->obj.height-2,b->obj.width-2,b->obj.height-2);
+		x_draw_line(b,b->button.Black,b->obj.width-1,0,b->obj.width-1,b->obj.height-1);
+		x_draw_line(b,b->button.Black,0,b->obj.height-1,b->obj.width-1,b->obj.height-1);
 	}
 }
 
@@ -194,18 +177,16 @@ void x_button_handle_event(XObject* obj, XEvent event)
 			if(event.xbutton.button==Button1)
 			{
 				obj->button.mouse_down=True;
-				if(obj->button.mouse_on)
-				{
-					ev.xexpose.type=Expose;
-					ev.xexpose.display=dis;
-					ev.xexpose.count=1;
-					ev.xexpose.x=0;
-					ev.xexpose.y=0;
-					ev.xexpose.width=obj->obj.width;
-					ev.xexpose.height=obj->obj.height;
-					ev.xexpose.window=obj->obj.win;
-					x_object_exposed(obj,ev);
-				}
+				obj->button.mouse_on=True;
+				ev.xexpose.type=Expose;
+				ev.xexpose.display=dis;
+				ev.xexpose.count=1;
+				ev.xexpose.x=0;
+				ev.xexpose.y=0;
+				ev.xexpose.width=obj->obj.width;
+				ev.xexpose.height=obj->obj.height;
+				ev.xexpose.window=obj->obj.win;
+				x_object_exposed(obj,ev);
 			}
 			break;
 		case ButtonRelease:

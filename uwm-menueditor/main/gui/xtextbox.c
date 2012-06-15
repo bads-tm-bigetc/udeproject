@@ -22,7 +22,6 @@ static char buff[256];
 XObject* x_textbox_create(XObject* parent, int x, int y, unsigned width, unsigned height, Bool visible,
 		XPointer cbdata)
 {
-	XGCValues val;
 	XObject* t=(XObject*) calloc(1,sizeof(XObject));
 	if(!t)
 	{
@@ -57,22 +56,8 @@ XObject* x_textbox_create(XObject* parent, int x, int y, unsigned width, unsigne
 	t->textbox.buffer_size=0;
 	t->textbox.font_ascent=font->ascent;
 	t->textbox.text_offset=0;
-	val.foreground=0x4e84b2;
-	val.fill_style=FillSolid;
-	t->textbox.SelectFocused=XCreateGC(dis,t->obj.win,GCForeground|GCFillStyle,&val);
-	if(!t->textbox.SelectFocused)
-	{
-		fprintf(stderr,"Failed to create GC\n");
-		exit(2);
-	}
-	val.foreground=0xA7A7A7;
-	val.fill_style=FillSolid;
-	t->textbox.SelectUnfocused=XCreateGC(dis,t->obj.win,GCForeground|GCFillStyle,&val);
-	if(!t->textbox.SelectUnfocused)
-	{
-		fprintf(stderr,"Failed to create GC\n");
-		exit(2);
-	}
+	t->textbox.SelectFocused=x_gc_create(t,0x4e84b2,0,LineSolid);
+	t->textbox.SelectUnfocused=x_gc_create(t,0xA7A7A7,0,LineSolid);
 	XSelectInput(dis,t->textbox.obj.win,ExposureMask|ButtonPressMask|
 			ButtonReleaseMask|KeyPressMask|Button1MotionMask|StructureNotifyMask);
 	t->textbox.visible=visible;
@@ -95,7 +80,7 @@ void x_textbox_exposed(XObject* t)
 		s2=i;
 	}
 	XClearWindow(dis,t->obj.win);
-	XFillRectangle(dis,t->obj.win,t->obj.isfocused?t->textbox.SelectFocused:t->textbox.SelectUnfocused,s1-t->textbox.text_offset,1,s2-s1,font->ascent+font->descent);
+	x_fill_rectangle(t,t->obj.isfocused?t->textbox.SelectFocused:t->textbox.SelectUnfocused,s1-t->textbox.text_offset,1,s2-s1,font->ascent+font->descent);
 	XDrawString(dis,t->obj.win,DefaultGC(dis,screen),2-t->textbox.text_offset,font->ascent+1,t->textbox.buffer,strlen(t->textbox.buffer));
 	if(t->obj.isfocused)
 		XDrawLine(dis,t->obj.win,DefaultGC(dis,screen),w-t->textbox.text_offset,1,w-t->textbox.text_offset,font->ascent+font->descent-1);

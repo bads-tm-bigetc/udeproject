@@ -11,7 +11,9 @@
 #include "xlabel.h"
 #include "xtextbox.h"
 #include "xdialog.h"
+#include "xtoolsgc.h"
 #include "xdraw.h"
+#include "xscroll.h"
 #define DefGC(dpy) DefaultGC(dpy, DefaultScreen(dpy))
 #define POINTERTOINT(a) ((int)(a))
 #define INTTOPOINTER(a) ((XPointer)(a))

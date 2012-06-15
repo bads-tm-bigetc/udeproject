@@ -36,7 +36,7 @@ XObject* x_frame_create(XObject* parent, int x, int y, unsigned width, unsigned 
 	}
 	f->obj.parentwindow=parent->obj.parentwindow;
 	f->obj.isfocused=False;
-	XSelectInput(dis,f->obj.win,KeyPressMask);
+	XSelectInput(dis,f->obj.win,KeyPressMask|ExposureMask);
 	f->frame.visible=visible;
 	if(f->frame.visible)
 	{

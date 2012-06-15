@@ -47,15 +47,25 @@ void x_object_destroy(XObject * obj)
 			modalwindow=NULL;
 		break;
 	case XBUTTON:
-		XFreeGC(dis,obj->button.Black);
-		XFreeGC(dis,obj->button.Gray);
-		XFreeGC(dis,obj->button.White);
+		x_gc_unref(obj->button.Black);
+		x_gc_unref(obj->button.Gray);
+		x_gc_unref(obj->button.White);
 		free(obj->button.text);
 		break;
 	case XFRAME:
 		break;
 	case XLABEL:
 		free(obj->label.text);
+		break;
+	case XTEXTBOX:
+		free(obj->textbox.buffer);
+		x_gc_unref(obj->textbox.SelectFocused);
+		x_gc_unref(obj->textbox.SelectUnfocused);
+		break;
+	case XSCROLL:
+		x_gc_unref(obj->scroll.Black);
+		x_gc_unref(obj->scroll.Gray);
+		x_gc_unref(obj->scroll.White);
 		break;
 	}
 	free(obj);
@@ -84,6 +94,9 @@ void x_object_exposed(XObject* obj,XEvent ev)
 		break;
 	case XTEXTBOX:
 		x_textbox_exposed(obj);
+		break;
+	case XSCROLL:
+		x_scrollbar_exposed(obj);
 		break;
 	}
 }
@@ -131,6 +144,11 @@ void x_object_move(XObject* obj, int x,int y)
 	case XTEXTBOX:
 		obj->textbox.x=x;
 		obj->textbox.y=y;
+		break;
+	case XSCROLL:
+		obj->scroll.x=x;
+		obj->scroll.y=y;
+		break;
 	}
 }
 

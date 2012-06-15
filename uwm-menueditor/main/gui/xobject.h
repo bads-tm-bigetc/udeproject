@@ -7,12 +7,17 @@
 #include "X11/Xatom.h"
 #include <X11/Xresource.h>
 
+typedef struct XToolsGC     XToolsGC    ;
+typedef struct XGCInfo      XGCInfo     ;
+typedef struct XGCData      XGCData     ;
+
 typedef struct XBasicObject XBasicObject;
 typedef struct XWindow      XWindow     ;
 typedef struct XButton      XButton     ;
 typedef struct XFrame       XFrame      ;
 typedef struct XLabel       XLabel      ;
 typedef struct XTextBox     XTextBox    ;
+typedef struct XScrollBar   XScrollBar  ;
 
 typedef union  XObject      XObject     ;
 
@@ -24,8 +29,29 @@ typedef void (*CallbackLite)(XObject* obj, XPointer cbdata);
 #define XFRAME   3
 #define XLABEL   4
 #define XTEXTBOX 5
+#define XSCROLL  6
+
 
 #define OUT_OF_MEMORY 1
+
+struct XGCInfo
+{
+  unsigned long foreground;
+  int line_width;
+  int line_style;
+};
+
+struct XGCData
+{
+  GC gc;
+  unsigned count;
+};
+
+struct XToolsGC
+{
+  XGCInfo inf;
+  XGCData dat;
+};
 
 struct XBasicObject
 {
@@ -57,7 +83,7 @@ struct XButton
 	int text_width,font_ascent;
 	int x,y;
 	char* text;
-	GC Black,White,Gray;
+	XToolsGC Black, White,Gray;
 	Callback button_press, expose;
 };
 
@@ -88,8 +114,25 @@ struct XTextBox
 	int capacity;
 	int font_ascent;
 	int text_offset;
-	GC SelectFocused,SelectUnfocused;
+	XToolsGC SelectFocused,SelectUnfocused;
 	CallbackLite change;
+};
+
+struct XScrollBar
+{
+	XBasicObject obj;
+	int x,y;
+	Bool visible;
+	Bool horizontal;
+	int minval,maxval;
+	int curval;
+	XObject *IncButton, *DecButton;
+	unsigned dragwidth,dragheight;
+	int dragX,dragY;
+	Bool scroll_down;
+	int downx, downy;
+	XToolsGC Black, White,Gray;
+	CallbackLite changed;
 };
 
 union XObject
@@ -100,6 +143,7 @@ union XObject
 	XFrame frame;
 	XLabel label;
 	XTextBox textbox;
+	XScrollBar scroll;
 };
 
 void x_object_destroy(XObject * obj);
