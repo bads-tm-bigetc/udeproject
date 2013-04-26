@@ -69,6 +69,8 @@ extern Atom WM_PROTOCOLS;
 extern Atom MOTIF_WM_HINTS;
 extern InitStruct InitS;
 
+extern int ignore_mask;
+
 int ShapeEvent;
 
 /***  Contains actual event handler configuration  ***/
@@ -311,7 +313,7 @@ void HandleButtonPress(XEvent *event)
     }
   } else if((InitS.BehaviourFlags & BF_IN_WIN_CTRL)
             || (event->xbutton.window != TheScreen.root)
-            || (event->xbutton.state == UWM_MODIFIERS)) {
+            || ( ( event->xbutton.state & ignore_mask ) == UWM_MODIFIERS)) {
     Window win;
 
     win = (event->xbutton.subwindow == None) ? event->xbutton.window 
@@ -443,7 +445,7 @@ void HandleKeyRelease(XEvent *event)
 
   if(event->xkey.root != TheScreen.root) return;
 
-  if(event->xkey.state==UWM_MODIFIERS){
+  if( (event->xkey.state & ignore_mask)==UWM_MODIFIERS){
     Node *n,*n2;
     switch(XKeycodeToKeysym(disp,event->xkey.keycode,0)){
       case XK_Right: ChangeWS((TheScreen.desktop.ActiveWorkSpace +1)\

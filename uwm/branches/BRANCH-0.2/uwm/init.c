@@ -1377,6 +1377,48 @@ void ReadConfigFile(FILE *uwmrc)
     }
 }
 
+//Copied from xbindkeys
+int numlock_mask, scrolllock_mask, capslock_mask;
+int ignore_mask;
+
+void
+get_offending_modifiers (Display * dpy)
+{
+  int i;
+  XModifierKeymap *modmap;
+  KeyCode nlock, slock;
+  static int mask_table[8] = {
+    ShiftMask, LockMask, ControlMask, Mod1Mask,
+    Mod2Mask, Mod3Mask, Mod4Mask, Mod5Mask
+  };
+
+  nlock = XKeysymToKeycode (dpy, XK_Num_Lock);
+  slock = XKeysymToKeycode (dpy, XK_Scroll_Lock);
+
+  /*
+   * Find out the masks for the NumLock and ScrollLock modifiers,
+   * so that we can bind the grabs for when they are enabled too.
+   */
+  modmap = XGetModifierMapping (dpy);
+
+  if (modmap != NULL && modmap->max_keypermod > 0)
+    {
+      for (i = 0; i < 8 * modmap->max_keypermod; i++)
+	{
+	  if (modmap->modifiermap[i] == nlock && nlock != 0)
+	    numlock_mask = mask_table[i / modmap->max_keypermod];
+	  else if (modmap->modifiermap[i] == slock && slock != 0)
+	    scrolllock_mask = mask_table[i / modmap->max_keypermod];
+	}
+    }
+
+  capslock_mask = LockMask;
+
+  ignore_mask=~(capslock_mask|numlock_mask|scrolllock_mask);
+  if (modmap)
+    XFreeModifiermap (modmap);
+}
+
 void InitDefaults()
 {
   FILE *uwmrc;
@@ -1498,6 +1540,8 @@ void InitUWM()
   XSetWindowAttributes xswa;
   XEvent event;
   Window otherwmswin;
+
+  int mask,i;
 
 /*** some inits to let SeeYa know what to deallocate etc... ***/
 
@@ -1742,23 +1786,31 @@ UWM ");
   TheScreen.MenuTextGC=XCreateGC(disp,TheScreen.root, GCFunction
                                  | GCForeground | GCFillStyle, &xgcv);
 
-  XGrabKey(disp, XKeysymToKeycode(disp,XK_Right), UWM_MODIFIERS,
+  // set grabs regardless of state of CapsLock, NumLock and ScrollLock
+  get_offending_modifiers(disp);
+
+  mask=capslock_mask|numlock_mask|scrolllock_mask;
+  for( i = mask ; ; i = ( i - 1 ) & mask )
+  {
+    XGrabButton(disp, AnyButton, UWM_MODIFIERS | i, TheScreen.root,
+                True, ButtonPressMask | ButtonReleaseMask, GrabModeAsync,
+                GrabModeAsync, None, None);
+    XGrabKey(disp, XKeysymToKeycode(disp,XK_Right), UWM_MODIFIERS|i,
+             TheScreen.root, True, GrabModeAsync, GrabModeAsync);
+    XGrabKey(disp, XKeysymToKeycode(disp,XK_Left), UWM_MODIFIERS|i,
+             TheScreen.root, True, GrabModeAsync, GrabModeAsync);
+    XGrabKey(disp, XKeysymToKeycode(disp,XK_Up), UWM_MODIFIERS|i,
+             TheScreen.root, True, GrabModeAsync, GrabModeAsync);
+    XGrabKey(disp, XKeysymToKeycode(disp,XK_Down), UWM_MODIFIERS|i,
            TheScreen.root, True, GrabModeAsync, GrabModeAsync);
-  XGrabKey(disp, XKeysymToKeycode(disp,XK_Left), UWM_MODIFIERS,
-           TheScreen.root, True, GrabModeAsync, GrabModeAsync);
-  XGrabKey(disp, XKeysymToKeycode(disp,XK_Up), UWM_MODIFIERS,
-           TheScreen.root, True, GrabModeAsync, GrabModeAsync);
-  XGrabKey(disp, XKeysymToKeycode(disp,XK_Down), UWM_MODIFIERS,
-           TheScreen.root, True, GrabModeAsync, GrabModeAsync);
-  XGrabKey(disp, XKeysymToKeycode(disp,XK_Page_Down), UWM_MODIFIERS,
-           TheScreen.root, True, GrabModeAsync, GrabModeAsync);
-  XGrabKey(disp, XKeysymToKeycode(disp,XK_Page_Up), UWM_MODIFIERS,
-           TheScreen.root, True, GrabModeAsync, GrabModeAsync);
-  XGrabKey(disp, XKeysymToKeycode(disp,XK_End), UWM_MODIFIERS,
-           TheScreen.root, True, GrabModeAsync, GrabModeAsync);
-  XGrabButton(disp, AnyButton, UWM_MODIFIERS, TheScreen.root,
-              True, ButtonPressMask | ButtonReleaseMask, GrabModeAsync,
-              GrabModeAsync, None, None);
+    XGrabKey(disp, XKeysymToKeycode(disp,XK_Page_Down), UWM_MODIFIERS|i,
+             TheScreen.root, True, GrabModeAsync, GrabModeAsync);
+    XGrabKey(disp, XKeysymToKeycode(disp,XK_Page_Up), UWM_MODIFIERS|i,
+             TheScreen.root, True, GrabModeAsync, GrabModeAsync);
+    XGrabKey(disp, XKeysymToKeycode(disp,XK_End), UWM_MODIFIERS|i,
+             TheScreen.root, True, GrabModeAsync, GrabModeAsync);
+    if(i==0) break;
+  }
 
   /* set up ude stuff (broadcast color and desktop information) */
   TheScreen.UDE_WORKSPACES_PROPERTY = XInternAtom(disp,\

@@ -399,7 +399,7 @@ MenuItem *StartMenu(Menu *menu, int x, int y, Bool q,
   while(keepIt){
     XEvent event;
     XNextEvent(disp,&event);
-    if(Handle[event.type]) (*Handle[event.type])(&event);
+    if(event.type<LASTEvent&&Handle[event.type]) (*Handle[event.type])(&event);
   }
 
   UngrabPointer();
