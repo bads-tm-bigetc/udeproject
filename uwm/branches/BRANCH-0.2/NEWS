@@ -1,3 +1,12 @@
+ude-0.2.11:
+
+* made keyboard combinations CapsLock and NumLock insensitive (thanks to
+  Alexandr Lyashko)
+* live appmenu reloading now possible (thanks to Alexandr Lyashko)
+* added internationalised font set support for menus and window titles
+* minor updates to urdb
+* some bugfixes
+
 ude-0.2.10:
 
 * 64 bit support
