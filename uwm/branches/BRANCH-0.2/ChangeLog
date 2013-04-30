@@ -1,3 +1,14 @@
+2013-04-26  Alexandr Lyashko <knightla@users.sf.net>
+	* uwm/handlers.c, uwm/init.c: fixed problem with hotkeys,
+	  they will now work regardless of state of CapsLock, NumLock and 
+	  Scrollock
+	* uwm/menu.c: fixed possible crash reason
+
+
+2012-03-25  Alexandr Lyashko <knightla@users.sf.net>
+	* uwm/uwmmenu.c: added Reload Menu button, which allows to reload menu
+	  without fully restarting UWM
+
 2011-03-06  Christian Ruppert  <arc@users.sf.net>
 	* uw/init.c, uwm/urm.c, uwm/urm.h, uwm/uwm.h, config/urdb: made
 	  internationalized fontsets available to applications through xrdb
