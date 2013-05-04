@@ -120,7 +120,7 @@ void RedirectErrorHandler(void)
   SeeYa(1,"Looks like there is another Window manager running.");
 #else
   fprintf (TheScreen.errout,"Looks like there is another Window manager "
-	   "running.\nBut since we're debuging we'll continue.");
+           "running.\nBut since we're debuging we'll continue.");
 #endif
 }
 
@@ -205,11 +205,11 @@ void HandleMapRequest(XEvent *event)
         case NormalState:
             DBG(fprintf(TheScreen.errout, "HandleMapRequest: displaying\n");)
             DisplayWin(uc);
-	    break;
+            break;
         case IconicState:
             DBG(fprintf(TheScreen.errout, "HandleMapRequest: iconifying\n");)
             IconifyWin(uc);
-	    break;
+            break;
       }
     } else {
       DBG(fprintf(TheScreen.errout, "HandleMapRequest: displaying\n");)
@@ -281,7 +281,7 @@ void HandleReparentNotify(XEvent *event)
   DBG(fprintf(TheScreen.errout,"HandleUnmapNotify\n");)
   
   if(event->xreparent.parent == TheScreen.root) return;
-					/* ignore reparenting to root */
+                                        /* ignore reparenting to root */
   if(!XFindContext(disp, event->xreparent.window, UWMContext,
                    (XPointer *)&uc)) {
     if((event->xreparent.window == uc->win)
@@ -391,14 +391,14 @@ void HandleConfigureRequest(XEvent *event)
           GravitizeWin(uc, &(xwc.x), &(xwc.y), UWM_GRAVITIZE);
         XConfigureWindow(disp, uc->frame, event->xconfigurerequest.value_mask
                          & (CWSibling | CWStackMode | CWX | CWY
-		            | CWWidth | CWHeight), &xwc);
+                            | CWWidth | CWHeight), &xwc);
         if((event->xconfigurerequest.value_mask & CWWidth)
            && (uc->title.win != None)
-	   && ((InitS.BorderTitleFlags & BT_CENTER_TITLE) 
-	       || (uc->flags & SHAPED))) {
+           && ((InitS.BorderTitleFlags & BT_CENTER_TITLE) 
+               || (uc->flags & SHAPED))) {
           XMoveWindow(disp, uc->title.win,
-	              uc->title.x = (xwc.width - uc->title.width) / 2,
-	              uc->title.y);
+                      uc->title.x = (xwc.width - uc->title.width) / 2,
+                      uc->title.y);
         }
         if((event->xconfigurerequest.value_mask & CWStackMode)
            || ((event->xconfigurerequest.value_mask & (CWX|CWY))
@@ -447,7 +447,8 @@ void HandleKeyRelease(XEvent *event)
 
   if( (event->xkey.state & ignore_mask)==UWM_MODIFIERS){
     Node *n,*n2;
-    switch(XKeycodeToKeysym(disp,event->xkey.keycode,0)){
+    int dummy;
+    switch(*XGetKeyboardMapping(disp,event->xkey.keycode,1,&dummy)){
       case XK_Right: ChangeWS((TheScreen.desktop.ActiveWorkSpace +1)\
                                      % TheScreen.desktop.WorkSpaces);
                      break;
@@ -461,7 +462,7 @@ void HandleKeyRelease(XEvent *event)
                            if(WinVisible(n2->data)) break;
                        } while(n!=n2);
                        if(n2) ActivateWin(n2->data);
-		       else ActivateWin(NULL);
+                       else ActivateWin(NULL);
                      }
                      break;
       case XK_Down:  n=n2=InNodeList(TheScreen.UltimateList, ActiveWin);{
@@ -470,7 +471,7 @@ void HandleKeyRelease(XEvent *event)
                            if(WinVisible(n2->data)) break;
                        } while(n!=n2);
                        if(n2) ActivateWin(n2->data);
-		       else ActivateWin(NULL);
+                       else ActivateWin(NULL);
                      }
                      break;
       case XK_Page_Up: if(ActiveWin) RaiseWin(ActiveWin);
@@ -501,7 +502,7 @@ void HandlePropertyNotify(XEvent *event)
       default:
         if(event->xproperty.atom==MOTIF_WM_HINTS) UpdateMotifHints(uc);
         if(event->xproperty.atom==WM_PROTOCOLS)
-	  UpdateWMProtocols(uc);
+          UpdateWMProtocols(uc);
     }
   }
   UngrabServer();
@@ -548,7 +549,7 @@ void HandleSelectionRequest(XEvent *event)
        || (event->xselectionrequest.time == CurrentTime)){
       prop = Parse_WM_Sx_Selection(event->xselectionrequest.target, 
                                    event->xselectionrequest.property,
-				   event->xselectionrequest.requestor);
+                                   event->xselectionrequest.requestor);
     }
   }
   SendSelectionNotify(event, prop);

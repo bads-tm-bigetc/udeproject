@@ -339,13 +339,15 @@ void ManualPlace(NodeList *wins,int w,int h,int *x,int *y)
     XMaskEvent(disp,PointerMotionMask|ButtonReleaseMask|ButtonPressMask
                     |KeyPressMask,&event);
     switch(event.type){
+      int dummy;
       case MotionNotify:      *x=event.xmotion.x_root;
                               *y=event.xmotion.y_root;
-			      if(InitS.SnapDistance) SnapWin(wins,x,y,w,h);
+                              if(InitS.SnapDistance) SnapWin(wins,x,y,w,h);
                               SqueezeRubber(*x,*y,w,h);
                               break;
-      case KeyPress:          keysym=XKeycodeToKeysym(disp, event.xkey.keycode,
-                                                      0);
+      case KeyPress:          keysym=*XGetKeyboardMapping(disp,
+                                                          event.xkey.keycode,
+                                                          1, &dummy);
                               if(
 #ifdef XK_Return
                                  (keysym == XK_Return) ||
@@ -357,9 +359,9 @@ void ManualPlace(NodeList *wins,int w,int h,int *x,int *y)
                                  (keysym == XK_Linefeed) ||
 #endif
                                  0) {
-			        placing=0;
-			        StampTime(event.xkey.time);
-			      }
+                                placing=0;
+                                StampTime(event.xkey.time);
+                              }
                               break;
       case ButtonRelease:     placing=0;
                               StampTime(event.xbutton.time);

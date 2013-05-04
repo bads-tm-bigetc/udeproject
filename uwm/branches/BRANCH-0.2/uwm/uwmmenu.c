@@ -39,6 +39,7 @@
 #include "workspaces.h"
 #include "menu.h"
 #include "i18n.h"
+#include "special.h"
 
 extern UDEScreen TheScreen;
 extern InitStruct InitS;
