@@ -4,7 +4,7 @@ TEXSOURCES= \
 TEXOUTPUT= \
 	manual.pdf
 
-# SUBDIRS= html
+SUBDIRS= html
 DIR_CONTENTS= ${TEXSOURCES} ${TEXOUTPUT} README
 udedocdir= ${prefix}/doc/${PACKAGE}-${VERSION}
 udedoc_DATA= ${DIR_CONTENTS}

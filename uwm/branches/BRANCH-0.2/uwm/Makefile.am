@@ -48,4 +48,6 @@ noinst_HEADERS= MwmUtil_fixed.h \
                 pix.h \
                 selection.h \
                 wingroups.h \
+                i18n.h \
+                gettext.h \
                 workspaces.h
