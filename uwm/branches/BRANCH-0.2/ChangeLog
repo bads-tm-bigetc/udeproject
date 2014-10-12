@@ -1,3 +1,8 @@
+2014-10-12  Christian Ruppert <arc@users.sf.net>
+	* .../Makefile.am, configure.ac: upgraded and fixed broken gettext
+	* doc/Makefile.am, conficure.ac: removed obsolete html documentation
+	  generation from distribution
+
 2013-04-26  Alexandr Lyashko <knightla@users.sf.net>
 	* uwm/handlers.c, uwm/init.c: fixed problem with hotkeys,
 	  they will now work regardless of state of CapsLock, NumLock and 
