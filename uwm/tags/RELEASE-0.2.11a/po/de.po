@@ -1,0 +1,91 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.2.8\n"
+"Report-Msgid-Bugs-To: arc@users.sf.net\n"
+"POT-Creation-Date: 2012-03-25 19:07+0200\n"
+"PO-Revision-Date: unknown\n"
+"Last-Translator: Christian Ruppert <arc@users.sf.net>\n"
+"Language-Team: unknown\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../uwm/windows.c:572
+msgid "Windows Menu"
+msgstr "Fenster Menü"
+
+#: ../uwm/windows.c:584 ../uwm/windows.c:585
+msgid "Sticky Windows"
+msgstr "Angepinnte Fenster"
+
+#: ../uwm/windows.c:602
+msgid ">nameless window<"
+msgstr ">Fenster ohne Namen<"
+
+#: ../uwm/winmenumenu.c:79
+msgid "Sticky window"
+msgstr "Fenster angepinnt"
+
+#: ../uwm/winmenumenu.c:90
+msgid "Move to WorkSpace"
+msgstr "Auf Workspace"
+
+#: ../uwm/init.c:533
+msgid "Application Menu"
+msgstr "Anwendungsmenü"
+
+#: ../uwm/init.c:890 ../uwm/init.c:917 ../uwm/init.c:937 ../uwm/init.c:976
+#: ../uwm/init.c:996 ../uwm/init.c:1022 ../uwm/init.c:1067 ../uwm/init.c:1081
+#: ../uwm/init.c:1089 ../uwm/init.c:1102 ../uwm/init.c:1110 ../uwm/init.c:1184
+#: ../uwm/init.c:1195 ../uwm/init.c:1249 ../uwm/init.c:1260 ../uwm/init.c:1271
+#: ../uwm/init.c:1282 ../uwm/init.c:1293
+#, c-format
+msgid "UWM: error in config-file. Ignored.\n"
+msgstr "UWM: Fehler in Konfigurationsdatei. Ignoriert.\n"
+
+#: ../uwm/uwmmenu.c:147
+msgid "Really?!"
+msgstr "Wirklich?!"
+
+#: ../uwm/uwmmenu.c:150
+msgid "UWM Menu"
+msgstr "UWM Menü"
+
+#. quit ude
+#: ../uwm/uwmmenu.c:155
+msgid "No!"
+msgstr "Nein!"
+
+#: ../uwm/uwmmenu.c:156
+msgid "Yes!"
+msgstr "Ja!"
+
+#: ../uwm/uwmmenu.c:158
+msgid "Quit UDE"
+msgstr "UDE verlassen"
+
+#. restart
+#: ../uwm/uwmmenu.c:161 ../uwm/uwmmenu.c:168
+msgid "Restart UDE"
+msgstr "UDE neu starten"
+
+#: ../uwm/uwmmenu.c:164
+msgid "Reexecute StartScript"
+msgstr "mit StartScript"
+
+#: ../uwm/uwmmenu.c:165
+msgid "No execute StartScript"
+msgstr "ohne StartScript"
+
+#: ../uwm/uwmmenu.c:173 ../uwm/uwmmenu.c:180
+msgid "Launch another WM"
+msgstr "anderen WM starten"
+
+#: ../uwm/uwmmenu.c:183
+msgid "Reload application menu"
+msgstr "Anwendungsmenü neu laden"
