@@ -1,5 +1,5 @@
 bin_PROGRAMS = uwm
-uwm_LDFLAGS  = ${X_LIBS} ${X_EXTRA_LIBS} ${X_PRE_LIBS}
+uwm_LDFLAGS  = ${X_LIBS} ${X_EXTRA_LIBS} ${X_PRE_LIBS} ${LIBINTL}
 uwm_CPPFLAGS = ${X_CFLAGS} -I../lib -DUWMVERSION=\"@VERSION@\" \
               -DLOCALEDIR=\"${datadir}/locale\" -DUDE_DIR=\"${pkgdatadir}\" \
               -DUDE_BIN_PATH=\"${bindir}\"
